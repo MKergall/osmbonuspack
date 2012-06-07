@@ -39,5 +39,5 @@ Example: long-press on the map to define the destination, a new POI,...
 
 = And then? = 
  * Look at (or get) OSMBonusPackDemo to see how to use these classes in common use cases. 
- * See HowToInstall
+ * See HowToInclude
  * Look in the javadoc to have more detailed information. 
