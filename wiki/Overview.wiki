@@ -36,3 +36,7 @@ A NinePatch background and a standard layout are provided in the sample applicat
 = Map events handling = 
 MapEventsOverlay and MapEventsReceiver classes provide a simple way to manage single-press and long-press events somewhere on the map. 
 Example: long-press on the map to define the destination, a new POI,... 
+
+= And then? = 
+ * Get OSMBonusPackDemo to see how to use these classes in common use cases. 
+ * Look in the javadoc to have more detailed information. 
