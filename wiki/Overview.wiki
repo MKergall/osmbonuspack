@@ -20,10 +20,16 @@ Migrating from Android Geocoder is a simple change of class name.
 
 = Routes and Directions = 
 OSMDroid Bonus Pack provides a set of classes to get routes, with turn-by-turn information and route shape:
- * RoadManagers retrieve roads from a variety of services providers. Currently supported: MapQuest Open API and OSRM. RoadManager can also build a PathOverlay with the route shape, ready-to-display. 
- * Result is a "Road" object
- * RoadNode array contains the turn-by-turn information
- * Also provided, some route-related utilities: polyline encoder/decoder, polyline reducer based on Douglas-Peucker algorithm. 
+ * RoadManagers retrieve roads from a variety of services providers. Currently supported: 
+  * MapQuest Open API 
+  * and OSRM. 
+
+ * Result is a "Road" object, containing: 
+  * road shape, as a list of GeoPoint => RoadManager can build an osmdroid PathOverlay from this road shape, ready-to-display. 
+  * turn-by-turn information, as a list of RoadNode
+ * Also provided, some route-related utilities: 
+  * a polyline encoder/decoder
+  * a polyline reducer based on Douglas-Peucker algorithm. 
 
 
 = Cartoon-bubble Overlays =
