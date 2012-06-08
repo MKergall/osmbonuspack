@@ -35,15 +35,17 @@ OSMDroid Bonus Pack provides a set of classes to get routes, with turn-by-turn i
 = Cartoon-bubble Overlays =
 OSMDroid Bonus Pack provides the InfoWindow class. This is a view that can be displayed on an OSMDroid map, associated to a GeoPoint. 
 Typical usage is to have cartoon-like bubble displayed when clicking an overlay item. 
-The API mimics the InfoWindow class of Google Maps JavaScript API V3. 
-A NinePatch background and a standard layout are provided in the sample application. 
+The API mimics the [https://developers.google.com/maps/documentation/javascript/reference#InfoWindow InfoWindow] class of Google Maps JavaScript API V3. 
+
+A NinePatch background and a standard layout are provided in the demo application. Contributors are encouraged to provide some nice alternatives. 
 
 
 = Map events handling = 
 MapEventsOverlay and MapEventsReceiver classes provide a simple way to manage single-press and long-press events somewhere on the map. 
+
 Example: long-press on the map to define the destination, a new POI,... 
 
-= And then? = 
- * Look at (or get) OSMBonusPackDemo to see how to use these classes in common use cases. 
- * See HowToInclude
+= Next steps = 
+ * Look at (or checkout) OSMBonusPackDemo to see how to use these classes in common use cases
+ * See HowToInclude the lib in your project
  * Look in the javadoc to have more detailed information. 
