@@ -9,10 +9,10 @@ However, in most map-based applications, we want more!
 So, here comes OSMDroid Bonus Pack. 
 
 = Geocoding and Reverse Geocoding =
-Android provides the Geocoder class. BUT... according to Google Terms&Conditions, it can only be used in relation with a Google map. 
+Android provides the [http://developer.android.com/reference/android/location/Geocoder.html Geocoder] class. BUT... according to Google Maps APIs Terms of Service, it can only be used in relation with a Google map. 
+(see https://developers.google.com/maps/terms, item (g): No Use of Content without a Google Map)
 
-So, OSMDroid Bonus Pack provides GeocoderNominatim class, which is fully compatible with Android Geocoder API. 
-It access to Nominatim service: 
+So, OSMDroid Bonus Pack provides GeocoderNominatim class, which accesses to Nominatim service: 
  * OSM Nominatim
  * MapQuest Nominatim
  * or any other Nominatim-compliant service. 
