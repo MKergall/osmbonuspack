@@ -1,0 +1,24 @@
+#Choosing a routing service
+= Introduction =
+
+So now, with this Bonus Pack, you can switch between routing services by just calling the right RoadManager. 
+But choosing the right routing service may not be so simple. 
+Find here some elements to help you in this choice. 
+
+= Performance = 
+On a 350km trip (in France, Rennes-Paris), the duration of an end-to-end route retrieval (including full parsing of server response) is, on an average of 5 requests: 
+ * With MapQuest Open API: 6 seconds (5s min, 7s max)
+ * With Google Directions API: 1.6s (1.5s min, 1.9s max)
+ * With OSRM demo site: 0.8 sec (0.4s min, 1.2s max)
+Yes, OSRM is incredibly fast!
+
+
+= OSRM Issues =
+ * Some start/end points "in the green" will lead to no-route answer
+ * The set of available directions is a little bit short. No "Enter/merge", or "Take exit lane on the left/on the right" for instance. 
+ * Waypoints are taken into account in route shape, but not in nodes. 
+
+OSRM is quite new and very active project, these issues should be fixed soon. 
+
+= MapQuest issues =
+ * Route is ending "one node too far". This is probably intentional, to give indications if the driver went too far. But not easy to hide. 
