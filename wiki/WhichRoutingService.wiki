@@ -1,4 +1,5 @@
-#Choosing a routing service
+#Choosing a routing service. 
+
 = Introduction =
 
 So now, with this Bonus Pack, you can switch between routing services by just calling the right RoadManager. 
@@ -9,7 +10,7 @@ Find here some elements to help you in this choice.
 On a 350km trip (in France, Rennes-Paris), the duration of an end-to-end route retrieval (including full parsing of server response) is, on an average of 5 requests: 
  * With MapQuest Open API: 6 seconds (5s min, 7s max)
  * With Google Directions API: 1.6s (1.5s min, 1.9s max)
- * With OSRM demo site: 0.8 sec (0.4s min, 1.2s max)
+ * With OSRM demo site: 0.8s (0.4s min, 1.2s max)
 Yes, OSRM is incredibly fast!
 
 
