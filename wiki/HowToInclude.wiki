@@ -1,4 +1,4 @@
-#summary How to include OSMBonusPack in your project.
+#summary How to install the OSMBonusPack lib in your project.
 
 = Introduction =
 First of all, you must include osmdroid in your Android project. 
@@ -22,5 +22,5 @@ If you want to use the default resources, download and copy in your project reso
 
 
 = 2. Set-up OSMBonusPack as an Android library project = 
-Checkout OSMBonusPack project from the repository. 
-In the properties of your application project, in Android section, add OSMBonusPack as a library. 
+Checkout OSMBonusPack project from the SVN repository and set it up as an "Android library" project in your Eclipse workspace. 
+Then, in the properties of your application project, in the Android section, add OSMBonusPack as a library. 
