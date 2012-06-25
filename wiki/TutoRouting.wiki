@@ -51,16 +51,46 @@ Okay, now refresh the map:
 	map.invalidate();
 }}}
 
-= 2. Playing with the manager =
+= 2. Playing with the RoadManager =
 
-Now, you want a route for bicycles. 
-First, change to MapQuestRoadManager, as it supports bicycle routes. One word to change, not too complicated:
+- Okay, but I wanted this route for bicycles... 
+
+- First, change to MapQuestRoadManager, as it supports bicycle routes. One word to change, not too complicated:
 {{{
 	RoadManager roadManager = new MapQuestRoadManager();
 }}}
 Then set appropriate option (before getting the road):
 {{{
-	roadManager.setOptions("routeType=bicycle");
+	roadManager.addRequestOption("routeType=bicycle");
 }}}
 
-= 3. Route steps =
+Done. 
+
+= 3. Showing the Route steps on the map =
+
+I'm sure you will soon want to add nice bubbles. So, let's use ItemizedOverlayWithBubble. First, put the resources: 
+ * in your res/layout: bonuspack_bubble.xml
+ * and in res/drawable-mpi: bonuspack_bubble.9.png
+You will get both in OSMBonusPackDemo res files. 
+
+Then, we can create the overlay and put it in the map:
+{{{
+final ArrayList<ExtendedOverlayItem> roadItems = new ArrayList<ExtendedOverlayItem>();
+ItemizedOverlayWithBubble<ExtendedOverlayItem> roadNodes = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, roadItems, map);
+map.getOverlays().add(roadNodes);
+}}}
+
+Once the road has been retrieved, populate the nodes overlay:
+
+{{{
+    	Drawable marker = getResources().getDrawable(R.drawable.marker_node);
+    	for (int i=0; i<road.mNodes.size(); i++){
+    		RoadNode node = road.mNodes.get(i);
+    		ExtendedOverlayItem nodeMarker = new ExtendedOverlayItem("Step "+i, "", node.mLocation);
+    		nodeMarker.setMarkerHotspot(OverlayItem.HotspotPlace.CENTER);
+    		nodeMarker.setMarker(marker);
+    		roadNodes.addItem(nodeMarker);
+    	}
+}}}
+
+Here we are! Clicking on a step marker will open its bubble. 
