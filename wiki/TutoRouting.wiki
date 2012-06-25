@@ -51,4 +51,16 @@ Okay, now refresh the map:
 	map.invalidate();
 }}}
 
-= 2. Hello Routing World =
+= 2. Playing with the manager =
+
+Now, you want a route for bicycles. 
+First, change to MapQuestRoadManager, as it supports bicycle routes. One word to change, not too complicated:
+{{{
+	RoadManager roadManager = new MapQuestRoadManager();
+}}}
+Then set appropriate option (before getting the road):
+{{{
+	roadManager.setOptions("routeType=bicycle");
+}}}
+
+= 3. Route steps =
