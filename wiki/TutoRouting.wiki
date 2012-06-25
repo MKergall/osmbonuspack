@@ -21,7 +21,7 @@ public class MapActivity extends Activity {
 
 And you want to display a route on your map. 
 
-= 1. Hello Routing World =
+= 1. "Hello, Routing World!" =
 
 First, get a road manager:
 {{{
