@@ -30,4 +30,4 @@ OSRM project is quite new and very active, these issues may be fixed soon.
  * Waypoints support
  * Route instructions
  * Fresh OSM data
- * No API Key!
+ * And last but not least: No API Key!
