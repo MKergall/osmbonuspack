@@ -46,6 +46,7 @@ MapEventsOverlay and MapEventsReceiver classes provide a simple way to manage si
 Example: long-press on the map to define the destination, a new POI,... 
 
 = Next steps = 
- * Look at (or checkout) OSMBonusPackDemo to see how to use these classes in common use cases
  * See HowToInclude the lib in your project
+ * Do the Tutorial_1
+ * Look at (or checkout) OSMBonusPackDemo to see how to use these classes in common use cases
  * Look in the javadoc to have more detailed information. 
