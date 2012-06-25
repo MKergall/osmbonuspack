@@ -1,0 +1,54 @@
+#summary Routing Tutorial.
+
+
+
+= 1. Hello Routing World =
+
+Let's assume you have a super-simple Android application using osmdroid, and displaying a map in an activity. Typically, that:
+
+{{{
+public class MapActivity extends Activity {
+
+    @Override public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);        
+        map = (MapView) findViewById(R.id.map);
+        map.setTileSource(TileSourceFactory.MAPNIK);
+        GeoPoint startPoint = new GeoPoint(48.13, -1.63)
+        MapController mapController = map.getController();
+        mapController.setCenter(startPoint);
+	mapController.setZoom(9);
+    }
+}
+}}}
+
+You want to display a route on your map. 
+First, get a road manager:
+{{{
+	RoadManager roadManager = new OSRMRoadManager();
+}}}
+
+Then, retreive the road between your start and end point:
+
+{{{
+	ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
+	waypoints.add(startPoint);
+	waypoints.add(new GeoPoint(48.4, -1.9)); //end point
+	Road road = roadManager.getRoad(waypoints);
+}}}
+
+then, build an overlay with the route shape:
+{{{
+	PathOverlay roadOverlay = RoadManager.buildRoadOverlay(road, map.getContext());
+}}}
+
+Add this overlay to the overlays of your map:
+{{{
+	map.getOverlays().add(roadOverlay);
+}}}
+Okay, now refresh the map:
+{{{
+	map.invalidate();
+}}}
+
+= 2. Hello Routing World =
