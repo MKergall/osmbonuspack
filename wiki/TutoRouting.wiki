@@ -68,19 +68,19 @@ Done.
 
 = 3. Showing the Route steps on the map =
 
-I'm sure you will soon want to add nice bubbles. So, let's use ItemizedOverlayWithBubble. First, put the resources: 
+I'm sure you will soon want to add nice bubbles on these steps. So, let's use our ItemizedOverlayWithBubble. First, put the 2 resources needed for bubbles: 
  * in your res/layout: bonuspack_bubble.xml
  * and in res/drawable-mpi: bonuspack_bubble.9.png
 You will get both in OSMBonusPackDemo res files. 
 
-Then, we can create the overlay and put it in the map:
+Then, we can create the overlay and put it on the map:
 {{{
 final ArrayList<ExtendedOverlayItem> roadItems = new ArrayList<ExtendedOverlayItem>();
 ItemizedOverlayWithBubble<ExtendedOverlayItem> roadNodes = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, roadItems, map);
 map.getOverlays().add(roadNodes);
 }}}
 
-Once the road has been retrieved, populate the nodes overlay:
+Once the road has been retrieved, populate the roadNodes overlay:
 
 {{{
     	Drawable marker = getResources().getDrawable(R.drawable.marker_node);
@@ -93,4 +93,32 @@ Once the road has been retrieved, populate the nodes overlay:
     	}
 }}}
 
+You don't have a marker_node? Shame on you. Pick the OSMBonusPackDemo one (res/drawable-nodpi/marker_node.png). 
+
 Here we are! Clicking on a step marker will open its bubble. 
+
+- Hey, guy, this bubble is nice, but useless!
+
+- You are right. So, go to step 4. 
+
+= 4. Filling the bubbles =
+
+Set the bubble description with the instructions:
+{{{
+nodeMarker.setDescription(node.mInstructions);
+}}}
+
+Set the bubble sub-description with the length and duration of the step:
+{{{
+nodeMarker.setSubDescription(road.getLengthDurationText(node.mLength, node.mDuration));
+}}}
+
+And put an icon showing the maneuver at this step:
+{{{
+Drawable icon = getResources().getDrawable(R.drawable.icon_continue);
+nodeMarker.setImage(icon);
+}}}
+
+Yes, you are right, it's not the right icon!
+
+The maneuver is in node.mManeuverType. I will take a coffee break while you handle icons properly. 
