@@ -47,6 +47,6 @@ Example: long-press on the map to define the destination, a new POI,...
 
 = Next steps = 
  * See HowToInclude the lib in your project
- * Do the [Tutorial_1]
+ * Follow the [Tutorial_1]
  * Look at (or checkout) [http://code.google.com/p/osmbonuspack/source/browse/ OSMBonusPackDemo source] to see how to use these classes in common use cases
- * Download the javadoc to have more detailed information. 
+ * Download the javadoc to get detailed information on the API. 
