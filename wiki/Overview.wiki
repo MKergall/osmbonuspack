@@ -1,4 +1,4 @@
-#summary Why this Bonus Pack, and what does it give.
+#summary Why this BonusPack, and what does it give.
 
 OSMDroid provides an simple and efficient way to move an application from Google Maps to OpenStreetMap. OSMDroid provides:
   * the map tiles (MapView) and the usual zoom/pan tools (MapController)
@@ -6,20 +6,20 @@ OSMDroid provides an simple and efficient way to move an application from Google
   * and some additional overlays (MinimapOverlay, PathOverlay,...)
 
 However, in most map-based applications, we want more!
-So, here comes OSMDroid Bonus Pack. 
+So, here comes OSMDroidBonusPack . 
 
 = Geocoding and Reverse Geocoding =
 Android provides the [http://developer.android.com/reference/android/location/Geocoder.html Geocoder] class. BUT... according to Google Maps APIs Terms of Service, it can only be used in relation with a Google map. 
 (see https://developers.google.com/maps/terms, item (g): No Use of Content without a Google Map)
 
-So, OSMDroid Bonus Pack provides GeocoderNominatim class, which accesses to Nominatim service: 
+So, OSMDroidBonusPack provides GeocoderNominatim class, which accesses to Nominatim service: 
  * OSM Nominatim
  * MapQuest Nominatim
  * or any other Nominatim-compliant service. 
 Migrating from Android Geocoder is a simple change of class name. 
 
 = Routes and Directions = 
-OSMDroid Bonus Pack provides a set of classes to get routes, with turn-by-turn information and route shape:
+OSMDroidBonusPack provides a set of classes to get routes, with turn-by-turn information and route shape:
  * RoadManagers retrieve roads from a variety of services providers. Currently supported: 
   * [http://open.mapquestapi.com/guidance/ MapQuest Open Guidance] service
   * and [http://project-osrm.org/ OSRM]. 
@@ -33,11 +33,13 @@ OSMDroid Bonus Pack provides a set of classes to get routes, with turn-by-turn i
 
 
 = Cartoon-bubble Overlays =
-OSMDroid Bonus Pack provides the InfoWindow class. This is a view that can be displayed on an OSMDroid map, associated to a GeoPoint. 
+The InfoWindow class is a view that can be displayed on an OSMDroid map, associated to a GeoPoint. 
 Typical usage is to have cartoon-like bubble displayed when clicking an overlay item. 
 The API mimics the [https://developers.google.com/maps/documentation/javascript/reference#InfoWindow InfoWindow] class of Google Maps JavaScript API V3. 
 
-A NinePatch background and a standard layout are provided in the demo application. Contributors are encouraged to provide some nice alternatives. 
+A NinePatch background and a standard layout are provided in the demo application. Contributors are strongly encouraged to provide some nice alternatives... 
+
+ItemizedOverlayWithBubble is an overlay that will open an InfoWindow bubble when the user taps on an item. ItemizedOverlayWithBubble can easily replace (and enhance) the ItemizedOverlayWithFocus of osmdroid. 
 
 
 = Map events handling = 
