@@ -121,4 +121,6 @@ nodeMarker.setImage(icon);
 
 Yes, you are right, it's not the right icon!
 
-The maneuver is in node.mManeuverType. I will take a coffee break while you handle icons properly. 
+The maneuver id is in node.mManeuverType. 
+The possible maneuver ids are [http://open.mapquestapi.com/guidance/#maneuvertypes here]. And the maneuver icons are in OSMBonusPackDemo res/drawable-mpi. 
+It's boring, so I'm going downstair to take a coffee, while you handle those icons properly. 
