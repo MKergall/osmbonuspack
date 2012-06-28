@@ -76,7 +76,7 @@ You will get both in OSMBonusPackDemo res files.
 Then, we can create the overlay and put it on the map:
 {{{
 final ArrayList<ExtendedOverlayItem> roadItems = new ArrayList<ExtendedOverlayItem>();
-ItemizedOverlayWithBubble<ExtendedOverlayItem> roadNodes = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, roadItems, map);
+ItemizedOverlayWithBubble<ExtendedOverlayItem> roadNodes = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, roadItems, map, R.layout.bonuspack_bubble);
 map.getOverlays().add(roadNodes);
 }}}
 
@@ -86,7 +86,7 @@ Once the road has been retrieved, populate the roadNodes overlay:
     	Drawable marker = getResources().getDrawable(R.drawable.marker_node);
     	for (int i=0; i<road.mNodes.size(); i++){
     		RoadNode node = road.mNodes.get(i);
-    		ExtendedOverlayItem nodeMarker = new ExtendedOverlayItem("Step "+i, "", node.mLocation);
+    		ExtendedOverlayItem nodeMarker = new ExtendedOverlayItem("Step "+i, "", node.mLocation, this);
     		nodeMarker.setMarkerHotspot(OverlayItem.HotspotPlace.CENTER);
     		nodeMarker.setMarker(marker);
     		roadNodes.addItem(nodeMarker);
