@@ -171,12 +171,14 @@ In our case, as our "more info" button is hidden in our layout, we show it:
 	}
 }}}
 
-The CustomInfoWindow class is ready, we can use it. Search the creation of your ItemizedOverlayWithBubble:
+The CustomInfoWindow class is ready, we can use it. 
+In your activity, search where the ItemizedOverlayWithBubble was created:
 {{{
 ItemizedOverlayWithBubble<ExtendedOverlayItem> roadNodes = 
-  new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, roadItems, map);
+  new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, 
+    roadItems, map);
 }}}
-and give it your own bubble: 
+and give it a customized bubble: 
 {{{
 ItemizedOverlayWithBubble<ExtendedOverlayItem> roadNodes = 
   new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, 
