@@ -68,15 +68,21 @@ Done.
 
 = 3. Showing the Route steps on the map =
 
-I'm sure you will soon want to add nice bubbles on these steps. So, let's use our ItemizedOverlayWithBubble. First, put the 2 resources needed for bubbles: 
+I'm sure you will soon want to add nice bubbles on these steps. So, let's use our ItemizedOverlayWithBubble. First, put all the resources needed for bubbles: 
  * in your res/layout: bonuspack_bubble.xml
- * and in res/drawable-mpi: bonuspack_bubble.9.png
+ * in res/drawable-mpi: 
+  * bonuspack_bubble.9.png
+  * moreinfo_arrow.png
+  * moreinfo_arrow_pressed.png
+ * in res/drawable: btn_moreinfo.xml
 You will get both in OSMBonusPackDemo res files. 
 
 Then, we can create the overlay and put it on the map:
 {{{
-final ArrayList<ExtendedOverlayItem> roadItems = new ArrayList<ExtendedOverlayItem>();
-ItemizedOverlayWithBubble<ExtendedOverlayItem> roadNodes = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, roadItems, map, R.layout.bonuspack_bubble);
+final ArrayList<ExtendedOverlayItem> roadItems = 
+  new ArrayList<ExtendedOverlayItem>();
+ItemizedOverlayWithBubble<ExtendedOverlayItem> roadNodes = 
+  new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, roadItems, map);
 map.getOverlays().add(roadNodes);
 }}}
 
@@ -124,3 +130,58 @@ Yes, you are right, it's not the right icon!
 The maneuver id is in node.mManeuverType. 
 The possible maneuver ids are [http://open.mapquestapi.com/guidance/#maneuvertypes here]. And the maneuver icons are in OSMBonusPackDemo res/drawable-mpi. 
 It's boring, so I'm going downstair to take a coffee, while you handle those icons properly. 
+
+= 5. Customizing the bubble behaviour =
+OMG, no more coffee. 
+Have you completed your maneuver icons? OK, so let's see now how to customize this bubble. 
+We want to add a button for displaying more information about this item in an activity. 
+
+First, create a new class CustomInfoWindow which inherits from DefaultInfoWindow, with its constructor. 
+{{{
+public class CustomInfoWindow extends DefaultInfoWindow {
+	public CustomInfoWindow(MapView mapView) {
+		super(R.layout.bonuspack_bubble, mapView);
+	}
+}
+}}}
+
+In the constructor, get the "more info" button:
+{{{
+		Button btn = (Button)(mView.findViewById(R.id.bubble_moreinfo));
+}}}
+
+In fact, default bubble layout already has a hidden "more info" button, so here we just have to get it. But of course you are free to define your own layout, and put as many buttons you want, with the look&feel you want. 
+
+Now, set a listener doing something on this button:
+{{{
+		btn.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Toast.makeText(v.getContext(), "Button clicked", Toast.LENGTH_LONG).show();
+			}
+		});
+}}}
+
+If needed, you can override the onOpen and onClose methods. 
+onOpen is called when tapping an item, just before showing the bubble. 
+In our case, as our "more info" button is hidden in our layout, we show it:
+{{{
+	@Override public void onOpen(ExtendedOverlayItem item){
+		super.onOpen(item);
+		mView.findViewById(R.id.bubble_moreinfo).setVisibility(View.VISIBLE);
+	}
+}}}
+
+The CustomInfoWindow class is ready, we can use it. Search the creation of your ItemizedOverlayWithBubble:
+{{{
+ItemizedOverlayWithBubble<ExtendedOverlayItem> roadNodes = 
+  new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, roadItems, map);
+}}}
+and give it your own bubble: 
+{{{
+ItemizedOverlayWithBubble<ExtendedOverlayItem> roadNodes = 
+  new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, 
+    roadItems, map, 
+    new CustomInfoWindow(map));
+}}}
+
+OK, ready, you can test it. 
