@@ -187,3 +187,5 @@ ItemizedOverlayWithBubble<ExtendedOverlayItem> roadNodes =
 }}}
 
 OK, ready, you can test it. 
+
+Next step is to open an activity instead of a stupid Toast, but that's just classical Android stuff, isn't it ?
