@@ -37,7 +37,7 @@ The InfoWindow class is a view that can be displayed on an OSMDroid map, associa
 Typical usage is to have cartoon-like bubble displayed when clicking an overlay item. 
 The API mimics the [https://developers.google.com/maps/documentation/javascript/reference#InfoWindow InfoWindow] class of Google Maps JavaScript API V3. 
 
-A NinePatch background and a standard layout are provided in the demo application. Contributors are strongly encouraged to provide some nice alternatives... 
+Two standard bubble layouts are provided in the demo application, each one with its NinePatch background. Contributors are strongly encouraged to provide some nice alternatives... 
 
 ItemizedOverlayWithBubble is an overlay that will open an InfoWindow bubble when the user taps on an item. ItemizedOverlayWithBubble can easily replace (and enhance) the ItemizedOverlayWithFocus of osmdroid. 
 
