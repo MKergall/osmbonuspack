@@ -135,9 +135,22 @@ This is simple: each time you create a POI item, give it a reference to the corr
 poiMarker.setRelatedObject(poi);
 }}}
 
-Then, in CustomInfoWindow.open(item), you can access to this reference: 
+Define "POI selectedPoi" as a member of your CustomInfoWindow. 
+Then, in CustomInfoWindow.open(item), you can access to the reference and update the selectedPoi: 
 {{{
-POI selectedPoi = (POI)item.getRelatedObject();
+selectedPoi = (POI)item.getRelatedObject();
 }}}
 
-poi.mUrl contains the Wikipedia URL. Now, you can create a WebView activity, pass the URL in the intent. But that's just usual Android stuff, isn't it?
+selectedPoi.mUrl contains the Wikipedia URL. 
+Now, you can modify the button listener to open a web view on this URL. 
+For instance this way:
+{{{
+btn.setOnClickListener(new View.OnClickListener() {
+	public void onClick(View view) {
+		if (selectedPoi.mUrl != null){
+			Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(selectedPoi.mUrl));
+			view.getContext().startActivity(myIntent);
+		}
+	}
+});
+}}}
