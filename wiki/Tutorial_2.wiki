@@ -1,3 +1,7 @@
-#summary One-sentence summary of this page.
+#summary BonusPack Tutorial #2: POI and custom bubbles.
+
+(we assume you already followed Tutorial_1)
 
 = POI =
+
+= Custom bubbles on POIs =
