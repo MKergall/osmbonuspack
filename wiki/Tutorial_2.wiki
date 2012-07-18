@@ -5,16 +5,53 @@
 = 5. POIs =
 "Points Of Interest" (POIs in short) are a very common need of map applications. 
 
-Example: I would like to show where are the cinemas (or restaurants, or hotels, or fuel stations, or whatever...) close to my position. 
+Example: I would like to see where are the cinemas (or restaurants, or hotels, or fuel stations, or whatever...) close to my position. 
 
 As for road nodes, in the onCreate() method of the activity, we add an itemized overlay: 
 {{{
-		final ArrayList<ExtendedOverlayItem> poiItems = new ArrayList<ExtendedOverlayItem>();
-		poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, 
+	final ArrayList<ExtendedOverlayItem> poiItems = new ArrayList<ExtendedOverlayItem>();
+	poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, 
 				poiItems, map);
-		map.getOverlays().add(poiMarkers);
+	map.getOverlays().add(poiMarkers);
 }}}
 
-TO COME SHORTLY...
+Now, we instantiate a POI Provider and do the request:
+
+{{{
+	NominatimPOIProvider poiProvider = new NominatimPOIProvider();
+	ArrayList<POI> pois = poiProvider.getPOICloseTo(destination, "cinema", 50, 0.1);
+
+}}}
+
+The possible types of POI are the OpenStreetMap "features". 
+In OSMBonusPackDemo, you can refer to res/values/poi_tags.xml to get a list of really working types. 
+
+Now, we build the POI markers, and put them in the overlay:
+
+{{{
+	for (POI poi:pois){
+		ExtendedOverlayItem poiMarker = new ExtendedOverlayItem(
+					poi.mType, poi.mDescription, 
+					poi.mLocation, map.getContext());
+		Drawable marker = getResources().getDrawable(R.drawable.marker_poi_default);
+		poiMarker.setMarker(marker);
+				poiMarker.setMarkerHotspot(OverlayItem.HotspotPlace.CENTER);
+		if (poi.mIcon != null){
+					poiMarker.setImage(new BitmapDrawable(poi.mIcon));
+		}
+		poiMarkers.addItem(poiMarker);
+	}
+}}}
+
+Okay, you can test it. Clicking on a cinema marker will open its bubble and display its name and address. 
+
+Nominatim also allows to search POIs along a route. 
+So, using the road you built in Tutorial_1, you can also get your POIs this way:
+{{{
+	ArrayList<POI> pois = poiProvider.getPOIAlong(road.getRouteLow(), "cinema", 50, 2.0);
+}}}
+
+Not the call to road.getRouteLow(), which provides a reduced version of the road path. This is better for everybody (for URL length, for Nominatim workload, and for responsiveness). 
+
 
 = 6. Custom bubbles on POIs =
