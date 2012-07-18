@@ -1,7 +1,20 @@
 #summary BonusPack Tutorial #2: POI and custom bubbles.
 
-(we assume you already followed Tutorial_1)
+(we assume you already followed [Tutorial_1])
 
-= POI =
+= 5. POIs =
+"Points Of Interest" (POIs in short) are a very common need of map applications. 
 
-= Custom bubbles on POIs =
+Example: I would like to show where are the cinemas (or restaurants, or hotels, or fuel stations, or whatever...) close to my position. 
+
+As for road nodes, in the onCreate() method of the activity, we add an itemized overlay: 
+{{{
+		final ArrayList<ExtendedOverlayItem> poiItems = new ArrayList<ExtendedOverlayItem>();
+		poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, 
+				poiItems, map);
+		map.getOverlays().add(poiMarkers);
+}}}
+
+TO COME SHORTLY...
+
+= 6. Custom bubbles on POIs =
