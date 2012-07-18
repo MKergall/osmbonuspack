@@ -2,10 +2,11 @@
 
 (we assume you already followed [Tutorial_1])
 
-= 5. POIs =
+= 5. OpenStreetMap POIs with Nominatim =
 "Points Of Interest" (POIs in short) are a very common need of map applications. 
 
 Example: I would like to see where are the cinemas (or restaurants, or hotels, or fuel stations, or whatever...) close to my position. 
+OpenStreetMap contains a lot of POIs. 
 
 As for road nodes, in the onCreate() method of the activity, we add an itemized overlay: 
 {{{
@@ -18,9 +19,8 @@ As for road nodes, in the onCreate() method of the activity, we add an itemized 
 Now, we instantiate a POI Provider and do the request:
 
 {{{
-	NominatimPOIProvider poiProvider = new NominatimPOIProvider();
-	ArrayList<POI> pois = poiProvider.getPOICloseTo(destination, "cinema", 50, 0.1);
-
+NominatimPOIProvider poiProvider = new NominatimPOIProvider();
+ArrayList<POI> pois = poiProvider.getPOICloseTo(startPoint, "cinema", 50, 0.1);
 }}}
 
 The possible types of POI are the OpenStreetMap "features". 
@@ -29,29 +29,115 @@ In OSMBonusPackDemo, you can refer to res/values/poi_tags.xml to get a list of r
 Now, we build the POI markers, and put them in the overlay:
 
 {{{
-	for (POI poi:pois){
+for (POI poi:pois){
 		ExtendedOverlayItem poiMarker = new ExtendedOverlayItem(
 					poi.mType, poi.mDescription, 
 					poi.mLocation, map.getContext());
 		Drawable marker = getResources().getDrawable(R.drawable.marker_poi_default);
 		poiMarker.setMarker(marker);
-				poiMarker.setMarkerHotspot(OverlayItem.HotspotPlace.CENTER);
+		poiMarker.setMarkerHotspot(OverlayItem.HotspotPlace.CENTER);
 		if (poi.mIcon != null){
-					poiMarker.setImage(new BitmapDrawable(poi.mIcon));
+			poiMarker.setImage(new BitmapDrawable(poi.mIcon));
 		}
 		poiMarkers.addItem(poiMarker);
-	}
+}
 }}}
 
-Okay, you can test it. Clicking on a cinema marker will open its bubble and display its name and address. 
+Okay, you can test it. Clicking on a POI marker will open its bubble and display the cinema name and address. 
 
 Nominatim also allows to search POIs along a route. 
 So, using the road you built in Tutorial_1, you can also get your POIs this way:
 {{{
-	ArrayList<POI> pois = poiProvider.getPOIAlong(road.getRouteLow(), "cinema", 50, 2.0);
+ArrayList<POI> pois = poiProvider.getPOIAlong(road.getRouteLow(), "fuel", 50, 2.0);
 }}}
 
 Not the call to road.getRouteLow(), which provides a reduced version of the road path. This is better for everybody (for URL length, for Nominatim workload, and for responsiveness). 
 
+= 6. Wikipedia POIs with GeoNames =
 
-= 6. Custom bubbles on POIs =
+There is a POI Provider based on GeoNames service, which is able to get Wikipedia entries close to a position. 
+
+To use it, you MUST 1) create a GeoNames account, and 2) activate the free services on it. 
+You can do that from here: [http://www.geonames.org/login]
+
+Once your account is activated, just change the poiProvider calls this way:
+{{{
+GeoNamesPOIProvider poiProvider = new GeoNamesPOIProvider("YOUR_GEONAMES_ACCOUNT");
+ArrayList<POI> pois = poiProvider.getPOICloseTo(startPoint, 75, 20.0);
+}}}
+
+And you can test!
+
+= 5. Customizing the bubble behaviour =
+Wikipedia POIs usually contain a URL to the Wikipedia page. 
+We would like to access this page from the POI bubble. 
+We will do that by customizing the bubble, adding a "more info" button which will open a web view on the Wikipedia URL. 
+
+Ready? Let's go! 
+
+First, create a new class CustomInfoWindow which inherits from DefaultInfoWindow, with its constructor. 
+{{{
+public class CustomInfoWindow extends DefaultInfoWindow {
+	public CustomInfoWindow(MapView mapView) {
+		super(R.layout.bonuspack_bubble, mapView);
+	}
+}
+}}}
+
+In the constructor, get the "more info" button:
+{{{
+Button btn = (Button)(mView.findViewById(R.id.bubble_moreinfo));
+}}}
+
+In fact, default bubble layout already has a hidden "more info" button, so here we just have to get it. But of course you are free to define your own layout, and put as many buttons you want, with the look&feel you want. 
+
+Now, set a listener doing something on this button:
+{{{
+btn.setOnClickListener(new View.OnClickListener() {
+	public void onClick(View v) {
+		Toast.makeText(v.getContext(), "Button clicked", Toast.LENGTH_LONG).show();
+	}
+});
+}}}
+
+If needed, you can override the onOpen and onClose methods. 
+onOpen is called when tapping an item, just before showing the bubble. 
+In our case, as our "more info" button is hidden in our layout, we show it:
+{{{
+@Override public void onOpen(ExtendedOverlayItem item){
+	super.onOpen(item);
+	mView.findViewById(R.id.bubble_moreinfo).setVisibility(View.VISIBLE);
+}
+}}}
+
+The CustomInfoWindow class is ready, we can use it. 
+In your activity, search where the ItemizedOverlayWithBubble was created:
+{{{
+ItemizedOverlayWithBubble<ExtendedOverlayItem> poiMarkers = 
+  new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, 
+    roadItems, map);
+}}}
+and give it a customized bubble: 
+{{{
+ItemizedOverlayWithBubble<ExtendedOverlayItem> poiMarkers = 
+  new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, 
+    poiItems, map, 
+    new CustomInfoWindow(map));
+}}}
+
+OK, ready, you can test it. 
+
+Next step is to open an activity on the POI, instead of a stupid Toast. 
+For that, we will need to access the POI in the CustomInfoWindow. 
+
+When you create your items, give them a reference to the POI: 
+{{{
+poiMarker.setRelatedObject(poi);
+}}}
+
+Then, in CustomInfoWindow.open(item), you can access to this reference: 
+{{{
+POI poi = (POI)item.getRelatedObject();
+}}}
+
+poi.mUrl gives the Wikipedia URL. Now, you can create a WebView activity, pass the URL in the intent. But that's just usual Android stuff, isn't it?
