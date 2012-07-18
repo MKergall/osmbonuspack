@@ -68,7 +68,7 @@ ArrayList<POI> pois = poiProvider.getPOICloseTo(startPoint, 75, 20.0);
 
 And you can test!
 
-= 5. Customizing the bubble behaviour =
+= 7. Customizing the bubble behaviour =
 Wikipedia POIs usually contain a URL to the Wikipedia page. 
 We would like to access this page from the POI bubble. 
 
