@@ -1,25 +1,43 @@
 #summary How to install the OSMBonusPack lib in your project.
 
-= Introduction =
-First of all, you must include osmdroid in your Android project. 
+= Prerequisites =
+You should be familiar with Android SDK. 
+
+In the explanations, we assume that you are using Eclipse, and that you have an Android project created. 
+
+= First steps =
+First of all, you must include osmdroid library in your Android project. 
 Refer to [http://code.google.com/p/osmdroid/ osmdroid] documentation. 
-Take care to put osmdroid.jar in a "libs" directory. 
+
+Take care to:
+ * put osmdroid.jar in a "libs" directory
+ * configure the Build Path of your project so that osmdroid.jar appears in the "Referenced Libraries"
+ * set-up the required permissions in your AndroidManifest.xml
 
 Done? OK. So, there are 2 ways to include OSMBonusPack, each one with pros and cons. 
 
 
 = 1. Simple way - Including osmbonuspack.jar =
-Assuming you are using Eclipse:
 Download the latest version of osmbonuspack.jar
+
 Copy it in the "libs" directory of your project, with osmdroid.jar. 
+
 Right-click on the project, "Build Path", "Configure Build Path...", "Add JARs...". 
-Select osmbonuspack.jar in libs, and OK. 
+
+Select osmbonuspack.jar in libs, and click OK. 
 It's added to the "Referenced Libraries", ready-to-use. 
 
-If you want to use the default resources, download and copy in your project resources the following files:
-  * drawable-mpi/bonuspack_bubble.9.png
-  * layout/bonuspack_bubble.xml
-
+If you want to use some default OSMBonusPack resources, browse the source, go to trunk/OSMBonusPackDemo and download in your project resources the following files:
+ * For a white bubble:
+   * drawable-mpi/bonuspack_bubble.9.png
+   * layout/bonuspack_bubble.xml
+ * For a dark-grey bubble:
+   * drawable-mpi/bonuspack_bubble_black.9.png
+   * layout/bonuspack_bubble_black.xml
+ * For the "more info" button:
+   * drawable/btn_moreinfo.xml
+   * drawable-mpi/moreinfo_arrow.png
+   * drawable-mpi/moreinfo_arrow_pressed.png
 
 = 2. Set-up OSMBonusPack as an Android library project = 
 Checkout OSMBonusPack project from the SVN repository and set it up as an "Android library" project in your Eclipse workspace. 
