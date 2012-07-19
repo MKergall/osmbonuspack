@@ -22,16 +22,16 @@ Migrating from Android Geocoder is a simple change of class name.
 OSMBonusPack provides a set of classes to get routes, with turn-by-turn information and route shape:
 
 RoadManagers retrieve roads from a variety of service providers. Currently supported: 
-  * [http://open.mapquestapi.com/guidance/ MapQuest Open Guidance] service
-  * and [http://project-osrm.org/ OSRM]. 
+  * MapQuestRoadManager using [http://open.mapquestapi.com/guidance/ MapQuest Open Guidance] service
+  * and OSRMRoadManager, using [http://project-osrm.org/ OSRM] service. 
 
 Result is a "Road" object, containing: 
   * the road shape, as a list of GeoPoint => RoadManager can build an osmdroid PathOverlay from this road shape, ready-to-display. 
   * turn-by-turn information, as a list of RoadNode
 
 Also provided, some route-related utilities: 
-  * a polyline encoder/decoder
-  * a polyline reducer based on Douglas-Peucker algorithm. 
+  * PolylineEncoder, a polyline encoder/decoder
+  * DouglasPeuckerReducer, a polyline reducer based on Douglas-Peucker algorithm. 
 
 
 = Overlays with cartoon-bubble =
@@ -48,8 +48,8 @@ OSMBonusPack gives a set of classes to get Points Of Interest (POIs).
 
 POIProviders retrieve POI from a variety of service providers. 
 Currently supported: 
- * Nominatim, to retrieve OpenStreetMap "features"
- * [http://www.geonames.org/export/wikipedia-webservice.html GeoNames Wikipedia] service, retrieving Wikipedia geolocalized entries
+ * NominatimPOIProvider, to retrieve OpenStreetMap "features"
+ * GeoNamesPOIProvider, using [http://www.geonames.org/export/wikipedia-webservice.html GeoNames Wikipedia] service, retrieving Wikipedia geolocalized entries
 
 Result is a list of "POI" objects containing the position of the POI, and POI information. 
 
