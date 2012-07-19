@@ -1,38 +1,40 @@
-#summary Why this BonusPack, and what does it give.
+#summary Why this "OSMBonusPack", and what does it give.
 
-OSMDroid provides an simple and efficient way to move an application from Google Maps to OpenStreetMap. OSMDroid provides:
+osmdroid is an opensource library which provides an simple and efficient way to move an application from Google Maps to OpenStreetMap. osmdroid provides:
   * the map tiles (MapView) and the usual zoom/pan tools (MapController)
   * the standard overlays (ItemizedOverlay, MyLocationOverlay,...)
   * and some additional overlays (MinimapOverlay, PathOverlay,...)
 
 However, in most map-based applications, we want more!
-So, here comes OSMDroidBonusPack . 
+So, here comes OSMBonusPack. 
 
 = Geocoding and Reverse Geocoding =
 Android provides the [http://developer.android.com/reference/android/location/Geocoder.html Geocoder] class. BUT... according to Google Maps APIs Terms of Service, it can only be used in relation with a Google map. 
 (see https://developers.google.com/maps/terms, item (g): No Use of Content without a Google Map)
 
-So, OSMDroidBonusPack provides GeocoderNominatim class, which accesses to Nominatim service: 
- * OSM Nominatim
- * MapQuest Nominatim
- * or any other Nominatim-compliant service. 
+So, OSMBonusPack provides GeocoderNominatim class, which accesses to Nominatim service: 
+ * the standard OpenStreetMap [http://wiki.openstreetmap.org/wiki/Nominatim Nominatim] service
+ * the Nominatim service hosted by [http://developer.mapquest.com/web/products/open/nominatim/ MapQuest]
+ * or any other Nominatim-compliant service (your own for instance). 
 Migrating from Android Geocoder is a simple change of class name. 
 
 = Routes and Directions = 
-OSMDroidBonusPack provides a set of classes to get routes, with turn-by-turn information and route shape:
- * RoadManagers retrieve roads from a variety of services providers. Currently supported: 
+OSMBonusPack provides a set of classes to get routes, with turn-by-turn information and route shape:
+
+RoadManagers retrieve roads from a variety of service providers. Currently supported: 
   * [http://open.mapquestapi.com/guidance/ MapQuest Open Guidance] service
   * and [http://project-osrm.org/ OSRM]. 
 
- * Result is a "Road" object, containing: 
-  * road shape, as a list of GeoPoint => RoadManager can build an osmdroid PathOverlay from this road shape, ready-to-display. 
+Result is a "Road" object, containing: 
+  * the road shape, as a list of GeoPoint => RoadManager can build an osmdroid PathOverlay from this road shape, ready-to-display. 
   * turn-by-turn information, as a list of RoadNode
- * Also provided, some route-related utilities: 
+
+Also provided, some route-related utilities: 
   * a polyline encoder/decoder
   * a polyline reducer based on Douglas-Peucker algorithm. 
 
 
-= Cartoon-bubble Overlays =
+= Overlays with cartoon-bubble =
 The InfoWindow class is a view that can be displayed on an OSMDroid map, associated to a GeoPoint. 
 Typical usage is to have cartoon-like bubble displayed when clicking an overlay item. 
 The API mimics the [https://developers.google.com/maps/documentation/javascript/reference#InfoWindow InfoWindow] class of Google Maps JavaScript API V3. 
@@ -41,14 +43,23 @@ Two standard bubble layouts are provided in the demo application, each one with 
 
 ItemizedOverlayWithBubble is an overlay that will open an InfoWindow bubble when the user taps on an item. ItemizedOverlayWithBubble can easily replace (and enhance) the ItemizedOverlayWithFocus of osmdroid. 
 
+= POIs =
+OSMBonusPack gives a set of classes to get Points Of Interest (POIs).
+
+POIProviders retrieve POI from a variety of service providers. 
+Currently supported: 
+ * Nominatim, to retrieve OpenStreetMap "features"
+ * [http://www.geonames.org/export/wikipedia-webservice.html GeoNames Wikipedia] service, retrieving Wikipedia geolocalized entries
+
+Result is a list of "POI" objects containing the position of the POI, and POI information. 
 
 = Map events handling = 
-MapEventsOverlay and MapEventsReceiver classes provide a simple way to manage single-press and long-press events somewhere on the map. 
+MapEventsOverlay and MapEventsReceiver classes provide a simple way to handle single-press and long-press events somewhere on the map. 
 
 Example: long-press on the map to define the destination, a new POI,... 
 
 = Next steps = 
  * See HowToInclude the lib in your project
- * Follow the [Tutorial_1]
+ * Follow the [Tutorial_1 Tutorials]
  * Look at (or checkout) [http://code.google.com/p/osmbonuspack/source/browse/ OSMBonusPackDemo source] to see how to use these classes in common use cases
  * Download the javadoc to get detailed information on the API. 
