@@ -68,14 +68,14 @@ Done.
 
 = 3. Showing the Route steps on the map =
 
-I'm sure you will soon want to add nice bubbles on these steps. So, let's use our ItemizedOverlayWithBubble. First, put all the resources needed for bubbles: 
+I'm sure you will soon want to add nice bubbles on these steps. So, let's use our ItemizedOverlayWithBubble. First, put all the resources needed for the standard bubble: 
  * in your res/layout: bonuspack_bubble.xml
  * in res/drawable-mpi: 
   * bonuspack_bubble.9.png
   * moreinfo_arrow.png
   * moreinfo_arrow_pressed.png
  * in res/drawable: btn_moreinfo.xml
-You will get both in OSMBonusPackDemo res files. 
+You will find all of them in OSMBonusPackDemo res directory. 
 
 Then, we can create the overlay and put it on the map:
 {{{
