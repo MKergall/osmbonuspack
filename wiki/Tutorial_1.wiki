@@ -21,6 +21,17 @@ public class MapActivity extends Activity {
 
 And you want to display a route on your map. 
 
+= Important note =
+For clarity and simplicity, in these tutorials, we do all API calls in the main thread. 
+
+Normally, for network calls, this is not recommended at all: we should use threads and asynchronous tasks. 
+Even worst, since Honeycomb SDK (3.0), it is not allowed to make a network call in the main thread (a NetworkOnMainThreadException exception will be raised). 
+
+So:
+ # For these tutorials, target an SDK earlier than 3.0
+ # Once you have played with the tutos and want to work on your real app, have a look at the OSMBonusPackDemo source code, where network calls are done in async tasks. 
+
+
 = 1. "Hello, Routing World!" =
 
 First, get a road manager:
