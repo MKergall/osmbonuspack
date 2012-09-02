@@ -25,7 +25,7 @@ And you want to display a route on your map.
 For clarity and simplicity, in these tutorials, we do all API calls in the main thread. 
 
 Normally, for network calls, this is not recommended at all: we should use threads and asynchronous tasks. 
-Even worst, since Honeycomb SDK (3.0), it is not allowed to make a network call in the main thread (a NetworkOnMainThreadException exception will be raised). 
+Even worst, since Honeycomb SDK (3.0), it is not allowed to make a network call in the main thread (thanks to the "StrictMode.ThreadPolicy" default settings, a NetworkOnMainThreadException exception will be raised). 
 
 So:
  # For these tutorials, target an SDK earlier than 3.0
