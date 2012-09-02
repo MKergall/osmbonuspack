@@ -157,4 +157,4 @@ btn.setOnClickListener(new View.OnClickListener() {
 
 That's all Folks!
 
-If you want to go further, have a look on OSMBonusPackDemo source code, and on the javadoc. 
+If you want to go further, have a look on OSMBonusPackDemo source code, and on the javadoc. You will discover some useful stuff like MapEventsOverlay/MapEventsReceiver, GeocoderNominatim, Parcelable objects, and more... 
