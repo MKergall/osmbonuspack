@@ -130,7 +130,7 @@ OK, ready, you can test it.
 
 The next step is to open an activity on the POI, instead of a stupid Toast. 
 For that, we would like to access POI information in the CustomInfoWindow. 
-This is simple: each time you create a POI item, give it a reference to the corresponding POI object: 
+There is a simple solution: each time you create a POI item, give it a reference to the corresponding POI object: 
 {{{
 poiMarker.setRelatedObject(poi);
 }}}
@@ -154,3 +154,7 @@ btn.setOnClickListener(new View.OnClickListener() {
 	}
 });
 }}}
+
+That's all Folks!
+
+If you want to go further, have a look on OSMBonusPackDemo source code, and on the javadoc. 
