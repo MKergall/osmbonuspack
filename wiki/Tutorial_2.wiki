@@ -63,10 +63,12 @@ You can do that from here: [http://www.geonames.org/login]
 Once your account is activated, just change the poiProvider calls this way:
 {{{
 GeoNamesPOIProvider poiProvider = new GeoNamesPOIProvider("YOUR_GEONAMES_ACCOUNT");
-ArrayList<POI> pois = poiProvider.getPOICloseTo(startPoint, 75, 20.0);
+BoundingBoxE6 bb = map.getBoundingBox();
+ArrayList<POI> pois = poiProvider.getPOIInside(bb, 75);
 }}}
 
 And you can test!
+
 
 = 7. Customizing the bubble behaviour =
 Wikipedia POIs usually contain a URL to the Wikipedia page. 
@@ -155,6 +157,41 @@ btn.setOnClickListener(new View.OnClickListener() {
 });
 }}}
 
-That's all Folks!
+= 8. Quick overview of the Flickr POIs =
+There is a POI provider for retrieving geolocalized Flickr photos. 
+The API is very similar to GeoNamesPOIProvider. 
+Again, you will need to obtain your own API key from Flickr - this is easy. 
+
+Then just change the poiProvider calls this way:
+
+{{{
+FlickrPOIProvider poiProvider = new FlickrPOIProvider("YOUR_FLICKR_API_KEY");
+BoundingBoxE6 bb = map.getBoundingBox();
+ArrayList<POI> pois = poiProvider.getPOIInside(bb, 50);
+}}}
+
+And test!
+
+You should have the markers, a "more info" button to go to the Flickr page, but no thumbnail... This is sad. 
+This is because we cannot load all thumbnails at once: this would take too long for the user. So the idea is to postpone thumbnail loading when the user opens the bubble. 
+
+Open again your CustomInfoWindow.onOpen method. 
+
+Retrieve the thumbNail of the current POI:
+{{{
+Bitmap thumbNail = selectedPOI.getThumbnail();
+}}}
+
+Then, put the thumbnail in the item, if not already done:
+{{{
+if (thumbNail != null && item.getImage() == null){
+	item.setImage(new BitmapDrawable(thumbNail));
+}
+}}}
+
+Much better, isn't it? 
+
+= Conclusion =
+Well, "That's all Folks!"
 
 If you want to go further, have a look on OSMBonusPackDemo source code, and on the javadoc. You will discover some useful stuff like MapEventsOverlay/MapEventsReceiver, GeocoderNominatim, Parcelable objects, and more... 
