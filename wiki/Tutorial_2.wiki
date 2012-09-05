@@ -55,7 +55,7 @@ Note the call to road.getRouteLow(), which provides a reduced version of the roa
 
 = 6. Wikipedia POIs with GeoNames =
 
-There is a POI Provider based on GeoNames service, which is able to get Wikipedia entries close to a position. 
+There is a POI Provider based on GeoNames service, which is able to get Wikipedia entries close to a position, or inside a bounding box. 
 
 This is cool, but to use it you MUST 1) create a GeoNames account, and 2) activate the free services on it. 
 You can do that from here: [http://www.geonames.org/login]
