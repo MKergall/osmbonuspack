@@ -1,4 +1,4 @@
 #summary Applications using OSMBonusPack.
 
 = Introduction =
-If you are using this pack for your application, you can let a comment. 
+If you are using or planning to use this pack for your application, you can let a comment, giving the information you want about your application. 
