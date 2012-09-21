@@ -157,17 +157,18 @@ btn.setOnClickListener(new View.OnClickListener() {
 });
 }}}
 
-= 8. Quick overview of the Flickr POIs =
-There is a POI provider for retrieving geolocalized Flickr photos. 
-The API is very similar to GeoNamesPOIProvider. 
-Again, you will need to obtain your own API key from Flickr - this is easy. 
+= 8. Quick overview of the Flickr and Picasa POIs =
+There is a POI provider for retrieving geolocalized Flickr photos, and another one for Picasa photos. 
+The API are very similar to GeoNamesPOIProvider. 
+Let's start with Flickr. 
+First, you will need to obtain your own API key from Flickr - this is easy. 
 
 Then just change the poiProvider calls this way:
 
 {{{
 FlickrPOIProvider poiProvider = new FlickrPOIProvider("YOUR_FLICKR_API_KEY");
 BoundingBoxE6 bb = map.getBoundingBox();
-ArrayList<POI> pois = poiProvider.getPOIInside(bb, 50);
+ArrayList<POI> pois = poiProvider.getPOIInside(bb, 20);
 }}}
 
 And test!
@@ -179,13 +180,13 @@ Open again your CustomInfoWindow.onOpen method.
 
 Retrieve the thumbNail of the current POI:
 {{{
-Bitmap thumbNail = selectedPOI.getThumbnail();
+Bitmap thumbnail = selectedPOI.getThumbnail();
 }}}
 
 Then, put the thumbnail in the item, if not already done:
 {{{
-if (thumbNail != null && item.getImage() == null){
-	item.setImage(new BitmapDrawable(thumbNail));
+if (thumbnail != null && item.getImage() == null){
+	item.setImage(new BitmapDrawable(thumbnail));
 }
 }}}
 
