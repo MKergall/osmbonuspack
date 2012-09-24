@@ -50,7 +50,7 @@ POIProviders retrieve POI from a variety of service providers.
 Currently supported: 
  * NominatimPOIProvider, to retrieve OpenStreetMap "features"
  * GeoNamesPOIProvider, using [http://www.geonames.org/export/wikipedia-webservice.html GeoNames Wikipedia] service, retrieving Wikipedia geolocalized entries
- * FlickrPOIProvider, using Flickr service to search among the billions of Flickr photos and retrieve most interesting geolocalized photos for an area. 
+ * FlickrPOIProvider and PicasaPOIProvider, using Flickr and Picasa services to search among the billions of Flickr and Picasa photos and retrieve geolocalized photos for an area. 
 
 Result is a list of "POI" objects containing the position of the POI, and POI information. 
 
