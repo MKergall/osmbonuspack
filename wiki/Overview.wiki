@@ -18,6 +18,9 @@ So, OSMBonusPack provides GeocoderNominatim class, which accesses to Nominatim s
  * or any other Nominatim-compliant service (your own for instance). 
 Migrating from Android Geocoder is a simple change of class name. 
 
+WARNING - WARNING - WARNING : The relevance of Nominatim service is far behind Google Geocoding service. Results are sometimes quite surprising, and there is absolutely no support for any kind of misspelling: missing letter, "street" used instead of "avenue", etc. 
+
+
 = Routes and Directions = 
 OSMBonusPack provides a set of classes to get routes, with turn-by-turn information and route shape:
 
