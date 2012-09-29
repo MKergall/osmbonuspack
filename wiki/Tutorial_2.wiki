@@ -192,6 +192,20 @@ if (thumbnail != null && item.getImage() == null){
 
 Much better, isn't it? 
 
+= 9. Creating your own bubble layout =
+Two standard layouts are provided and can be found in OSMBonusPackDemo/res/layout directory: 
+ * bonuspack_bubble.xml, which is the default layout
+ * bonuspack_bubble_black.xml
+
+You can build and use your own bubble layouts, but some components are mandatory if you want to use them with a DefaultInfoWindow: 
+ * a TextView with id: bubble_title
+ * a TextView with id: bubble_description
+ * a TextView with id: bubble_subdescription
+ * an ImageView with id: bubble_image
+Take care to respect the exact spelling of these ids. 
+If you don't need these components, each one can be in status hidden or gone. 
+
+
 = Conclusion =
 Well, "That's all Folks!"
 
