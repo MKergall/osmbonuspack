@@ -92,9 +92,9 @@ In the constructor, get the "more info" button:
 Button btn = (Button)(mView.findViewById(R.id.bubble_moreinfo));
 }}}
 
-In fact, our default bubble layouts already have a hidden "more info" button, so here we just have to get it. But of course you are free to define your own layout, and put as many buttons you want, with the look&feel you want. 
+In fact, our default bubble layouts already have a hidden "more info" button, so here we just have to get it. But of course you are free to define your own layout, and put as many buttons you want, with the look&feel you want. We will see how to do that in chapter 9. 
 
-Now, set a listener doing something on this button:
+For now, set a listener doing something on this button:
 {{{
 btn.setOnClickListener(new View.OnClickListener() {
 	public void onClick(View v) {
