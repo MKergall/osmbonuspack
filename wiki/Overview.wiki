@@ -12,13 +12,17 @@ So, here comes OSMBonusPack.
 Android provides the [http://developer.android.com/reference/android/location/Geocoder.html Geocoder] class. BUT... according to Google Maps APIs Terms of Service, it can only be used in relation with a Google map. 
 (see https://developers.google.com/maps/terms, item (g): No Use of Content without a Google Map)
 
-So, OSMBonusPack provides GeocoderNominatim class, which accesses to Nominatim service: 
- * the standard OpenStreetMap [http://wiki.openstreetmap.org/wiki/Nominatim Nominatim] service
- * the Nominatim service hosted by [http://developer.mapquest.com/web/products/open/nominatim/ MapQuest]
- * or any other Nominatim-compliant service (your own for instance). 
+If you are using osmdroid, you are probably not displaying a Google map. 
+
+So, OSMBonusPack provides GeocoderNominatim class, which accesses to a Nominatim service: 
+ * either the standard OpenStreetMap [http://wiki.openstreetmap.org/wiki/Nominatim Nominatim] service
+ * or the Nominatim service hosted by [http://developer.mapquest.com/web/products/open/nominatim/ MapQuest]
+ * or any other Nominatim-compliant service (your own installation for example). 
 Migrating from Android Geocoder is a simple change of class name. 
 
 WARNING - WARNING - WARNING : The relevance of Nominatim service is far behind Google Geocoding service. Results are sometimes quite surprising, and there is absolutely no support for any kind of misspelling: missing letter, "street" used instead of "avenue", etc. 
+
+Take that aspect into account before providing a real-life service. 
 
 
 = Routes and Directions = 
