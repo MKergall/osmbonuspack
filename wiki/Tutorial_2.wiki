@@ -23,8 +23,11 @@ NominatimPOIProvider poiProvider = new NominatimPOIProvider();
 ArrayList<POI> pois = poiProvider.getPOICloseTo(startPoint, "cinema", 50, 0.1);
 }}}
 
-The possible types of POI are the OpenStreetMap "features". 
-In OSMBonusPackDemo, you can refer to res/values/poi_tags.xml to get a list of features that are really available. 
+The possible types of POI are the OpenStreetMap "features"
+([http://wiki.openstreetmap.org/wiki/Map_Features]). 
+But this is only the theory. In pratice, either because some features are rarely described in OSM, or because of Nominatim itself, there are searches for various features that return few or no results. 
+
+You can refer to  [http://code.google.com/p/osmbonuspack/source/browse/trunk/OSMBonusPackDemo/res/values/poi_tags.xml] to get a list of features that are really - really - available through Nominatim. 
 
 Now, we build the POI markers, and put them in the overlay:
 
