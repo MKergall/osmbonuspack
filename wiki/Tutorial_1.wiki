@@ -74,6 +74,7 @@ Then set appropriate option (before getting the road):
 {{{
 	roadManager.addRequestOption("routeType=bicycle");
 }}}
+(all MapQuest options are described here: http://open.mapquestapi.com/guidance/)
 
 Done. 
 
