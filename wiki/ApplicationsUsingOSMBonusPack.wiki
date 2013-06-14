@@ -1,6 +1,8 @@
 #summary Applications using OSMBonusPack.
 
 = Introduction =
+Some statistics: the osmbonuspack library is dowloaded approximately 4 times per day. Not the demo application: the library! We haven't a clue why. 
+
 If you are using or planning to use this pack, please let a comment here, giving the information you want about your application/library/framework/project/whatever. 
 
 It will take you 2 minutes, and will provide you 2 advantages: 
