@@ -20,7 +20,7 @@ Done? OK. So, there are 2 ways to include OSMBonusPack, each one with pros and c
 
 
 = 1. Simple way - Including osmbonuspack.jar =
-[https://drive.google.com/folderview?id=0B_8VOmRyW664WXNDbjFOVjBROG8&usp=sharing Download] the latest version of osmbonuspack.jar
+[http://code.google.com/p/osmbonuspack/source/browse/#svn%2FBonusPackDownloads Download] the latest version of osmbonuspack.jar
 
 Copy it in the "libs" directory of your project, with osmdroid.jar. 
 
