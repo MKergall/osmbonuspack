@@ -1,5 +1,12 @@
-#summary One-sentence summary of this page.
+#summary BonusPack Tutorial #3: KML content.
 
 = Using KML content =
 
-Add your content here.
+[http://www.wikipedia.com/KML KML] is a de-facto standard for handling overlays on maps, from a simple list of markers, to complex structures. 
+
+Both Google Maps and Bing Maps allow people to create their "personal maps" by putting markers, lines and polygons. Such personal maps can be exported as KML content. 
+More advanced tools can be used to create and display KML content, like Google Earth or ArcGIS. 
+
+OSMBonusPack provides the basic toolbox to handle KML content. 
+
+mapsengine.google.com/map/kml?mid=z6IJfj90QEd4.kUUY9FoHFRdE
