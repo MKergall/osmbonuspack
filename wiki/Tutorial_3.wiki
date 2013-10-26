@@ -22,7 +22,11 @@ kmlOverlay = new FolderOverlay(this);
 map.getOverlays().add(kmlOverlay);
 }}}
 
-This FolderOverlay will be the container of all overlays found in the KML file. 
+This FolderOverlay will be the root container for all features that will be found in the KML file: 
+ * KML Point (marker), handled as OSMBonusPack ExtendedOverlayItem
+ * KML LineString, handled as osmdroid PathOverlay
+ * KML Polygon, handled as OSMBonusPack PolygonOverlay
+ * and KML Folder, handled as OSMBonusPack FolderOverlay, allowing to keep the hierarchical structure of the KML content. 
 
 Create a KmlProvider, the helper object that will do KML reading and parsing:
 {{{
@@ -57,4 +61,4 @@ You see nothing? Try to move your map to the right place.
 = Conclusion =
 Well, "That's all Folks!"
 
-If you want to go further, have a look on OSMBonusPackDemo/OSMNavigator source code, and on the javadoc. You will discover some useful stuff like MapEventsOverlay/MapEventsReceiver, GeocoderNominatim, Parcelable objects, and more... 
+If you want to go further, have a look on OSMBonusPackDemo/OSMNavigator source code, and on the javadoc. You will discover some useful stuff like MapEventsOverlay/MapEventsReceiver, GeocoderNominatim, PolygonOverlay, Parcelable objects, and more... 
