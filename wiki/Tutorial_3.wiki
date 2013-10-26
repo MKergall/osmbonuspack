@@ -1,5 +1,7 @@
 #summary BonusPack Tutorial #3: KML content.
 
+(We assume you followed [Tutorial_1] and [Tutorial_2])
+
 = 10. Using KML content =
 
 [http://en.wikipedia.org/wiki/Keyhole_Markup_Language KML] is a de-facto standard for handling overlays on maps, from a simple list of markers, to complex structures. 
