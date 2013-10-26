@@ -50,6 +50,11 @@ Then redraw your map view:
 map.invalidate();
 }}}
 
-Now give this a try. You see nothing? Try to move your map to the right place. 
+Now give this a try. 
+
+You see nothing? Try to move your map to the right place. 
 
 = Conclusion =
+Well, "That's all Folks!"
+
+If you want to go further, have a look on OSMBonusPackDemo/OSMNavigator source code, and on the javadoc. You will discover some useful stuff like MapEventsOverlay/MapEventsReceiver, GeocoderNominatim, Parcelable objects, and more... 
