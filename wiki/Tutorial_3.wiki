@@ -1,6 +1,6 @@
 #summary BonusPack Tutorial #3: KML content.
 
-= Using KML content =
+= 10. Using KML content =
 
 [http://en.wikipedia.org/wiki/Keyhole_Markup_Language KML] is a de-facto standard for handling overlays on maps, from a simple list of markers, to complex structures. 
 
@@ -18,8 +18,7 @@ Let see it in action. I have a Url to a KML file, and I want to show it on my OS
  * http://www.yournavigation.org/api/1.0/gosmore.php?format=kml&flat=52.215676&flon=5.963946&tlat=52.2573&tlon=6.1799
 - End of parenthesis)
 
-First, create a FolderOverlay, and add it on your map. 
-
+First, create a FolderOverlay, and add it on your map:
 {{{
 kmlOverlay = new FolderOverlay(this);
 map.getOverlays().add(kmlOverlay);
@@ -37,12 +36,12 @@ Read your KML content:
 Document kmlDoc = kmlProvider.getKml(uri);
 }}}
 
-Set a default icon for markers:
+Set a default icon for all markers:
 {{{
 Drawable defaultMarker = getResources().getDrawable(R.drawable.marker_kml_point);
 }}}
 
-And parse the KML document to build the overlays inside kmlOverlay: 
+And parse the KML document to build the overlays inside the folder overlay: 
 {{{
 Element kmlRoot = kmlDoc.getDocumentElement();
 kmlProvider.buildOverlays(kmlRoot, kmlOverlay, this, map, defaultMarker);
@@ -52,3 +51,5 @@ Then redraw your map view:
 {{{
 map.invalidate();
 }}}
+
+Now give this a try. You see nothing? Try to move your map to the right place. 
