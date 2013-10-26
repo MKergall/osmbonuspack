@@ -1,6 +1,6 @@
 #summary BonusPack Tutorial #3: KML content.
 
-(We assume you followed [Tutorial_1] and [Tutorial_2])
+(we assume you already followed [Tutorial_1] and [Tutorial_2])
 
 = 10. Using KML content =
 
