@@ -206,8 +206,4 @@ You can build and use your own bubble layouts, but some components are mandatory
 Take care to respect the exact spelling of these ids. 
 If you don't need these components, each one can be in status hidden or gone. 
 
-
-= Conclusion =
-Well, "That's all Folks!"
-
-If you want to go further, have a look on OSMBonusPackDemo/OSMNavigator source code, and on the javadoc. You will discover some useful stuff like MapEventsOverlay/MapEventsReceiver, GeocoderNominatim, the KML toolbox, Parcelable objects, and more... 
+To discover other features, look at [Tutorial_3]. 
