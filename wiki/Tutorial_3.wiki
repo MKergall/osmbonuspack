@@ -20,23 +20,35 @@ Let see it in action. I have a Url to a KML file, and I want to show it on my OS
 
 First, create a FolderOverlay, and add it on your map. 
 
+{{{
 kmlOverlay = new FolderOverlay(this);
 map.getOverlays().add(kmlOverlay);
+}}}
 
 This FolderOverlay will be the container of all overlays found in the KML file. 
 
 Create a KmlProvider, the helper object that will do KML reading and parsing:
+{{{
 KmlProvider kmlProvider = new KmlProvider();
+}}}
 
 Read your KML content: 
+{{{
 Document kmlDoc = kmlProvider.getKml(uri);
+}}}
 
 Set a default icon for markers:
+{{{
 Drawable defaultMarker = getResources().getDrawable(R.drawable.marker_kml_point);
+}}}
 
 And parse the KML document to build the overlays inside kmlOverlay: 
+{{{
 Element kmlRoot = kmlDoc.getDocumentElement();
 kmlProvider.buildOverlays(kmlRoot, kmlOverlay, this, map, defaultMarker);
+}}}
 
 Then redraw your map view:
+{{{
 map.invalidate();
+}}}
