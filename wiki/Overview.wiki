@@ -67,6 +67,13 @@ MapEventsOverlay and MapEventsReceiver classes provide a simple way to handle si
 
 Example: long-press on the map to define the destination, a new POI,... 
 
+= KML support =
+KmlProvider allows to read and parse KML content, to create related overlays. 
+
+FolderOverlay is a container for other overlays. It can contain any Overlay object - including other FolderOverlays, so it is perfect for managing easily hierarchical structures of overlays. 
+
+PolygonOverlay is a robust implementation for polygons - something lacking in osmdroid. 
+
 = Next steps = 
  * See HowToInclude the lib in your project
  * Follow the [Tutorial_1 Tutorials]
