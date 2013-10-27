@@ -14,37 +14,37 @@ Probably the most desired feature.
 OSMBonusPack provides a set of classes to get routes, with turn-by-turn information and route shape:
 
 RoadManagers retrieve roads from a variety of service providers. Currently supported: 
-  * MapQuestRoadManager using [http://open.mapquestapi.com/guidance/ MapQuest Open Guidance] service
-  * and OSRMRoadManager, using [http://project-osrm.org/ OSRM] service. 
+  * *MapQuestRoadManager* using [http://open.mapquestapi.com/guidance/ MapQuest Open Guidance] service
+  * and *OSRMRoadManager*, using [http://project-osrm.org/ OSRM] service. 
 
-Result is a "Road" object, containing: 
+Result is a *Road* object, containing: 
   * the road shape, as a list of GeoPoint => RoadManager can build an osmdroid PathOverlay from this road shape, ready-to-display. 
   * turn-by-turn information, as a list of RoadNode
 
 Also provided, very useful route-related utilities: 
-  * PolylineEncoder, a polyline encoder/decoder
-  * DouglasPeuckerReducer, a polyline reducer based on Douglas-Peucker algorithm. 
+  * *PolylineEncoder*, a polyline encoder/decoder
+  * *DouglasPeuckerReducer*, a polyline reducer based on Douglas-Peucker algorithm. 
 
 
 = Overlays with cartoon-bubble =
-The InfoWindow class is a view that can be displayed on an OSMDroid map, associated to a GeoPoint. 
+The *InfoWindow* class is a view that can be displayed on an osmdroid map, associated to a GeoPoint. 
 Typical usage is to have cartoon-like bubble displayed when clicking an overlay item. 
 The API mimics the [https://developers.google.com/maps/documentation/javascript/reference#InfoWindow InfoWindow] class of Google Maps JavaScript API V3. 
 
 Two standard bubble layouts are provided in the demo application, each one with its NinePatch background. Contributors are strongly encouraged to provide some nice alternatives... 
 
-ItemizedOverlayWithBubble is an overlay that will open an InfoWindow bubble when the user taps on an item. ItemizedOverlayWithBubble can easily replace (and enhance) the ItemizedOverlayWithFocus of osmdroid. 
+*ItemizedOverlayWithBubble* is an overlay that will open an InfoWindow bubble when the user taps on an item. ItemizedOverlayWithBubble can easily replace (and enhance) the ItemizedOverlayWithFocus of osmdroid. 
 
 = POIs =
 OSMBonusPack gives a set of classes to get Points Of Interest (POIs).
 
 POIProviders retrieve POI from a variety of service providers. 
 Currently supported: 
- * NominatimPOIProvider, to retrieve OpenStreetMap "features"
- * GeoNamesPOIProvider, using [http://www.geonames.org/export/wikipedia-webservice.html GeoNames Wikipedia] service, retrieving Wikipedia geolocalized entries
- * FlickrPOIProvider and PicasaPOIProvider, using Flickr and Picasa services to search among the billions of Flickr and Picasa photos and retrieve geolocalized photos for an area. 
+ * *NominatimPOIProvider*, to retrieve OpenStreetMap "features"
+ * *GeoNamesPOIProvider*, using [http://www.geonames.org/export/wikipedia-webservice.html GeoNames Wikipedia] service, retrieving Wikipedia geolocalized entries
+ * *FlickrPOIProvider* and *PicasaPOIProvider*, using Flickr and Picasa services to search among the billions of Flickr and Picasa photos and retrieve geolocalized photos for an area. 
 
-Result is a list of "POI" objects containing the position of the POI, and POI information. 
+Result is a list of *POI* objects containing the position of the POI, and POI information. 
 
 = Geocoding and Reverse Geocoding =
 Android provides the [http://developer.android.com/reference/android/location/Geocoder.html Geocoder] class. BUT... according to Google Maps APIs Terms of Service, it can only be used in relation with a Google map. 
