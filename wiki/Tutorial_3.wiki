@@ -27,12 +27,17 @@ map.getOverlays().add(kmlOverlay);
 This FolderOverlay will be the root container for all features that will be found in the KML file: 
  * KML Point (marker), handled as OSMBonusPack ExtendedOverlayItem
  * KML LineString, handled as osmdroid PathOverlay
- * KML Polygon, handled as OSMBonusPack PolygonOverlay
+ * KML Polygon, handled as OSMBonusPack Polygon
  * and KML Folder, handled as OSMBonusPack FolderOverlay, allowing to keep the hierarchical structure of the KML content. 
 
 Create a KmlProvider, the helper object that will do KML reading and parsing:
 {{{
 KmlProvider kmlProvider = new KmlProvider();
+}}}
+
+To ensure all items of the KML content will be displayed, set support for visibility tag to false:
+{{{
+kmlProvider.setVisibilitySupport(false);
 }}}
 
 Read your KML content: 
