@@ -29,11 +29,12 @@ Also provided, very useful route-related utilities:
 = Overlays with cartoon-bubble =
 The *InfoWindow* class is a view that can be displayed on an osmdroid map, associated to a GeoPoint. 
 Typical usage is to have cartoon-like bubble displayed when clicking an overlay item. 
-The API mimics the [https://developers.google.com/maps/documentation/javascript/reference#InfoWindow InfoWindow] class of Google Maps JavaScript API V3. 
+The API has been implemented to mimic the [https://developers.google.com/maps/documentation/javascript/reference#InfoWindow InfoWindow] class of Google Maps JavaScript API V3. It appears that it is also quite close to Google Maps Android API v2. 
 
 Two standard bubble layouts are provided in the demo application, each one with its NinePatch background. Contributors are strongly encouraged to provide some nice alternatives... 
 
-*ItemizedOverlayWithBubble* is an overlay that will open an InfoWindow bubble when the user taps on an item. ItemizedOverlayWithBubble can easily replace (and enhance) the ItemizedOverlayWithFocus of osmdroid. 
+*ItemizedOverlayWithBubble* is an overlay that opens an InfoWindow bubble when the user taps on an item. ItemizedOverlayWithBubble can easily replace (and enhance) the ItemizedOverlayWithFocus of osmdroid. 
+It is quite close to the Marker of Google Maps Android API v2. 
 
 = POIs =
 OSMBonusPack gives a set of classes to get Points Of Interest (POIs).
