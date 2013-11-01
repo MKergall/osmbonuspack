@@ -70,7 +70,7 @@ Example: long-press on the map to define the destination, a new POI,...
 = Additional Overlays =
 *FolderOverlay* is a container for other overlays. It can contain any Overlay object - including other FolderOverlays, so it is perfect for managing easily hierarchical structures of overlays. 
 
-*PolygonOverlay* is a robust implementation for polygons - something lacking in osmdroid. 
+*Polygon* is a robust implementation for polygons - - something lacking in osmdroid - with an API as close as possible to Google Maps v2 equivalent. 
 
 = KML support =
 *KmlProvider* allows to read and parse KML content, to create related overlays. It makes heavy use of FolderOverlay to keep KML structure. 
