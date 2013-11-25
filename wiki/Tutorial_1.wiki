@@ -133,7 +133,7 @@ nodeMarker.setSubDescription(road.getLengthDurationText(node.mLength, node.mDura
 
 And put an icon showing the maneuver at this step:
 {{{
-Drawable icon = getResources().getDrawable(R.drawable.icon_continue);
+Drawable icon = getResources().getDrawable(R.drawable.ic_continue);
 nodeMarker.setImage(icon);
 }}}
 
