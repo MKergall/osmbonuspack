@@ -35,7 +35,7 @@ for (POI poi:pois){
 					poi.mType, poi.mDescription, 
 					poi.mLocation, map.getContext());
 		Drawable poiMarker = getResources().getDrawable(R.drawable.marker_poi_default);
-		poiItem.setMarker(marker);
+		poiItem.setMarker(poiMarker);
 		poiItem.setMarkerHotspot(OverlayItem.HotspotPlace.CENTER);
 		if (poi.mThumbnail != null){
 			poiItem.setImage(new BitmapDrawable(poi.mThumbnail));
