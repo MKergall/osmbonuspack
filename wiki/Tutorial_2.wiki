@@ -11,7 +11,7 @@ OpenStreetMap contains a lot of POIs, and Nominatim service allows to search for
 As for road nodes, in the onCreate() method of the activity, we add an itemized overlay: 
 {{{
 final ArrayList<ExtendedOverlayItem> poiItems = new ArrayList<ExtendedOverlayItem>();
-poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, 
+ItemizedOverlayWithBubble<ExtendedOverlayItem> poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, 
 				poiItems, map);
 map.getOverlays().add(poiMarkers);
 }}}
