@@ -31,16 +31,16 @@ Now, we build the POI markers, and put them in the overlay:
 
 {{{
 for (POI poi:pois){
-		ExtendedOverlayItem poiMarker = new ExtendedOverlayItem(
+		ExtendedOverlayItem poiItem = new ExtendedOverlayItem(
 					poi.mType, poi.mDescription, 
 					poi.mLocation, map.getContext());
-		Drawable marker = getResources().getDrawable(R.drawable.marker_poi_default);
-		poiMarker.setMarker(marker);
-		poiMarker.setMarkerHotspot(OverlayItem.HotspotPlace.CENTER);
-		if (poi.mIcon != null){
-			poiMarker.setImage(new BitmapDrawable(poi.mIcon));
+		Drawable poiMarker = getResources().getDrawable(R.drawable.marker_poi_default);
+		poiItem.setMarker(marker);
+		poiItem.setMarkerHotspot(OverlayItem.HotspotPlace.CENTER);
+		if (poi.mThumbnail != null){
+			poiItem.setImage(new BitmapDrawable(poi.mThumbnail));
 		}
-		poiMarkers.addItem(poiMarker);
+		poiMarkers.addItem(poiItem);
 }
 }}}
 
