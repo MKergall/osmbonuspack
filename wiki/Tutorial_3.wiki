@@ -25,7 +25,7 @@ KmlProvider kmlProvider = new KmlProvider();
 
 Then you can use it to read and parse your KML content:
 {{{
-KmlObject kmlRoot = kmlProvider.parse(url);
+KmlObject kmlRoot = kmlProvider.parseUrl(url);
 }}}
 
 The whole KML structure is now contained in this kmlRoot. Don't hesitate to have a look at [http://code.google.com/p/osmbonuspack/source/browse/trunk/OSMBonusPack/src/org/osmdroid/bonuspack/kml/KmlObject.java KmlObject] class to understand its logic. It's quite simple, and you will need to understand it if you want to go further and manipulate your KML structure. 
