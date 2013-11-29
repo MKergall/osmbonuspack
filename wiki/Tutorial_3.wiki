@@ -2,14 +2,14 @@
 
 (we assume you already followed [Tutorial_1] and [Tutorial_2])
 
-= 10. Using KML content =
+= 10. Working with KML content =
 
 [http://en.wikipedia.org/wiki/Keyhole_Markup_Language KML] is a de-facto standard for handling overlays on maps, from a simple list of markers, to complex structures. 
 
 Both Google Maps and Bing Maps allow people to create their "personal maps" by putting markers, lines and polygons. Such personal maps can be exported as KML content. 
 More advanced tools can be used to create and display KML content, like Google Earth or ArcGIS Explorer. 
 
-OSMBonusPack provides the basic toolbox to handle KML content. 
+OSMBonusPack provides the basic toolbox to handle KML content: read (from a url or a local file), save locally, and edit. 
 
 Let see it in action. I have a Url to a KML file, and I want to show it on my OSM map. 
 
