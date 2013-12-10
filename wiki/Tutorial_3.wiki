@@ -64,7 +64,7 @@ You see nothing? Try to move your map at the right place. Or set automatically t
 map.zoomToBoundingBox(kmlRoot.mBB);
 }}}
 
-11. Grabbing overlays to KML
+= 11. Grabbing overlays to KML
 TODO...
 
 = Conclusion =
