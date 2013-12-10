@@ -2,7 +2,7 @@
 
 (we assume you already followed [Tutorial_1] and [Tutorial_2])
 
-= 10. Working with KML content =
+= 10. Loading KML content =
 
 [http://en.wikipedia.org/wiki/Keyhole_Markup_Language KML] is a de-facto standard for handling overlays on maps, from a simple list of markers, to complex structures. 
 
@@ -63,6 +63,9 @@ You see nothing? Try to move your map at the right place. Or set automatically t
 {{{
 map.zoomToBoundingBox(kmlRoot.mBB);
 }}}
+
+11. Grabbing overlays to KML
+TODO...
 
 = Conclusion =
 Well, "That's all Folks!"
