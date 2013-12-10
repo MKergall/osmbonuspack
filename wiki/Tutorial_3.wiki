@@ -65,7 +65,7 @@ map.zoomToBoundingBox(kmlRoot.mBB);
 }}}
 
 = 11. Grab overlays in KML structure, save KML locally =
-You can "grab" an overlay and add it in an existing KML structure. 
+You can "grab" an overlay and add it in an existing KML folder. 
 For example, we can grab the route shape overlay we built in chapter 1: 
 {{{
 kmlRoot.addOverlay(roadOverlay, kmlProvider);
