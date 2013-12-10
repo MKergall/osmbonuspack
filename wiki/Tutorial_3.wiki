@@ -64,8 +64,25 @@ You see nothing? Try to move your map at the right place. Or set automatically t
 map.zoomToBoundingBox(kmlRoot.mBB);
 }}}
 
-= 11. Grabbing overlays to KML =
-TODO...
+= 11. Grab overlays in KML structure, save KML locally =
+You can "grab" an overlay and add it in an existing KML structure. 
+For example, we can grab the route shape overlay we built in chapter 1: 
+{{{
+kmlRoot.addOverlay(roadOverlay, kmlProvider);
+}}}
+
+This is working for Polyline overlays, but also for ItemizedOverlayWithBubble. So let's grab all road nodes: 
+{{{
+kmlRoot.addOverlay(roadNodes, kmlProvider);
+}}}
+
+And we can save the final result locally, in a KML file:
+{{{
+File localFile = kmlProvider.getDefaultPathForAndroid("my_routes.kml");
+kmlProvider.saveAsKML(localFile, kmlRoot);
+}}}
+The default path for KML files is in the external storage, in a "kml" directory. 
+Now, you have a "my_routes.kml" file, containing the whole KML content loaded from a url in chapter 10, plus the route shape and route nodes of chapter 1. 
 
 = Conclusion =
 Well, "That's all Folks!"
