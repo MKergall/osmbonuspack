@@ -133,7 +133,7 @@ nodeMarker.setDescription(node.mInstructions);
 
 Set the bubble sub-description with the length and duration of the step:
 {{{
-nodeMarker.setSubDescription(road.getLengthDurationText(node.mLength, node.mDuration));
+nodeMarker.setSubDescription(Road.getLengthDurationText(node.mLength, node.mDuration));
 }}}
 
 And put an icon showing the maneuver at this step:
