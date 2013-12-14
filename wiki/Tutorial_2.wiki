@@ -108,7 +108,7 @@ If needed, you can override the onOpen and onClose methods.
 onOpen is called when tapping an item, just before showing the bubble. 
 In our case, as our "more info" button is hidden in our layout, we show it:
 {{{
-@Override public void onOpen(ExtendedOverlayItem item){
+@Override public void onOpen(Object item){
 	super.onOpen(item);
 	mView.findViewById(R.id.bubble_moreinfo).setVisibility(View.VISIBLE);
 }
