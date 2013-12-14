@@ -98,8 +98,8 @@ In fact, our default bubble layouts already have a hidden "more info" button, so
 For now, set a listener doing something on this button:
 {{{
 btn.setOnClickListener(new View.OnClickListener() {
-	public void onClick(View v) {
-		Toast.makeText(v.getContext(), "Button clicked", Toast.LENGTH_LONG).show();
+	public void onClick(View view) {
+		Toast.makeText(view.getContext(), "Button clicked", Toast.LENGTH_LONG).show();
 	}
 });
 }}}
@@ -141,7 +141,8 @@ poiMarker.setRelatedObject(poi);
 Define "POI selectedPoi" as a member of your CustomInfoWindow. 
 Then, in CustomInfoWindow.open(item), you can access to the reference and update the selectedPoi: 
 {{{
-selectedPoi = (POI)item.getRelatedObject();
+ExtendedOverlayItem eItem = (ExtendedOverlayItem)item;
+selectedPoi = (POI)eItem.getRelatedObject();
 }}}
 
 selectedPoi.mUrl contains the Wikipedia URL. 
