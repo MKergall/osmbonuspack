@@ -43,7 +43,7 @@ FolderOverlay kmlOverlay = (FolderOverlay)kmlRoot.buildOverlays(this, map, defau
 
 Yes, this is doing the job. This FolderOverlay will be the container for all overlays that will be found in the KML structure: 
  * KML Point, handled as an OSMBonusPack ItemizedOverlayWithBubble
- * KML LineString, handled as osmdroid PathOverlay
+ * KML LineString, handled as OSMBonusPack Polyline
  * KML Polygon, handled as OSMBonusPack Polygon
  * and KML Folder, handled as OSMBonusPack FolderOverlay, allowing to keep the hierarchical structure of the KML structure. 
 
