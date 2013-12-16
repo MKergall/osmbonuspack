@@ -178,18 +178,18 @@ And test!
 You should have the markers, a "more info" button to go to the Flickr page, but no thumbnail... This is sad. 
 This is because we cannot load all thumbnails at once: this would take too long for the user. So the idea is to postpone thumbnail loading when the user opens the bubble. 
 
+In addition, we will do that in an async task, to avoid blocking the user interface. Luckily, POI objects have a method to retrieve their thumbnail image in an async task. 
+
 Open again your CustomInfoWindow.onOpen method. 
 
-Retrieve the thumbNail of the current POI:
+We first have to retrieve the target image view in which the image will be displayed:
 {{{
-Bitmap thumbnail = selectedPoi.getThumbnail();
+ImageView imageView = (ImageView)mView.findViewById(R.id.bubble_image);
 }}}
 
-Then, put the thumbnail in the item, if not already done:
+And then we call the async image fetching:
 {{{
-if (thumbnail != null && eItem.getImage() == null){
-	eItem.setImage(new BitmapDrawable(thumbnail));
-}
+selectedPoi.fetchThumbnailOnThread(imageView);
 }}}
 
 Much better, isn't it? 
