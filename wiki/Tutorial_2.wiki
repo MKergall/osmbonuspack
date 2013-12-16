@@ -182,13 +182,13 @@ Open again your CustomInfoWindow.onOpen method.
 
 Retrieve the thumbNail of the current POI:
 {{{
-Bitmap thumbnail = selectedPOI.getThumbnail();
+Bitmap thumbnail = selectedPoi.getThumbnail();
 }}}
 
 Then, put the thumbnail in the item, if not already done:
 {{{
-if (thumbnail != null && item.getImage() == null){
-	item.setImage(new BitmapDrawable(thumbnail));
+if (thumbnail != null && eItem.getImage() == null){
+	eItem.setImage(new BitmapDrawable(thumbnail));
 }
 }}}
 
