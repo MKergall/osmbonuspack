@@ -65,7 +65,7 @@ Once your account is activated, just change the poiProvider calls this way:
 {{{
 GeoNamesPOIProvider poiProvider = new GeoNamesPOIProvider("YOUR_GEONAMES_ACCOUNT");
 BoundingBoxE6 bb = map.getBoundingBox();
-ArrayList<POI> pois = poiProvider.getPOIInside(bb, 75);
+ArrayList<POI> pois = poiProvider.getPOICloseTo(startPoint, 30, 20.0);
 }}}
 
 And you can test!
