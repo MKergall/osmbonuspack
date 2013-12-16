@@ -131,7 +131,7 @@ ItemizedOverlayWithBubble<ExtendedOverlayItem> poiMarkers =
 
 OK, ready, you can test it. 
 
-The next step is to open an activity on the POI, instead of a stupid Toast. 
+The next step is to open an activity on the POI, instead of this useless Toast. 
 For that, we would like to access POI information in the CustomInfoWindow. 
 There is a simple solution: each time you create a POI item, give it a reference to the corresponding POI object: 
 {{{
@@ -139,7 +139,7 @@ poiMarker.setRelatedObject(poi);
 }}}
 
 Define "POI selectedPoi" as a member of your CustomInfoWindow. 
-Then, in CustomInfoWindow.open(item), you can access to the reference and update the selectedPoi: 
+Then, in CustomInfoWindow.onOpen(item), you can access to the reference and update the selectedPoi: 
 {{{
 ExtendedOverlayItem eItem = (ExtendedOverlayItem)item;
 selectedPoi = (POI)eItem.getRelatedObject();
