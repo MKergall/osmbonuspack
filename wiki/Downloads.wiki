@@ -1,0 +1,7 @@
+#summary About Downloads location
+
+Following new Google code plan, to block the standard Downloads feature, the project downloads are now hosted in the Source tab, in a dedicated project <a href="http://code.google.com/p/osmbonuspack/source/browse/#svn%2FBonusPackDownloads">BonusPackDownloads</a>. 
+
+This is the less bad option we found (after experiencing the Google Drive option, which was just irrelevant when using an Android device to download an application...). 
+
+Better ideas will be welcomed. 
