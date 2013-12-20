@@ -16,6 +16,7 @@ Let see it in action. I have a Url to a KML file, and I want to show it on my OS
 (Parenthesis - If you don't have such Url, pick one of those:
  * Paris Tour: http://mapsengine.google.com/map/kml?mid=z6IJfj90QEd4.kUUY9FoHFRdE
  * A route in Netherlands: http://www.yournavigation.org/api/1.0/gosmore.php?format=kml&flat=52.215676&flon=5.963946&tlat=52.2573&tlon=6.1799
+ * Or a message in the desert: http://mapsengine.google.com/map/kml?mid=z6IJfj90QEd4.kcfEKhi8r5LQ
 End of parenthesis)
 
 First of all, you need a KmlDocument: 
