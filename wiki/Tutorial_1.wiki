@@ -71,10 +71,13 @@ Okay, now refresh the map:
 
 - Okay, but I wanted this route for bicycles... 
 
-- First, change to MapQuestRoadManager, as it supports bicycle routes. One word to change, not too complicated:
+- First, change to MapQuestRoadManager, as it supports bicycle routes. Bad news, MapQuest service now requires this API key, so you will also have to register at http://developer.mapquest.com, and set-up an API key. 
+
+Then, in the code, just few changes, not too complicated:
 {{{
-	RoadManager roadManager = new MapQuestRoadManager();
+	RoadManager roadManager = new MapQuestRoadManager("YOUR MAPQUEST API KEY");
 }}}
+
 Then set appropriate option (before getting the road):
 {{{
 	roadManager.addRequestOption("routeType=bicycle");
