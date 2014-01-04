@@ -26,12 +26,12 @@ KmlDocument kmlDocument = new KmlDocument();
 
 Then you can use it to read and parse your KML content:
 {{{
-KmlObject result = kmlDocument.parseUrl(url);
+kmlDocument.parseUrl(url);
 }}}
 
 This KmlDocument now contains the whole KML Document. 
-In particular, it contains a KmlObject: kmlRoot, which is the entry point to the KML hierarchy. 
-Don't hesitate to have a look at [http://code.google.com/p/osmbonuspack/source/browse/trunk/OSMBonusPack/src/org/osmdroid/bonuspack/kml/KmlObject.java KmlObject] class to understand its logic. It's quite simple, and you will need to understand it if you want to go further and manipulate your KML structure. 
+In particular, it contains a KmlFeature: kmlRoot, which is the entry point to the KML hierarchy. 
+Don't hesitate to have a look at [http://code.google.com/p/osmbonuspack/source/browse/trunk/OSMBonusPack/src/org/osmdroid/bonuspack/kml/KmlFeature.java KmlFeature] class to understand its logic. It's quite simple, and you will need to understand it if you want to go further and manipulate your KML structure. 
 
 But for now, we mainly wish to see the graphics on the screen. 
 So, set a default marker icon for all points:
