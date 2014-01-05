@@ -75,7 +75,7 @@ Example: long-press on the map to define the destination, a new POI,...
 
 
 = KML support =
-*KmlDocument* and *KmlObject* are the building blocks to read and parse KML content, to build corresponding overlays, to convert overlays as KML content, and to save KML documents locally. 
+*KmlDocument* and *KmlFeature* are the building blocks to read and parse KML content, to build corresponding overlays, to convert overlays as KML content, and to save KML documents locally. 
 
 
 = Next steps = 
