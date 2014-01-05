@@ -14,7 +14,7 @@ OSMBonusPack jars from v4.0 are based on osmdroid v4.0.
 Take care to:
  * put osmdroid.jar in a "libs" directory
  * configure the Build Path of your project so that osmdroid.jar appears in the "Referenced Libraries"
- * set-up the required permissions in your AndroidManifest.xml
+ * set-up the permissions required by osmdroid in your AndroidManifest.xml (OSMBonusPack doesn't requires anything more than osmdroid). 
 
 Done? OK. So, there are 2 ways to include OSMBonusPack, each one with pros and cons. 
 
