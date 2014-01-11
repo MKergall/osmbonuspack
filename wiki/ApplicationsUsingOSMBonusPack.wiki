@@ -8,5 +8,3 @@ If you are using or planning to use this pack, please let a comment here, giving
 It will take you 2 minutes, and will provide you 2 advantages: 
   * Advertisement about your application (for free!)
   * Help the (reduced) OSMBonusPack development team to remain motivated for working on this project, providing support and improvements (for free!). 
-
-(the conclusion is that OSMBonusPack is a "commentware", not a "beerware" - as I don't like beer. It could be a "ciderware", but commentware method seems really simpler)
