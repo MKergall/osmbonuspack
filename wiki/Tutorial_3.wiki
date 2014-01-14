@@ -62,7 +62,7 @@ map.invalidate();
 
 Now give this a try. 
 
-You see nothing? Try to move your map at the right place. Or set automatically the view on the whole stuff:
+You see nothing? Try to move your map at the right place. Or set automatically the view on the whole stuff, using the bounding box which is maintained up-to-date:
 {{{
 map.zoomToBoundingBox(kmlDocument.kmlRoot.mBB);
 }}}
@@ -81,12 +81,12 @@ kmlDocument.kmlRoot.addOverlay(roadNodes, kmlDocument);
 
 And we can save the final result locally, in a KML file:
 {{{
-File localFile = kmlDocument.getDefaultPathForAndroid("my_routes.kml");
+File localFile = kmlDocument.getDefaultPathForAndroid("my_route.kml");
 kmlDocument.saveAsKML(localFile);
 }}}
 
 The default path for KML files is in the external storage, in a "kml" directory. 
-Now, you have a "my_routes.kml" file, containing the whole KML content loaded from a url in chapter 10, plus the route shape and route nodes of chapter 1. 
+Now, you have a "my_route.kml" file, containing the whole KML content loaded from a url in chapter 10, plus the route shape and route nodes of chapter 1. 
 
 = Conclusion =
 Well, "That's all Folks!"
