@@ -23,7 +23,18 @@ Unsupported objects are just ignored, without raising an error.
 
 *NetworkLink* is handled at loading, but converted to a regular Folder. The content of the related file is completely integrated into the folder hierarchy: the link information is lost, styles of both files are merged. 
 
-For all Geometry: extrude, altitudeMode and tesselate (everything related to 3D display) are not supported. Altitude is kept as is. 
+For all supported *Feature*, supported attributes/elements are:
+ * id
+ * name
+ * description (with no warranty about what happens if you put HTML, JavaScript or CSS inside)
+ * visibility
+ * open
+ * styleUrl: references to external files are not handled. 
+ * ExtendedData: see details below
+
+
+For all supported *Geometry*: 
+ * extrude, altitudeMode and tesselate (everything related to 3D display) are not supported. Altitude is kept as is. 
 
 *Polygon*: 
  * innerBoundaryIs (holes) are not supported. 
@@ -34,6 +45,11 @@ For all Geometry: extrude, altitudeMode and tesselate (everything related to 3D 
  * href: only full HTTP addresses are supported (no local file, no relative path). 
  * heading is not supported. 
  * hotSpot is not supported. Hotspot will always be bottom-center. 
+
+*PolyStyle*:
+ * fill and outline are not supported. Polyline is always filled and outlined. 
+
+*LineStyle*: none of "gx:" elements are supported. 
 
 
 *ExtendedData*: 
