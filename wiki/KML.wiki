@@ -10,6 +10,10 @@ From an end-user point of view:
  * When using Google Maps Engine LITE (the Google Maps Web interface to create personal maps), anything you can create as KML will be supported. 
  * But if you created your KML content with advanced tools like Google Earth or ArcGIS, find below the details about what is supported - and what is not. 
 
+
+If there is an unsupported feature that is key for you, don't hesitate to create an Issue in the Issues tab, explaining your need. We will see if we can add it to the roadmap. 
+
+
 = Details =
 
 This explanation assumes you know KML concepts. 
