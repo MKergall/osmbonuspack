@@ -1,12 +1,14 @@
 #summary KML handling in OSMBonusPack - details about what is supported and what is not.
 
+<wiki:toc max_depth="2" />
+
 = Introduction =
 
 OSMBonusPack implements a subset of KML features. 
 
 From an end-user point of view: 
- * Anything you can do with Google Maps Engine LITE (the Web) is supported. 
- * But if you created your KML content with advanced tools like Google Earth or ArcGIS, then find below the details of what is supported - and what is not. 
+ * When using Google Maps Engine LITE (the Google Maps Web interface to create personal maps), anything you can create as KML will be supported. 
+ * But if you created your KML content with advanced tools like Google Earth or ArcGIS, find below the details about what is supported - and what is not. 
 
 = Details =
 
@@ -19,10 +21,6 @@ Supported objects are:
 Unsupported objects are just ignored, without raising an error. 
 
 
-*Document* is loaded and then handled as a Folder. When saving, the root folder is saved as a Document. 
-
-*NetworkLink* is handled at loading, but converted to a regular Folder. The content of the related file is completely integrated into the folder hierarchy: the link information is lost, styles of both files are merged. 
-
 For all supported *Feature*, supported attributes/elements are:
  * id
  * name
@@ -32,27 +30,48 @@ For all supported *Feature*, supported attributes/elements are:
  * styleUrl: references to external files are not handled. 
  * ExtendedData: see details below
 
+== Document ==
+
+Document is loaded and then handled as a Folder. 
+When saving, the root folder is saved as a Document. 
+
+== NetworkLink ==
+
+NetworkLink is handled at loading, but converted to a regular Folder. The content of the related file is completely integrated into the folder hierarchy: the link information is lost, styles of both files are merged. 
+
+== Geometry ==
 
 For all supported *Geometry*: 
  * extrude, altitudeMode and tesselate (everything related to 3D display) are not supported. Altitude is kept as is. 
 
-*Polygon*: 
+
+== Polygon ==
+
  * innerBoundaryIs (holes) are not supported. 
 
-*Style*: inline styles are supported at loading, and converted to shared styles. 
 
-*IconStyle*: 
+== Style ==
+
+Inline styles are supported at loading, and converted to shared styles. 
+
+== IconStyle ==
+
  * href: only full HTTP addresses are supported (no local file, no relative path). 
  * heading is not supported. 
  * hotSpot is not supported. Hotspot will always be bottom-center. 
 
-*PolyStyle*:
+
+== PolyStyle ==
+
  * fill and outline are not supported. Polyline is always filled and outlined. 
 
-*LineStyle*: none of "gx:" elements are supported. 
+==  LineStyle ==
+
+None of "gx:" elements are supported. 
 
 
-*ExtendedData*: 
+== ExtendedData ==
+
  * *Data* are supported. 
  * *SimpleData* are supported, but with no handling of SchemaData, and no control of the Schema: all values are handled as Java Strings. When saving, they will be saved as Data. 
  * There is no support for ExtendedData using other namespaces. 
