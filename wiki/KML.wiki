@@ -6,48 +6,49 @@ OSMBonusPack implements a subset of KML features.
 
 From an end-user point of view: 
  * Anything you can do with Google Maps Engine LITE (the Web) is supported. 
- * But if you created your KML content with advanced tools like Google Earth or ArcGIS, then find below the details of what is supported. 
+ * But if you created your KML content with advanced tools like Google Earth or ArcGIS, then find below the details of what is supported - and what is not. 
 
 = Details =
 
-Supported objects:
+Supported objects are:
  * Features: Document, Folder, NetworkLink, Placemark
  * Geometry: Point, LineString, Polygon
  * Style
  * ColorStyle: LineStyle, PolyStyle, IconStyle
 
-All unsupported objects are just ignored, without raising an error. 
+Unsupported objects are just ignored, without raising an error. 
 
 
-*Document* is loaded and handled as a Folder. When saving, the root folder is saved as a Document. 
+*Document* is loaded and then handled as a Folder. When saving, the root folder is saved as a Document. 
 
-*NetworkLink* is only handled at loading, and converted to a Folder. The content of the related file is completely integrated into the folder hierarchy: the link information is lost, styles of both files are merged. 
+*NetworkLink* is handled at loading, but converted to a regular Folder. The content of the related file is completely integrated into the folder hierarchy: the link information is lost, styles of both files are merged. 
 
 For all Geometry: extrude, altitudeMode and tesselate (everything related to 3D display) are not supported. Altitude is kept as is. 
 
 *Polygon*: 
  * innerBoundaryIs (holes) are not supported. 
 
-*Style*: inline styles are supported at loading, but converted to shared styles. 
+*Style*: inline styles are supported at loading, and converted to shared styles. 
 
 *IconStyle*: 
- * only href to full HTTP addresses are supported (no local file, no relative path). 
+ * href: only full HTTP addresses are supported (no local file, no relative path). 
  * heading is not supported. 
  * hotSpot is not supported. Hotspot will always be bottom-center. 
 
 
 *ExtendedData*: 
  * *Data* are supported. 
- * *SimpleData* are supported, but with no handling of SchemaData, and no control of the Schema: all values are handled as Java Strings. When saving, they will be stored as Data. 
+ * *SimpleData* are supported, but with no handling of SchemaData, and no control of the Schema: all values are handled as Java Strings. When saving, they will be saved as Data. 
  * There is no support for ExtendedData using other namespaces. 
 
 
 = Limits =
 
-There is no hard-coded limit in the lib, for instance on the number or level of folders, number of placemarks, number of coordinates, and so on. 
+There is no hard-coded limit in the lib, for instance on the number of folders, levels of folders, number of placemarks, number of coordinates, and so on. 
 So the only technical limit will be the memory heap. 
 
-Unfortunately, on Android, memory heap available to an application is small: around 50Mb - when it can be 1Gb or more on a PC. 
-As OSMBonusPack handles KML entirely in memory, memory is the real limit. 
+Unfortunately, on Android, the memory heap available to an application is small: around 50Mb - when it is usually above 1Gb on a PC. 
+And as OSMBonusPack handles KML entirely in memory, memory is the real limit. 
 
 In practice, you can reasonnably plan to manipulate KML files up to 1Mb (loading, displaying, editing, saving). 
+But with a 10Mb file, you will certainly encounter crashes due to OutOfMemory exceptions. 
