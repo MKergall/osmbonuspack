@@ -79,7 +79,7 @@ None of "gx:" elements are supported.
 There is no hard-coded limit in the lib, for instance on the number of folders, levels of folders, number of placemarks, number of coordinates, and so on. 
 So the only technical limit will be the memory heap. 
 
-Unfortunately, on Android, the memory heap available to an application is small: around 50Mb - when it is usually above 1Gb on a PC. 
+Unfortunately, on Android, the memory heap available to an application is ridiculously small: something between 20Mb and 50Mb - when it is usually above 1Gb on a PC. 
 And as OSMBonusPack handles KML entirely in memory, memory is the real limit. 
 
 In practice, you can reasonnably plan to manipulate KML files up to 1Mb (loading, displaying, editing, saving). 
