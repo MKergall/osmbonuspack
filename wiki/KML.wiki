@@ -19,7 +19,6 @@ If there is an unsupported feature that is key for you, don't hesitate to create
 This explanation assumes you know KML concepts. 
 See the [https://developers.google.com/kml/documentation/kmlreference KML Reference] if necessary. 
 
-
 == Supported objects ==
 
 Supported objects are:
@@ -47,6 +46,9 @@ When saving, the root folder is saved as a Document.
 == !NetworkLink ==
 NetworkLink is handled at loading, but converted to a regular Folder. The content of the related file is completely integrated into the folder hierarchy: the link information is lost, styles of both files are merged. 
 
+Supported Link elements: 
+ * href: only full HTTP addresses are supported (no local file, no relative path). 
+
 == Geometry ==
 For all supported *Geometry*: 
  * extrude, altitudeMode and tesselate (everything related to 3D display) are not supported. Altitude is kept as is. 
@@ -70,14 +72,19 @@ Inline styles are supported at loading, and converted to shared styles.
 None of "gx:" elements are supported. 
 
 == !ExtendedData ==
- * *Data* are supported. 
+ * *Data* are supported, with their name and value. displayName is not handled. 
  * *SimpleData* are supported, but with no handling of SchemaData, and no control of the Schema: all values are handled as Java Strings. When saving, they will be saved as Data. 
  * There is no support for ExtendedData using other namespaces. 
+
+== Other aspects ==
+
+KMZ files are not supported. But you can easily convert between KML and KMZ with Android zip APIs (ZipFile, ZipInputStream,...). 
+
 
 = Limits =
 
 There is no hard-coded limit in the lib, for instance on the number of folders, levels of folders, number of placemarks, number of coordinates, and so on. 
-So the only technical limit will be the memory heap. 
+So the only technical limit is the memory heap. 
 
 Unfortunately, on Android, the memory heap available to an application is ridiculously small: something between 20Mb and 50Mb - when it is usually above 1Gb on a PC. 
 And as OSMBonusPack handles KML entirely in memory, memory is the real limit. 
