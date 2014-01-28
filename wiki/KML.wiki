@@ -47,7 +47,7 @@ When saving, the root folder is saved as a Document.
 NetworkLink is handled at loading, but converted to a regular Folder. The content of the related file is completely integrated into the folder hierarchy: the link information is lost, styles of both files are merged. 
 
 Supported Link elements: 
- * href: only full HTTP addresses are supported (no local file, no relative path). 
+ * href: only full HTTP addresses are supported (no local file, no relative path). _Support for local files on its way, will be in next version_
 
 == Geometry ==
 For all supported *Geometry*: 
@@ -55,18 +55,18 @@ For all supported *Geometry*:
 
 
 == Polygon ==
- * innerBoundaryIs (holes) are not supported. 
+ * innerBoundaryIs (holes) are not supported. _Support for holes on its way, will be in next version_
 
 == Style ==
 Inline styles are supported at loading, and converted to shared styles. 
 
 == !IconStyle ==
- * href: only full HTTP addresses are supported (no local file, no relative path). 
+ * href: only full HTTP addresses are supported (no local file, no relative path). _Support for local files on its way, will be in next version_
  * heading is not supported. 
  * hotSpot is not supported. Hotspot will always be bottom-center. 
 
 == !PolyStyle ==
- * fill and outline are not supported. Polyline is always filled and outlined. 
+ * fill and outline are not supported, and considered as "true". 
 
 ==  !LineStyle ==
 None of "gx:" elements are supported. 
