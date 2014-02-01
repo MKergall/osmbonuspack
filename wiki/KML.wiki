@@ -22,7 +22,7 @@ See the [https://developers.google.com/kml/documentation/kmlreference KML Refere
 == Supported objects ==
 
 Supported objects are:
- * Features: Document, Folder, NetworkLink, Placemark
+ * Features: Document, Folder, NetworkLink, Placemark, GroundOverlay
  * Geometry: Point, LineString, Polygon
  * Style
  * ColorStyle: LineStyle, PolyStyle, IconStyle
@@ -56,6 +56,9 @@ For all supported *Geometry*:
 
 == Polygon ==
  * innerBoundaryIs (holes) are now supported. 
+
+== !GroundOverlay ==
+_Currently under development, will be available in v4.2.7_
 
 == Style ==
 Inline styles are supported at loading, and converted to shared styles. 
