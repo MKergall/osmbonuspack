@@ -1,5 +1,7 @@
 #summary Why this "OSMBonusPack", and what does it give.
 
+<wiki:toc max_depth="1" />
+
 osmdroid is an opensource library which provides a simple and efficient way to port an Android application from Google Maps to OpenStreetMap. osmdroid provides:
   * the map tiles (MapView) and the usual zoom/pan tools (MapController)
   * the standard overlays (ItemizedOverlay, MyLocationOverlay,...)
@@ -26,7 +28,7 @@ Also provided, very useful route-related utilities:
   * *DouglasPeuckerReducer*, a polyline reducer based on Douglas-Peucker algorithm. 
 
 
-= Overlays with cartoon-bubble =
+= Markers with cartoon-bubble =
 The *InfoWindow* class is a view that can be displayed on an osmdroid map, associated to a GeoPoint. 
 Typical usage is to have cartoon-like bubble displayed when clicking an overlay item. 
 The API has been implemented to mimic the [https://developers.google.com/maps/documentation/javascript/reference#InfoWindow InfoWindow] class of Google Maps JavaScript API V3. It appears that it is also quite close to Google Maps Android API v2. 
@@ -69,14 +71,16 @@ Take that aspect into account before providing a real-life service.
 Example: long-press on the map to define the destination, a new POI,... 
 
 = Additional Overlays =
-*FolderOverlay* is a container for other overlays. It can contain any Overlay object - including other FolderOverlays, so it is perfect for managing easily hierarchical structures of overlays. 
-
 *Polygon* is a robust implementation for polygons - something lacking in osmdroid - with an API as close as possible to Google Maps v2 equivalent. 
+
+*GroundOverlay* is the implementation of Google Maps v2 equivalent. 
+
+*FolderOverlay* is a container for other overlays. It can contain any Overlay object - including other FolderOverlays, so it is perfect for managing easily hierarchical structures of overlays. 
 
 
 = KML support =
-*KmlDocument* and *KmlFeature* are the building blocks to read and parse KML content, to build corresponding overlays, to convert overlays as KML content, and to save KML documents locally. 
-
+*KmlDocument* and *KmlFeature* are the major building blocks to read and parse KML content, to build corresponding overlays, to convert overlays as KML content, and to save KML documents locally. 
+Refer to the [KML KML wiki page] for more details. 
 
 = Next steps = 
  * See HowToInclude the lib in your project
