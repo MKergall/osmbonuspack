@@ -37,34 +37,74 @@ So:
  # Once you have played with the tutos and want to work on your real app, have a look at the OSMBonusPackDemo source code, where network calls are done in async tasks. 
 
 
+= 0. Using the Marker overlay =
+As we will make a large usage of Marker overlays, let's have a quick presentation. 
+
+First of all, you MUST put in your project res directory all resources needed for the default InfoWindow or "bubble": 
+ * in your res/layout: bonuspack_bubble.xml
+ * in res/drawable-mpi: 
+  * bonuspack_bubble.9.png
+  * moreinfo_arrow.png
+  * moreinfo_arrow_pressed.png
+ * in res/drawable: btn_moreinfo.xml
+You will find all those resources in OSMBonusPackDemo res directory. 
+
+Now, back to the code. We create a Marker, we screw it at the start point, and we set its anchor at bottom-center. 
+{{{
+Marker startMarker = new Marker(map);
+startMarker.setPosition(startPoint);
+startMarker.setAnchor(Marker.ANCHOR_CENTER, 1.0f);
+}}}
+(Marker.ANCHOR_CENTER is just a more readable way for 0.5)
+
+And we refresh the map. Yes, we will not repeat it everytime, but in order to see your changes, you need to refresh the map - this way:
+{{{
+map.invalidate();
+}}}
+
+Give it a try. You should see the default osmdroid marker icon. 
+
+Now we can improve a little bit, changing the icon, setting a title to be shown in the InfoWindow when clicking on the marker:
+{{{
+startMarker.setIcon(getResources().getDrawable(R.drawable.ic_launcher));
+startMarker.setTitle("Start point");
+}}}
+
+- And then? 
+
+- Refresh the map!
+
+- Okay, you got it. So now, let's start with really new stuff. 
+
 = 1. "Hello, Routing World!" =
 
 First, get a road manager:
 {{{
-	RoadManager roadManager = new OSRMRoadManager();
+RoadManager roadManager = new OSRMRoadManager();
 }}}
 
 Then, retreive the road between your start and end point:
 
 {{{
-	ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
-	waypoints.add(startPoint);
-	waypoints.add(new GeoPoint(48.4, -1.9)); //end point
-	Road road = roadManager.getRoad(waypoints);
+ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
+waypoints.add(startPoint);
+waypoints.add(new GeoPoint(48.4, -1.9)); //end point
+Road road = roadManager.getRoad(waypoints);
 }}}
 
-then, build an overlay with the route shape:
+then, build a Polyline with the route shape:
 {{{
-	PathOverlay roadOverlay = RoadManager.buildRoadOverlay(road, map.getContext());
+Polyline roadOverlay = RoadManager.buildRoadOverlay(road, this);
 }}}
 
-Add this overlay to the overlays of your map:
+Add this Polyline to the overlays of your map:
 {{{
-	map.getOverlays().add(roadOverlay);
+map.getOverlays().add(roadOverlay);
 }}}
-Okay, now refresh the map:
+
+And then? Refresh the map!
 {{{
-	map.invalidate();
+map.invalidate();
 }}}
 
 = 2. Playing with the RoadManager =
@@ -75,12 +115,12 @@ Okay, now refresh the map:
 
 Then, in the code, just few changes, not too complicated:
 {{{
-	RoadManager roadManager = new MapQuestRoadManager("YOUR MAPQUEST API KEY");
+RoadManager roadManager = new MapQuestRoadManager("YOUR MAPQUEST API KEY");
 }}}
 
 Then set appropriate option (before getting the road):
 {{{
-	roadManager.addRequestOption("routeType=bicycle");
+roadManager.addRequestOption("routeType=bicycle");
 }}}
 (all MapQuest options are described here: http://open.mapquestapi.com/guidance/)
 
@@ -88,50 +128,31 @@ Done.
 
 = 3. Showing the Route steps on the map =
 
-I'm sure you will soon want to add nice bubbles on these steps. So, let's use our ItemizedOverlayWithBubble. First, put all the resources needed for the standard bubble: 
- * in your res/layout: bonuspack_bubble.xml
- * in res/drawable-mpi: 
-  * bonuspack_bubble.9.png
-  * moreinfo_arrow.png
-  * moreinfo_arrow_pressed.png
- * in res/drawable: btn_moreinfo.xml
-You will find all of them in OSMBonusPackDemo res directory. 
-
-Then, we can create the overlay and put it on the map:
-{{{
-final ArrayList<ExtendedOverlayItem> roadItems = 
-  new ArrayList<ExtendedOverlayItem>();
-ItemizedOverlayWithBubble<ExtendedOverlayItem> roadNodes = 
-  new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, roadItems, map);
-map.getOverlays().add(roadNodes);
-}}}
-
-Once the road has been retrieved, populate the roadNodes overlay:
+At each road node, we put a Marker. Straightforward:
 
 {{{
-    	Drawable marker = getResources().getDrawable(R.drawable.marker_node);
-    	for (int i=0; i<road.mNodes.size(); i++){
-    		RoadNode node = road.mNodes.get(i);
-    		ExtendedOverlayItem nodeMarker = new ExtendedOverlayItem("Step "+i, "", node.mLocation, this);
-    		nodeMarker.setMarkerHotspot(OverlayItem.HotspotPlace.CENTER);
-    		nodeMarker.setMarker(marker);
-    		roadNodes.addItem(nodeMarker);
-    	}
+Drawable nodeIcon = getResources().getDrawable(R.drawable.marker_node);
+for (int i=0; i<road.mNodes.size(); i++){
+	RoadNode node = road.mNodes.get(i);
+	Marker nodeMarker = new Marker(map);
+	nodeMarker.setPosition(node.mLocation);
+	nodeMarker.setIcon(nodeIcon);
+	nodeMarker.setTitle("Step "+i);
 }}}
 
 You don't have a marker_node? Shame on you. Pick the OSMBonusPackDemo one (res/drawable-nodpi/marker_node.png). 
 
 Here we are! Clicking on a step marker will open its bubble. 
 
-- Hey, guy, this bubble is nice, but useless!
+- Hey, guy, those bubbles are nice, but useless!
 
 - You are right. So, go to step 4. 
 
 = 4. Filling the bubbles =
 
-Set the bubble description with the instructions:
+Set the bubble snippet with the instructions:
 {{{
-nodeMarker.setDescription(node.mInstructions);
+nodeMarker.setSnippet(node.mInstructions);
 }}}
 
 Set the bubble sub-description with the length and duration of the step:
