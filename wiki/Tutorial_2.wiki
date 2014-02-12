@@ -8,14 +8,6 @@
 Example: I would like to see where are the cinemas (or restaurants, or hotels, or fuel stations, or whatever...) close to my position. 
 OpenStreetMap contains a lot of POIs, and Nominatim service allows to search for them. 
 
-As for road nodes, in the onCreate() method of the activity, we add an itemized overlay: 
-{{{
-final ArrayList<ExtendedOverlayItem> poiItems = new ArrayList<ExtendedOverlayItem>();
-ItemizedOverlayWithBubble<ExtendedOverlayItem> poiMarkers = new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, 
-				poiItems, map);
-map.getOverlays().add(poiMarkers);
-}}}
-
 Now, we instantiate a Nominatim POI Provider and do the request:
 
 {{{
@@ -25,22 +17,24 @@ ArrayList<POI> pois = poiProvider.getPOICloseTo(startPoint, "cinema", 50, 0.1);
 
 Nominatim searches in OpenStreetMap features using specific keywords: the "Special Phrases" ([http://wiki.openstreetmap.org/wiki/Nominatim/Special_Phrases]). 
 Take care that, either because some features are rarely described in OSM, or because of Nominatim itself, there are keywords that return few or no results. 
+
 You can refer to  [http://code.google.com/p/osmbonuspack/source/browse/trunk/OSMBonusPackDemo/res/values/poi_tags.xml] to get a sub-list of features that are really - really - available through Nominatim. 
 
-Now, we build the POI markers, and put them in the overlay:
+
+OK, back to the code. We can build the POI markers, and put them on the map:
 
 {{{
+Drawable poiIcon = getResources().getDrawable(R.drawable.marker_poi_default);
 for (POI poi:pois){
-		ExtendedOverlayItem poiItem = new ExtendedOverlayItem(
-					poi.mType, poi.mDescription, 
-					poi.mLocation, map.getContext());
-		Drawable poiMarker = getResources().getDrawable(R.drawable.marker_poi_default);
-		poiItem.setMarker(poiMarker);
-		poiItem.setMarkerHotspot(OverlayItem.HotspotPlace.CENTER);
-		if (poi.mThumbnail != null){
-			poiItem.setImage(new BitmapDrawable(poi.mThumbnail));
-		}
-		poiMarkers.addItem(poiItem);
+	Marker poiMarker = new Marker(map);
+	poiMarker.setTitle(poi.mType);
+	poiMarker.setSnippet(poi.mDescription);
+	poiMarker.setPosition(poi.mLocation);
+	poiMarker.setIcon(poiIcon);
+	if (poi.mThumbnail != null){
+		poiItem.setImage(new BitmapDrawable(poi.mThumbnail));
+	}
+	map.getOverlays().add(poiMarker);
 }
 }}}
 
@@ -79,9 +73,9 @@ We will do that by customizing the bubble, adding a "more info" button which wil
 
 Ready? Let's go! 
 
-First, create a new class CustomInfoWindow which inherits from DefaultInfoWindow, with its constructor. 
+First, create a new class CustomInfoWindow which inherits from MarkerInfoWindow - the default InfoWindow for Markers. 
 {{{
-public class CustomInfoWindow extends DefaultInfoWindow {
+public class CustomInfoWindow extends MarkerInfoWindow {
 	public CustomInfoWindow(MapView mapView) {
 		super(R.layout.bonuspack_bubble, mapView);
 	}
@@ -105,7 +99,7 @@ btn.setOnClickListener(new View.OnClickListener() {
 }}}
 
 If needed, you can override the onOpen and onClose methods. 
-onOpen is called when tapping an item, just before showing the bubble. 
+onOpen is called when tapping a Marker, just before showing the bubble. 
 In our case, as our "more info" button is hidden in our layout, we show it:
 {{{
 @Override public void onOpen(Object item){
@@ -114,45 +108,35 @@ In our case, as our "more info" button is hidden in our layout, we show it:
 }
 }}}
 
-The CustomInfoWindow class is ready, we can use it. 
-In your activity, search where the ItemizedOverlayWithBubble was created:
+The CustomInfoWindow class is ready, we can set it in each POI Marker:
 {{{
-ItemizedOverlayWithBubble<ExtendedOverlayItem> poiMarkers = 
-  new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, 
-    roadItems, map);
-}}}
-and give it a customized bubble: 
-{{{
-ItemizedOverlayWithBubble<ExtendedOverlayItem> poiMarkers = 
-  new ItemizedOverlayWithBubble<ExtendedOverlayItem>(this, 
-    poiItems, map, 
-    new CustomInfoWindow(map));
+poiMarker.setInfoWindow(new CustomInfoWindow(map));
 }}}
 
 OK, ready, you can test it. 
 
 The next step is to open an activity on the POI, instead of this useless Toast. 
 For that, we would like to access POI information in the CustomInfoWindow. 
-There is a simple solution: each time you create a POI item, give it a reference to the corresponding POI object: 
+There is a simple solution: each time you create a POI Marker, give it a reference to the corresponding POI object: 
 {{{
 poiMarker.setRelatedObject(poi);
 }}}
 
-Define "POI selectedPoi" as a member of your CustomInfoWindow. 
+Define "POI mSelectedPoi" as a member of your CustomInfoWindow. 
 Then, in CustomInfoWindow.onOpen(item), you can access to the reference and update the selectedPoi: 
 {{{
-ExtendedOverlayItem eItem = (ExtendedOverlayItem)item;
-selectedPoi = (POI)eItem.getRelatedObject();
+Marker marker = (Marker)item;
+mSelectedPoi = (POI)marker.getRelatedObject();
 }}}
 
-selectedPoi.mUrl contains the Wikipedia URL. 
+mSelectedPoi.mUrl contains the Wikipedia URL. 
 Now, you can modify the button listener to open a web view on this URL. 
 For instance this way:
 {{{
 btn.setOnClickListener(new View.OnClickListener() {
 	public void onClick(View view) {
-		if (selectedPoi.mUrl != null){
-			Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(selectedPoi.mUrl));
+		if (mSelectedPoi.mUrl != null){
+			Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mSelectedPoi.mUrl));
 			view.getContext().startActivity(myIntent);
 		}
 	}
@@ -189,7 +173,7 @@ ImageView imageView = (ImageView)mView.findViewById(R.id.bubble_image);
 
 And then we call the async image fetching:
 {{{
-selectedPoi.fetchThumbnailOnThread(imageView);
+mSelectedPoi.fetchThumbnailOnThread(imageView);
 }}}
 
 Much better, isn't it? 
@@ -199,7 +183,7 @@ Two standard layouts are provided and can be found in OSMBonusPackDemo/res/layou
  * bonuspack_bubble.xml, which is the default layout
  * bonuspack_bubble_black.xml
 
-You can build and use your own bubble layouts, but some components are mandatory if you want to use them with a DefaultInfoWindow: 
+You can build and use your own bubble layouts, but some components are mandatory if you want to use them with a MarkerInfoWindow: 
  * a TextView with id: bubble_title
  * a TextView with id: bubble_description
  * a TextView with id: bubble_subdescription
