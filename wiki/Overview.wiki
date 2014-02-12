@@ -29,14 +29,22 @@ Also provided, very useful route-related utilities:
 
 
 = Markers with cartoon-bubble =
-The *InfoWindow* class is a view that can be displayed on an osmdroid map, associated to a GeoPoint. 
-Typical usage is to have cartoon-like bubble displayed when clicking an overlay item. 
-The API has been implemented to mimic the [https://developers.google.com/maps/documentation/javascript/reference#InfoWindow InfoWindow] class of Google Maps JavaScript API V3. It appears that it is also quite close to Google Maps Android API v2. 
+The *Marker* overlay mimics as much as possible its Google Maps V2 equivalent. 
 
-Two standard bubble layouts are provided in the demo application, each one with its NinePatch background. Contributors are strongly encouraged to provide some nice alternatives... 
+It supports the now classical "cartoon-bubble" or *InfoWindow*. 
+Two standard bubble layouts are provided in the demo application, each one with its NinePatch background. You can use your own, and contributors are strongly encouraged to share some nice alternatives... 
 
-*ItemizedOverlayWithBubble* is an overlay that opens an InfoWindow bubble when the user taps on an item. ItemizedOverlayWithBubble can easily replace (and enhance) the ItemizedOverlayWithFocus of osmdroid. 
-It is quite close to the Marker of Google Maps Android API v2. 
+This *Marker* also supports drag events, transparency, rotation, and so on. 
+
+= Other Overlays =
+
+The *Polygon* overlay mimics as much as possible its Google Maps V2 equivalent. 
+This *Polygon* overlay also supports cartoon-bubble (something not available in Google Maps V2). 
+
+The *Polyline* overlay and *GroundOverlay* also mimic their Google Maps V2 equivalents. 
+
+The *FolderOverlay* has no Google Maps counterpart. It is a container for other overlays. It can contain any Overlay object - including other FolderOverlays, so it is perfect for managing easily hierarchical structures of overlays. 
+
 
 = POIs =
 OSMBonusPack gives a set of classes to get Points Of Interest (POIs).
@@ -69,13 +77,6 @@ Take that aspect into account before providing a real-life service.
 *MapEventsOverlay* and *MapEventsReceiver* classes provide a simple way to handle single-press and long-press events somewhere on the map. 
 
 Example: long-press on the map to define the destination, a new POI,... 
-
-= Additional Overlays =
-*Polygon* is a robust implementation for polygons - something lacking in osmdroid - with an API as close as possible to Google Maps v2 equivalent. 
-
-*GroundOverlay* is the implementation of Google Maps v2 equivalent. 
-
-*FolderOverlay* is a container for other overlays. It can contain any Overlay object - including other FolderOverlays, so it is perfect for managing easily hierarchical structures of overlays. 
 
 
 = KML support =
