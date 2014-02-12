@@ -49,11 +49,12 @@ First of all, you MUST put in your project res directory all resources needed fo
  * in res/drawable: btn_moreinfo.xml
 You will find all those resources in OSMBonusPackDemo res directory. 
 
-Now, back to the code. We create a Marker, we screw it at the start point, and we set its anchor at bottom-center. 
+Now, back to the code. We create a Marker, we screw it at the start point, we set its anchor at bottom-center, and we add this Marker to the map's overlays. 
 {{{
 Marker startMarker = new Marker(map);
 startMarker.setPosition(startPoint);
 startMarker.setAnchor(Marker.ANCHOR_CENTER, 1.0f);
+map.getOverlays().add(startMarker);
 }}}
 (Marker.ANCHOR_CENTER is just a more readable way for 0.5)
 
@@ -138,9 +139,10 @@ for (int i=0; i<road.mNodes.size(); i++){
 	nodeMarker.setPosition(node.mLocation);
 	nodeMarker.setIcon(nodeIcon);
 	nodeMarker.setTitle("Step "+i);
+	map.getOverlays().add(nodeMarker);
 }}}
 
-You don't have a marker_node? Shame on you. Pick the OSMBonusPackDemo one (res/drawable-nodpi/marker_node.png). 
+You don't have a marker_node icon? Shame on you. Pick the OSMBonusPackDemo one (res/drawable-nodpi/marker_node.png). 
 
 Here we are! Clicking on a step marker will open its bubble. 
 
