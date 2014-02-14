@@ -21,8 +21,18 @@ Take care that, either because some features are rarely described in OSM, or bec
 You can refer to  [http://code.google.com/p/osmbonuspack/source/browse/trunk/OSMBonusPackDemo/res/values/poi_tags.xml] to get a sub-list of features that are really - really - available through Nominatim. 
 
 
-OK, back to the code. We can build the POI markers, and put them on the map:
+OK, back to the code. We can build the POI markers, and put them on the map. 
 
+Let us improve the coding a little bit, grouping all those POI markers in a FolderOverlay. 
+This is not mandatory, but organizing the markers is very helpful in real applications. 
+
+We create the FolderOverlay and put it on the map this way:
+{{{
+FolderOverlay poiMarkers = new FolderOverlay(this);
+map.getOverlays().add(poiMarkers);
+}}}
+
+Then we can create the markers, and put them in the FolderOverlay:
 {{{
 Drawable poiIcon = getResources().getDrawable(R.drawable.marker_poi_default);
 for (POI poi:pois){
@@ -34,7 +44,7 @@ for (POI poi:pois){
 	if (poi.mThumbnail != null){
 		poiItem.setImage(new BitmapDrawable(poi.mThumbnail));
 	}
-	map.getOverlays().add(poiMarker);
+	poiMarkers.add(poiMarker);
 }
 }}}
 
@@ -67,7 +77,7 @@ And you can test!
 
 = 7. Customizing the bubble behaviour =
 Wikipedia POIs usually contain a URL to the Wikipedia page. 
-We would like to access this page from the POI bubble. 
+It would be nice to give access to this page from the POI bubble. 
 
 We will do that by customizing the bubble, adding a "more info" button which will open a web view on the Wikipedia URL. 
 
@@ -82,12 +92,13 @@ public class CustomInfoWindow extends MarkerInfoWindow {
 }
 }}}
 
-In the constructor, get the "more info" button:
+Then, the "more info" button. In fact, our default bubble layouts already have a hidden "more info" button. So we just have to get it. 
+In the constructor:
 {{{
 Button btn = (Button)(mView.findViewById(R.id.bubble_moreinfo));
 }}}
 
-In fact, our default bubble layouts already have a hidden "more info" button, so here we just have to get it. But of course you are free to define your own layout, and put as many buttons you want, with the look&feel you want. We will see how to do that in chapter 9. 
+Of course, you are free to define your own layout, and put as many buttons you want, with the look&feel you want. We will see how to do that in chapter 9. 
 
 For now, set a listener doing something on this button:
 {{{
@@ -100,7 +111,7 @@ btn.setOnClickListener(new View.OnClickListener() {
 
 If needed, you can override the onOpen and onClose methods. 
 onOpen is called when tapping a Marker, just before showing the bubble. 
-In our case, as our "more info" button is hidden in our layout, we show it:
+In our case, as our "more info" button is hidden in our layout, we have to show it:
 {{{
 @Override public void onOpen(Object item){
 	super.onOpen(item);
