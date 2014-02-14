@@ -55,18 +55,25 @@ For all supported *Geometry*:
 
 
 == Polygon ==
- * innerBoundaryIs (holes) are now supported. 
+ * innerBoundaryIs (holes) are supported from v4.2.6. 
 
 == !GroundOverlay ==
-_Currently under development, will be available in v4.2.7_
+Supported from v4.2.7. 
+
+ * Icon href: either a full HTTP address, or a relative path to a local file
+ * LatLonBox is supported. Meridian overlapping is not supported. 
+ * gx:LatLonQuad is not supported. 
+ * color: only the alpha value is used, as the GroundOverlay transparency. 
+ * drawOrder is not supported. Draw order will be the order of elements in the KML file. 
+ * elements related to altitude are not supported. 
 
 == Style ==
 Inline styles are supported at loading, and converted to shared styles. 
 
 == !IconStyle ==
  * href: either a full HTTP address, or a relative path to a local file (ex: "images/img1.png"). 
- * heading is not supported. 
- * hotSpot is not supported. Hotspot will always be bottom-center. 
+ * heading is not supported. _Under development_. 
+ * hotSpot is not supported. Hotspot will always be bottom-center. _Under development_. 
 
 == !PolyStyle ==
  * fill and outline are not supported, and considered as "true". 
