@@ -45,10 +45,17 @@ The *Polyline* overlay and *GroundOverlay* also mimic their Google Maps V2 equiv
 
 The *FolderOverlay* has no Google Maps counterpart. It is a container for other overlays. It can contain any Overlay object - including other FolderOverlays, so it is perfect for managing easily hierarchical structures of overlays. 
 
+= Marker Clustering =
+Marker Clustering is the now classical solution to the "Too Many Markers Problem". 
 
-= POIs =
-OSMBonusPack gives a set of classes to get Points Of Interest (POIs).
+*MarkerClusterer* displays all Markers which are close together as a single icon - adapting the clustering to the zoom level. 
 
+It has been designed to be as simple to use as possible. Basically, you just have to create a MarkerClusterer, add it to your map overlays, and put your Markers inside. 
+
+You can also customize its look&feel (cluster icon, cluster size, text style). 
+
+
+= Points Of Interest - POIs =
 POIProviders retrieve POI from a variety of service providers. 
 Currently supported: 
  * *NominatimPOIProvider*, to retrieve OpenStreetMap "features"
