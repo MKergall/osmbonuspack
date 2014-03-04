@@ -2,7 +2,37 @@
 
 (we assume you already followed [Tutorial_1] and [Tutorial_2])
 
-= 10. Loading KML content =
+= 10. Marker Clustering =
+
+Marker Clustering is a now classical technique when you have a lot of markers on a map, to group markers which are close together in a single "cluster" marker, displaying the number of markers it "contains". 
+
+This (cool) feature is available in OSMBonusPack with MarkerClusterer. 
+
+If you already grouped your markers in a FolderOverlay (as we did in chapter 5 with poiMarkers), introducing marker clustering is trivial. 
+You replace the FolderOverlay by a MarkerClusterer: 
+{{{
+MarkerClusterer poiMarkers = new MarkerClusterer(this);
+}}}
+
+You also have to set an icon for the clusters. This is the icon to be used when there are many markers in a cluster. 
+As this icon must be a Bitmap, here is the usual way to get a Bitmap from a Drawable resource: 
+{{{
+Drawable clusterIconD = getResources().getDrawable(R.drawable.marker_cluster);
+Bitmap clusterIcon = ((BitmapDrawable)clusterIconD).getBitmap();
+}}}
+
+Then you can set this icon to clusters:
+{{{
+poiMarkers.setIcon(clusterIcon);
+}}}
+
+The rest of the code: adding the poiMarkers to map overlays, and adding markers to poiMarkers, has already been done in chapter 5, and need no change. 
+
+So you can give it a try. 
+If you zoom in, each individual marker appears. When you zoom out, they are grouped and displayed with the cluster icon. Fine, isn't it?
+
+
+= 11. Loading KML content =
 
 [http://en.wikipedia.org/wiki/Keyhole_Markup_Language KML] is a de-facto standard for handling overlays on maps, from a simple list of markers, to complex structures. 
 
@@ -67,7 +97,7 @@ You see nothing? Try to move your map at the right place. Or set automatically t
 map.zoomToBoundingBox(kmlDocument.kmlRoot.mBB);
 }}}
 
-= 11. Grab overlays in KML structure, save KML locally =
+= 12. Grab overlays in KML structure, save KML locally =
 You can "grab" an overlay and add it in an existing KML folder. 
 For example, we can grab the route shape overlay we built in chapter 1: 
 {{{
