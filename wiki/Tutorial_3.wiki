@@ -28,7 +28,8 @@ poiMarkers.setIcon(clusterIcon);
 
 The rest of the code: adding the poiMarkers to map overlays, and adding markers to poiMarkers, has already been done in chapter 5, and need no change. 
 
-So you can give it a try. 
+So you can give it a try. <br/>
+<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/tuto_clustering.png" height="530"><br/>
 If you zoom in, each individual marker appears. When you zoom out, they are grouped and displayed with the cluster icon. Fine, isn't it?
 
 
