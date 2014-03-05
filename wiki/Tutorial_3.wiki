@@ -28,8 +28,12 @@ poiMarkers.setIcon(clusterIcon);
 
 The rest of the code: adding the poiMarkers to map overlays, and adding markers to poiMarkers, has already been done in chapter 5, and need no change. 
 
-So you can give it a try. <br/>
-<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/tuto_clustering.png" height="530"><br/>
+So you can give it a try. 
+
+The result when searching for "bakery" with NominatimPOIProvider:
+
+<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/tuto_clustering.png" height="530">
+
 If you zoom in, each individual marker appears. When you zoom out, they are grouped and displayed with the cluster icon. Fine, isn't it?
 
 
@@ -97,6 +101,8 @@ You see nothing? Try to move your map at the right place. Or set automatically t
 {{{
 map.zoomToBoundingBox(kmlDocument.kmlRoot.mBB);
 }}}
+
+The result when loading "Paris Tour" URL:
 
 <img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/tuto_kml.png">
 
