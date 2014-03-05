@@ -53,10 +53,10 @@ Now, back to the code. We create a Marker, we screw it at the start point, we se
 {{{
 Marker startMarker = new Marker(map);
 startMarker.setPosition(startPoint);
-startMarker.setAnchor(Marker.ANCHOR_CENTER, 1.0f);
+startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
 map.getOverlays().add(startMarker);
 }}}
-(Marker.ANCHOR_CENTER is just a more readable way for 0.5)
+(Marker.ANCHOR_CENTER and Marker.ANCHOR_BOTTOM are just readable synonyms for 0.5 and 1.0)
 
 And we refresh the map. Yes, we will not repeat it everytime, but in order to see your changes, you need to refresh the map - this way:
 {{{
