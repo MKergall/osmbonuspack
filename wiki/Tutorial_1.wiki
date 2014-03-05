@@ -175,3 +175,5 @@ The possible maneuver ids are [http://open.mapquestapi.com/guidance/#maneuvertyp
 It's boring, so I'm going downstair to take a coffee, while you handle those icons properly. 
 
 And see you again on [Tutorial_2]. 
+
+<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/tuto_routing.png" height="530">
