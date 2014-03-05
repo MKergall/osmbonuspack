@@ -98,6 +98,8 @@ You see nothing? Try to move your map at the right place. Or set automatically t
 map.zoomToBoundingBox(kmlDocument.kmlRoot.mBB);
 }}}
 
+<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/tuto_kml.png">
+
 = 12. Grab overlays in KML structure, save KML locally =
 You can "grab" an overlay and add it in an existing KML folder. 
 For example, we can grab the route shape overlay we built in chapter 1: 
@@ -105,7 +107,7 @@ For example, we can grab the route shape overlay we built in chapter 1:
 kmlDocument.kmlRoot.addOverlay(roadOverlay, kmlDocument);
 }}}
 
-This is working for Polyline overlays, but also for Markers, and for FolderOverlays. If you put your road node markers in a roadNodes FolderOverlay (as we did for POI Markers in chapter 5), you can grab all of them once:
+This is working for Polyline overlays, but also for Markers, FolderOverlays and MarkerClusterers. If you put your road node markers in a roadNodes FolderOverlay (as we did for POI Markers in chapter 5), you can grab all of them once:
 {{{
 kmlDocument.kmlRoot.addOverlay(roadNodes, kmlDocument);
 }}}
