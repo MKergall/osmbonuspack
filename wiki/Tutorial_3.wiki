@@ -1,4 +1,4 @@
-#summary BonusPack Tutorial #3: KML content.
+#summary BonusPack Tutorial #3: Marker Clustering, KML content.
 
 (we assume you already followed [Tutorial_1] and [Tutorial_2])
 
