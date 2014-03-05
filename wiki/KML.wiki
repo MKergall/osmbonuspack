@@ -72,8 +72,8 @@ Inline styles are supported at loading, and converted to shared styles.
 
 == !IconStyle ==
  * href: either a full HTTP address, or a relative path to a local file (ex: "images/img1.png"). 
- * heading is not supported. _Under development_. 
- * hotSpot is not supported. Hotspot will always be bottom-center. _Under development_. 
+ * heading is supported from 4.2.8
+ * hotSpot is supported from 4.2.8. Only fraction units are supported. Hotspot is bottom-centered by default. 
 
 == !PolyStyle ==
  * fill and outline are not supported, and considered as "true". 
