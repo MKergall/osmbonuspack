@@ -1,0 +1,16 @@
+#summary Support of GeoJSON.
+
+= Mapping between GeoJSON and KML classes =
+
+
+ || GeoJSON type || OSMBonusPack class ||
+ || FeatureCollection || KmlFolder ||
+ || Feature || KmlPlacemark ||
+ || Point || KmlPoint ||
+ || LineString || KmlLineString ||
+ || Polygon || KmlPolygon ||
+
+Other GeoJSON types are not supported. 
+And other KML classes cannot be saved in GeoJSON. 
+
+Surprisingly, GeoJSON doesn't seem to support multiple levels of FeatureCollection. If your KmlFolder contains recursively other KmlFolder, the resulting GeoJSON could be invalid. 
