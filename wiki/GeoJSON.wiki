@@ -1,16 +1,30 @@
 #summary Support of GeoJSON.
 
-= Mapping between GeoJSON and KML classes =
+_GeoJSON saving is available. GeoJSON loading is on its way and will be available from v4.2.9. _
+
+= Mapping between GeoJSON types and KML classes =
 
 
- || GeoJSON type || OSMBonusPack class ||
- || FeatureCollection || KmlFolder ||
- || Feature || KmlPlacemark ||
- || Point || KmlPoint ||
- || LineString || KmlLineString ||
- || Polygon || KmlPolygon ||
+|| *GeoJSON type* || *OSMBonusPack class* ||
+|| FeatureCollection || KmlFolder ||
+|| Feature || KmlPlacemark ||
+|| Point || KmlPoint ||
+|| LineString || KmlLineString ||
+|| Polygon || KmlPolygon ||
 
-Other GeoJSON types are not supported. 
-And other KML classes cannot be saved in GeoJSON. 
 
-Surprisingly, GeoJSON doesn't seem to support multiple levels of FeatureCollection. If your KmlFolder contains recursively other KmlFolder, the resulting GeoJSON could be invalid. 
+At loading, other GeoJSON types will be ignored. 
+At saving, other KML classes will be ignored. 
+
+If your KmlFolder contains recursively other KmlFolder, the resulting GeoJSON could be invalid. 
+Surprisingly, GeoJSON doesn't seem to support multiple levels of FeatureCollection. 
+
+= GeoJSON properties, KML attributes and ExtendedData =
+
+KML "name" attribute is handled (at loading and saving) as the property "name". 
+Exemple: 
+"properties": {"name" : "New-York city"}
+
+All other GeoJSON properties are loaded as ExtendedData. 
+KML ExtendedData are saved as GeoJSON properties. 
+And other KML attributes like description, or style information, are not saved in GeoJSON. 
