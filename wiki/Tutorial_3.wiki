@@ -127,6 +127,21 @@ kmlDocument.saveAsKML(localFile);
 The default path for KML files is in the external storage, in a "kml" directory. 
 Now, you have a "my_route.kml" file, containing the whole KML content loaded from a url in chapter 10, plus the route shape and route nodes of chapter 1. 
 
+= 13. Loading and saving of GeoJSON content =
+
+[http://en.wikipedia.org/wiki/GeoJSON GeoJSON] is more or less the JSON equivalent to KML. 
+Very easy to use in a HTML/JavaScript context, it rapidly reached a large audience. 
+
+From OSMBonusPack v4.2.9, all KML objects support loading GeoJSON content, and saving locally in GeoJSON format. 
+
+Let save in GeoJSON the KML structure built in chapters 11 and 12: 
+{{{
+File localFile = kmlDocument.getDefaultPathForAndroid("my_route.json");
+kmlDocument.saveAsGeoJSON(localFile);
+}}}
+
+Refer to [GeoJSON] Wiki page for more details. 
+
 = Conclusion =
 Well, "That's all Folks!"
 
