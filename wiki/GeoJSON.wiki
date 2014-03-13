@@ -3,7 +3,7 @@
 <wiki:toc max_depth="2" />
 
 = Introduction =
-_GeoJSON saving is available. GeoJSON loading is on its way and will be available from v4.2.9. _
+_GeoJSON support is available from v4.2.9. _
 
 In OSMBonusPack, support for GeoJSON is done through KML objects. 
 
@@ -51,3 +51,12 @@ And other KML attributes, like description or style information, are not saved i
 
 = Coordinates reference system =
 Only WGS84 is supported. All longitude and latitude values are assumed to be in decimal degrees. 
+
+= Limits =
+As for KML, the only technical limits are about memory and time. 
+
+For memory, you will find the same limits than [KML], related to memory heap on Android. 
+
+For time : note that performance for GeoJSON loading should be significantly slower than for an equivalent in KML. There are 2 reasons: 
+ * the usage of the standard JSON library included in the Android SDK - which is not definitely not as efficient as the standard XML SAX parser. 
+ * cumulated with the structure of GeoJSON coordinates: each position is stored as a JSON array, implying a heavy usage of JSON parsing. In KML, the coordinates of a whole geometry are in a single XML element with a simple formatting, allowing an optimized loading strategy. 
