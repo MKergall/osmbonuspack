@@ -19,25 +19,25 @@ If there is an unsupported feature that is key for you, don't hesitate to create
 This explanation assumes you know KML concepts. 
 See the [https://developers.google.com/kml/documentation/kmlreference KML Reference] if necessary. 
 
-== Supported objects ==
+== Supported object types ==
 
-Supported objects are listed in the table below, with their related OSMBonusPack class:
+Supported KML object types are listed in the table below, with their related OSMBonusPack class:
 
-|| KML object type || OSMBonusPack class ||
+|| *KML object type* || *OSMBonusPack class* ||
 || Document || KmlDocument ||
+|| Feature || KmlFeature ||
 || Folder || KmlFolder ||
 || NetworkLink || KmlFolder ||
 || Placemark|| KmlPlacemark ||
 || GroundOverlay|| KmlGroundOverlay ||
 || Geometry|| KmlGeometry ||
 || Point|| KmlPoint ||
-|| Point|| KmlPoint ||
 || LineString || KmlLineString ||
 || Polygon || KmlPolygon ||
 || Style || Style ||
 || ColorStyle || ColorStyle ||
+|| PolyStyle|| ColorStyle ||
 || LineStyle || LineStyle ||
-|| PolyStyle|| PolyStyle ||
 || IconStyle|| IconStyle ||
 
 
@@ -54,11 +54,11 @@ For all supported *Feature*, supported attributes/elements are:
  * ExtendedData: see restrictions below. 
 
 == Document ==
-Document is loaded and then handled as a Folder. 
+Document is loaded and then handled as a KmlFolder. 
 When saving, the root folder is saved as a Document. 
 
 == !NetworkLink ==
-NetworkLink is handled at loading, but converted to a regular Folder. The content of the related file is completely integrated into the folder hierarchy: the link information is lost, styles of both files are merged. 
+NetworkLink is handled at loading, but converted to a regular KmlFolder. The content of the related file is completely integrated into the folder hierarchy: the link information is lost, styles of both files are merged. 
 
 Supported Link elements: 
  * href: must be either a full HTTP address, or a relative path to a local file (ex: "subdir/subfile_1.kml"). 
