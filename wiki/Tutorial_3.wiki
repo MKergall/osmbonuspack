@@ -6,12 +6,12 @@
 
 Marker Clustering is a now classical technique when you have a lot of markers on a map, to group markers which are close together in a single "cluster" marker, displaying the number of markers it "contains". 
 
-This (cool) feature is available in OSMBonusPack with MarkerClusterer. 
+This (cool) feature is available in OSMBonusPack with the GridMarkerClusterer. 
 
 If you already grouped your markers in a FolderOverlay (as we did in chapter 5 with poiMarkers), introducing marker clustering is trivial. 
-You replace the FolderOverlay by a MarkerClusterer: 
+You replace the FolderOverlay by a GridMarkerClusterer: 
 {{{
-MarkerClusterer poiMarkers = new MarkerClusterer(this);
+GridMarkerClusterer poiMarkers = new GridMarkerClusterer(this);
 }}}
 
 You also have to set an icon for the clusters. This is the icon to be used when there are many markers in a cluster. 
@@ -36,8 +36,26 @@ The result when searching for "bakery" with NominatimPOIProvider:
 
 If you zoom in, each individual marker appears. When you zoom out, they are grouped and displayed with the cluster icon. Fine, isn't it?
 
+= 11. Customizing the clusters design =
 
-= 11. Loading KML content =
+To customize the design of clusters, the first level is to use the available getters, setters and public attributes. 
+
+Example:
+{{{
+poiMarkers.getTextPaint().setTextSize(10.0f);
+poiMarkers.getTextPaint().setColor(Color.DKGRAY);
+poiMarkers.mTextAnchorU = 0.75f;
+poiMarkers.mTextAnchorV = 0.25f;
+}}}
+
+The second level is to sub-class either the MarkerClusterer abstract class, or the GridMarkerClusterer, depending on how much you need. 
+Then you override #buildClusterMarker(StaticCluster cluster, MapView mapView) method. 
+
+
+If you want to go further, you can also implement your own clustering algorithm. You "just" have to sub-class the MarkerClusterer, and override the #clusterer(MapView mapView) method. 
+
+
+= 12. Loading KML content =
 
 [http://en.wikipedia.org/wiki/Keyhole_Markup_Language KML] is a de-facto standard for handling overlays on maps, from a simple list of markers, to complex structures. 
 
@@ -76,7 +94,7 @@ Drawable defaultMarker = getResources().getDrawable(R.drawable.marker_kml_point)
 
 And build the overlays:
 {{{
-FolderOverlay kmlOverlay = (FolderOverlay)kmlDocument.kmlRoot.buildOverlays(this, map, defaultMarker, kmlDocument, false);
+FolderOverlay kmlOverlay = (FolderOverlay)kmlDocument.mKmlRoot.buildOverlays(this, map, defaultMarker, kmlDocument, false);
 }}}
 
 Yes, this is doing the job. This FolderOverlay will be the container for all overlays that will be found in the KML structure: 
@@ -99,23 +117,23 @@ Now give this a try.
 
 You see nothing? Try to move your map at the right place. Or set automatically the view on the whole stuff, using the bounding box which is maintained up-to-date:
 {{{
-map.zoomToBoundingBox(kmlDocument.kmlRoot.mBB);
+map.zoomToBoundingBox(kmlDocument.mKmlRoot.mBB);
 }}}
 
 The result when loading "Paris Tour" URL:
 
 <img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/tuto_kml.png">
 
-= 12. Grab overlays in KML structure, save KML locally =
+= 13. Grab overlays in KML structure, save KML locally =
 You can "grab" an overlay and add it in an existing KML folder. 
 For example, we can grab the route shape overlay we built in chapter 1: 
 {{{
-kmlDocument.kmlRoot.addOverlay(roadOverlay, kmlDocument);
+kmlDocument.mKmlRoot.addOverlay(roadOverlay, kmlDocument);
 }}}
 
 This is working for Polyline overlays, but also for Markers, FolderOverlays and MarkerClusterers. If you put your road node markers in a roadNodes FolderOverlay (as we did for POI Markers in chapter 5), you can grab all of them once:
 {{{
-kmlDocument.kmlRoot.addOverlay(roadNodes, kmlDocument);
+kmlDocument.mKmlRoot.addOverlay(roadNodes, kmlDocument);
 }}}
 
 And we can save the final result locally, in a KML file:
@@ -127,7 +145,7 @@ kmlDocument.saveAsKML(localFile);
 The default path for KML files is in the external storage, in a "kml" directory. 
 Now, you have a "my_route.kml" file, containing the whole KML content loaded from a url in chapter 10, plus the route shape and route nodes of chapter 1. 
 
-= 13. Loading and saving of GeoJSON content =
+= 14. Loading and saving of GeoJSON content =
 
 [http://en.wikipedia.org/wiki/GeoJSON GeoJSON] is more or less the JSON equivalent to KML. 
 Very easy to use in a HTML/JavaScript context, it rapidly reached a large audience. 
