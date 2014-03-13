@@ -1,0 +1,113 @@
+#summary BonusPack Tutorial #4: KML content.
+
+(we assume you already followed [Tutorial_1] and [Tutorial_2]])
+
+= 12. Loading KML content =
+
+[http://en.wikipedia.org/wiki/Keyhole_Markup_Language KML] is a de-facto standard for handling overlays on maps, from a simple list of markers, to complex structures. 
+
+Both Google Maps and Bing Maps allow people to create their "personal maps" by putting markers, lines and polygons. Such personal maps can be exported as KML content. 
+More advanced tools can be used to create and display KML content, like Google Earth or ArcGIS Explorer. 
+
+OSMBonusPack provides the basic toolbox to handle KML content: read (from a url or a local file), save locally, and edit. 
+
+Let see it in action. I have a Url to a KML file, and I want to show it on my OSM map. 
+
+(Parenthesis - If you don't have such Url, pick one of those:
+ * Paris Tour: http://mapsengine.google.com/map/kml?mid=z6IJfj90QEd4.kUUY9FoHFRdE
+ * A route in Netherlands: http://www.yournavigation.org/api/1.0/gosmore.php?format=kml&flat=52.215676&flon=5.963946&tlat=52.2573&tlon=6.1799
+ * Or a message in the desert: http://mapsengine.google.com/map/kml?mid=z6IJfj90QEd4.kcfEKhi8r5LQ
+End of parenthesis)
+
+First of all, you need a KmlDocument: 
+{{{
+KmlDocument kmlDocument = new KmlDocument();
+}}}
+
+Then you can use it to read and parse your KML content:
+{{{
+kmlDocument.parseUrl(url);
+}}}
+
+This KmlDocument now contains the whole KML Document. 
+In particular, it contains a KmlFeature: kmlRoot, which is the entry point to the KML hierarchy. 
+Don't hesitate to have a look at [http://code.google.com/p/osmbonuspack/source/browse/trunk/OSMBonusPack/src/org/osmdroid/bonuspack/kml/KmlFeature.java KmlFeature] class to understand its logic. It's quite simple, and you will need to understand it if you want to go further and manipulate your KML structure. 
+
+But for now, we mainly wish to see the graphics on the screen. 
+So, set a default marker icon for all points:
+{{{
+Drawable defaultMarker = getResources().getDrawable(R.drawable.marker_kml_point);
+}}}
+
+And build the overlays:
+{{{
+FolderOverlay kmlOverlay = (FolderOverlay)kmlDocument.mKmlRoot.buildOverlays(this, map, defaultMarker, kmlDocument, false);
+}}}
+
+Yes, this is doing the job. This FolderOverlay will be the container for all overlays that will be found in the KML structure: 
+ * KML Point, handled as an OSMBonusPack Marker
+ * KML LineString, handled as OSMBonusPack Polyline
+ * KML Polygon, handled as OSMBonusPack Polygon
+ * and KML Folder, handled as OSMBonusPack FolderOverlay, allowing to keep the hierarchical structure of the KML structure. 
+
+Now, add this folder overlay on the map: 
+{{{
+map.getOverlays().add(kmlOverlay);
+}}}
+
+And don't forget to redraw your map view:
+{{{
+map.invalidate();
+}}}
+
+Now give this a try. 
+
+You see nothing? Try to move your map at the right place. Or set automatically the view on the whole stuff, using the bounding box which is maintained up-to-date:
+{{{
+map.zoomToBoundingBox(kmlDocument.mKmlRoot.mBB);
+}}}
+
+The result when loading "Paris Tour" URL:
+
+<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/tuto_kml.png">
+
+= 13. Grab overlays in KML structure, save KML locally =
+You can "grab" an overlay and add it in an existing KML folder. 
+For example, we can grab the route shape overlay we built in chapter 1: 
+{{{
+kmlDocument.mKmlRoot.addOverlay(roadOverlay, kmlDocument);
+}}}
+
+This is working for Polyline overlays, but also for Markers, FolderOverlays and MarkerClusterers. If you put your road node markers in a roadNodes FolderOverlay (as we did for POI Markers in chapter 5), you can grab all of them once:
+{{{
+kmlDocument.mKmlRoot.addOverlay(roadNodes, kmlDocument);
+}}}
+
+And we can save the final result locally, in a KML file:
+{{{
+File localFile = kmlDocument.getDefaultPathForAndroid("my_route.kml");
+kmlDocument.saveAsKML(localFile);
+}}}
+
+The default path for KML files is in the external storage, in a "kml" directory. 
+Now, you have a "my_route.kml" file, containing the whole KML content loaded from a url in chapter 10, plus the route shape and route nodes of chapter 1. 
+
+= 14. Loading and saving of GeoJSON content =
+
+[http://en.wikipedia.org/wiki/GeoJSON GeoJSON] is more or less the JSON equivalent to KML. 
+Very easy to use in a HTML/JavaScript context, it rapidly reached a large audience. 
+
+From OSMBonusPack v4.2.9, all KML objects support loading GeoJSON content, and saving locally in GeoJSON format. 
+
+Let save in GeoJSON the KML structure built in chapters 11 and 12: 
+{{{
+File localFile = kmlDocument.getDefaultPathForAndroid("my_route.json");
+kmlDocument.saveAsGeoJSON(localFile);
+}}}
+
+Refer to [GeoJSON] Wiki page for more details. 
+
+= Conclusion =
+Well, "That's all Folks!"
+
+If you want to go further, have a look on OSMBonusPackDemo/OSMNavigator source code, and on the javadoc. You will discover some useful stuff like *MapEventsOverlay*/*MapEventsReceiver*, *GeocoderNominatim*, *Polygon* overlay, Parcelable objects, and more... 
