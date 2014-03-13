@@ -21,11 +21,25 @@ See the [https://developers.google.com/kml/documentation/kmlreference KML Refere
 
 == Supported objects ==
 
-Supported objects are:
- * Features: Document, Folder, NetworkLink, Placemark, GroundOverlay
- * Geometry: Point, LineString, Polygon
- * Style
- * ColorStyle: LineStyle, PolyStyle, IconStyle
+Supported objects are listed in the table below, with their related OSMBonusPack class:
+
+|| KML object type || OSMBonusPack class ||
+|| Document || KmlDocument ||
+|| Folder || KmlFolder ||
+|| NetworkLink || KmlFolder ||
+|| Placemark|| KmlPlacemark ||
+|| GroundOverlay|| KmlGroundOverlay ||
+|| Geometry|| KmlGeometry ||
+|| Point|| KmlPoint ||
+|| Point|| KmlPoint ||
+|| LineString || KmlLineString ||
+|| Polygon || KmlPolygon ||
+|| Style || Style ||
+|| ColorStyle || ColorStyle ||
+|| LineStyle || LineStyle ||
+|| PolyStyle|| PolyStyle ||
+|| IconStyle|| IconStyle ||
+
 
 Unsupported objects are just ignored, without raising an error. 
 
