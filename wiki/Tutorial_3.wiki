@@ -42,14 +42,18 @@ To customize the design of clusters, the first level is to use the available get
 
 Example:
 {{{
-poiMarkers.getTextPaint().setTextSize(10.0f);
 poiMarkers.getTextPaint().setColor(Color.DKGRAY);
-poiMarkers.mTextAnchorU = 0.75f;
-poiMarkers.mTextAnchorV = 0.25f;
+poiMarkers.getTextPaint().setTextSize(12.0f);
+poiMarkers.mAnchorU = Marker.ANCHOR_RIGHT;
+poiMarkers.mAnchorV = Marker.ANCHOR_BOTTOM;
+poiMarkers.mTextAnchorV = 0.40f;
 }}}
 
-The second level is to sub-class either the MarkerClusterer abstract class, or the GridMarkerClusterer, depending on how much you need. 
-Then you override #buildClusterMarker(StaticCluster cluster, MapView mapView) method. 
+But you may want to go deeper. There is a lot of excellent ideas for cluster design: circles with various sizes or colors, set of photos,... 
+You can implement such designs by sub-classing the GridMarkerClusterer. 
+Then you override #buildClusterMarker(StaticCluster cluster, MapView mapView) method, and draw your cluster icon as needed. 
+
+Look at GridMarkerClusterer#buildClusterMarker source code to have a good starting point. 
 
 
 If you want to go further, you can also implement your own clustering algorithm. You "just" have to sub-class the MarkerClusterer, and override the #clusterer(MapView mapView) method. 
