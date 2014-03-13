@@ -23,7 +23,8 @@ The table below shows the mapping in both ways between GeoJSON types and KML cla
 At loading, other GeoJSON types will be ignored. 
 At saving, other KML classes will be ignored. 
 
-If your KmlFolder contains recursively other KmlFolder, the resulting GeoJSON FeatureCollection will contain other FeatureCollection. This could be invalid, as (surprisingly) GeoJSON spec doesn't support multiple levels of FeatureCollection. 
+GeoJSON spec doesn't support nested of FeatureCollection. 
+So, at saving, if your KmlFolder contains recursively other KmlFolder, this hierarchy is flattened: the root KmlFolder is converted in a FeatureCollection, containing all KmlPlacemarks converted as Features. 
 
 = GeoJSON properties, KML attributes and KML ExtendedData =
 
