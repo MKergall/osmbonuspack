@@ -38,7 +38,7 @@ So:
 
 
 = 0. Using the Marker overlay =
-As we will make a large usage of Marker overlays, let's have a quick presentation. 
+As we will make a large usage of OSMBonusPack Marker, let's have a quick presentation. 
 
 First of all, you MUST put in your project res directory all resources needed for the default InfoWindow or "bubble": 
  * in your res/layout: bonuspack_bubble.xml
@@ -56,7 +56,11 @@ startMarker.setPosition(startPoint);
 startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
 map.getOverlays().add(startMarker);
 }}}
-(Marker.ANCHOR_CENTER and Marker.ANCHOR_BOTTOM are just readable synonyms for 0.5 and 1.0)
+
+You will certainly notice that 2 Marker classes are available: one in osmdroid, and one in OSMBonusPack. Of course, you need to import the OSMBonusPack one: 
+{{{
+import org.osmdroid.bonuspack.overlays.Marker;
+}}}
 
 And we refresh the map. Yes, we will not repeat it everytime, but in order to see your changes, you need to refresh the map - this way:
 {{{
@@ -65,7 +69,7 @@ map.invalidate();
 
 Give it a try. You should see the default osmdroid marker icon. 
 
-Now we can improve a little bit, changing the icon, setting a title to be shown in the InfoWindow when clicking on the marker:
+Now we can improve a little bit, changing the icon, and setting a title to be shown in the InfoWindow when clicking on the marker:
 {{{
 startMarker.setIcon(getResources().getDrawable(R.drawable.ic_launcher));
 startMarker.setTitle("Start point");
