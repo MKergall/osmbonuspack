@@ -97,9 +97,9 @@ Now, you have a "my_route.kml" file, containing the whole KML content loaded fro
 [http://en.wikipedia.org/wiki/GeoJSON GeoJSON] is more or less the JSON equivalent to KML. 
 Very easy to use in a HTML/JavaScript context, it rapidly reached a large audience. 
 
-From OSMBonusPack v4.2.9, all KML objects support loading GeoJSON content, and saving locally in GeoJSON format. 
+From OSMBonusPack v4.2.9, all KML objects support loading of GeoJSON content, and saving locally in GeoJSON format. 
 
-Let save in GeoJSON the KML structure built in chapters 11 and 12: 
+Let save in GeoJSON the KML structure built in chapters 12 and 13: 
 {{{
 File localFile = kmlDocument.getDefaultPathForAndroid("my_route.json");
 kmlDocument.saveAsGeoJSON(localFile);
