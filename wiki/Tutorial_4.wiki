@@ -15,7 +15,6 @@ Let see it in action. I have a Url to a KML file, and I want to show it on my OS
 
 (Parenthesis - If you don't have such Url, pick one of those:
  * Paris Tour: http://mapsengine.google.com/map/kml?mid=z6IJfj90QEd4.kUUY9FoHFRdE
- * A route in Netherlands: http://www.yournavigation.org/api/1.0/gosmore.php?format=kml&flat=52.215676&flon=5.963946&tlat=52.2573&tlon=6.1799
  * Or a message in the desert: http://mapsengine.google.com/map/kml?mid=z6IJfj90QEd4.kcfEKhi8r5LQ
 End of parenthesis)
 
@@ -34,14 +33,10 @@ In particular, it contains a KmlFeature: kmlRoot, which is the entry point to th
 Don't hesitate to have a look at [http://code.google.com/p/osmbonuspack/source/browse/trunk/OSMBonusPack/src/org/osmdroid/bonuspack/kml/KmlFeature.java KmlFeature] class to understand its logic. It's quite simple, and you will need to understand it if you want to go further and manipulate your KML structure. 
 
 But for now, we mainly wish to see the graphics on the screen. 
-So, set a default marker icon for all points:
-{{{
-Drawable defaultMarker = getResources().getDrawable(R.drawable.marker_kml_point);
-}}}
 
 And build the overlays:
 {{{
-FolderOverlay kmlOverlay = (FolderOverlay)kmlDocument.mKmlRoot.buildOverlays(this, map, defaultMarker, kmlDocument, false);
+FolderOverlay kmlOverlay = (FolderOverlay)kmlDocument.mKmlRoot.buildOverlays(this, map, null, null, kmlDocument);
 }}}
 
 Yes, this is doing the job. This FolderOverlay will be the container for all overlays that will be found in the KML structure: 
@@ -71,7 +66,24 @@ The result when loading "Paris Tour" URL:
 
 <img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/tuto_kml.png">
 
-= 13. Grab overlays in KML structure, save KML locally =
+= 13. Styling overlays =
+In chapter 12, you used KML content including styles, and the overlays were reflecting these styles. 
+This is not always the case. You may have content without style, or you may want to get rid of existing styles and apply your own strategy. 
+
+Example: this KML containing a route in Netherlands: 
+http://www.yournavigation.org/api/1.0/gosmore.php?format=kml&flat=52.215676&flon=5.963946&tlat=52.2573&tlon=6.1799
+
+First level, defining a default style:
+Set a default marker icon for all points:
+{{{
+Drawable defaultMarker = getResources().getDrawable(R.drawable.marker_kml_point);
+Style defaultStyle = new Style(defaultBitmap, 0x901010AA, 3.0f, 0x20AA1010);
+FolderOverlay kmlOverlay = (FolderOverlay)mKmlDocument.mKmlRoot.buildOverlay(map, defaultStyle, null, mKmlDocument);
+}}}
+
+TO BE COMPLETED... 
+
+= 14. Grab overlays in KML structure, save KML locally =
 You can "grab" an overlay and add it in an existing KML folder. 
 For example, we can grab the route shape overlay we built in chapter 1: 
 {{{
