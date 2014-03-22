@@ -67,21 +67,85 @@ The result when loading "Paris Tour" URL:
 <img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/tuto_kml.png">
 
 = 13. Styling overlays =
-In chapter 12, you used KML content including styles, and the overlays were reflecting these styles. 
-This is not always the case. You may have content without style, or you may want to get rid of existing styles and apply your own strategy. 
+In chapter 12, you used KML samples including styles, and the overlays were reflecting these styles. 
+This is not always the case. You may have content without style. Or you may want to get rid of defined styles and apply your own strategy. 
 
-Example: this KML containing a route in Netherlands: 
+Example: YOURS service produces routes in KML format. 
+Here is a 
 http://www.yournavigation.org/api/1.0/gosmore.php?format=kml&flat=52.215676&flon=5.963946&tlat=52.2573&tlon=6.1799
 
-First level, defining a default style:
-Set a default marker icon for all points:
+This KML contains no style at all, and all "visible" elements are set to false. 
+
+So, what can we do? 
+
+== 13.1 Default style ==
+First level of design customization is to specify a default style. 
+
+You can use the simplified Style constructor where you just specify 
+ * a default Marker icon, 
+ * a default line color and line width, 
+ * and a default fill color
+
 {{{
 Drawable defaultMarker = getResources().getDrawable(R.drawable.marker_kml_point);
+Bitmap defaultBitmap = ((BitmapDrawable)defaultMarker).getBitmap();
 Style defaultStyle = new Style(defaultBitmap, 0x901010AA, 3.0f, 0x20AA1010);
+}}}
+
+Then you specify this default style when building the overlays:
+{{{
 FolderOverlay kmlOverlay = (FolderOverlay)mKmlDocument.mKmlRoot.buildOverlay(map, defaultStyle, null, mKmlDocument);
 }}}
 
-TO BE COMPLETED... 
+Everytime a Placemark has no style defined, the default style will be used to build its Overlay. 
+
+== 13.2 Advanced styling with the Styler ==
+If you need more advanced mechanisms, then you can specify a "Styler". 
+This is an interface providing methods to be applied to each kind of KML Feature or Geometry during the Overlays building. 
+
+First step is to implement your Styler:
+{{{
+class MyKmlStyler implements KmlFeature.Styler {
+}
+}}}
+
+Then you write the methods. 
+Here is a LineString styler setting the width of the line according to its number of points:
+{{{
+@Override public void onLineString(Polyline polyline, KmlPlacemark kmlPlacemark, KmlLineString kmlLineString){
+  polyline.setWidth(Math.max(kmlLineString.mCoordinates.size()/200.0f, 3.0f));
+  polyline.setColor(Color.GREEN);
+}
+}}}
+
+If you have nothing to do, do nothing:
+{{{
+@Override public void onFeature(Overlay overlay, KmlFeature kmlFeature){}
+}}}
+
+Now you can use this styler when building overlays, this way:
+
+{{{
+KmlFeature.Styler styler = new MyKmlStyler();
+FolderOverlay kmlOverlay = (FolderOverlay)mKmlDocument.mKmlRoot.buildOverlay(map, null, styler, mKmlDocument);
+}}}
+
+It's important to understand the styling strategy: 
+ # Is there is a styler, it is called, and NO other styling is applied. 
+ # Else, if there is a style defined in the KML Feature, this style is applied. 
+ # Else, if there is a default style specified, it is applied. 
+ # Else, hard-coded default styling (quite ugly) is applied. 
+
+It may happen that you would like to both use a Styler, AND still have access to standard styling. In this case, in the Styler methods, you can still call #applyDefaultStyling, which is available in most KML classes. 
+
+In our example, if we have no particular style specificities for Points, we can define onPoint this way:
+{{{
+@Override public void onPoint(Marker marker, KmlPlacemark kmlPlacemark, KmlPoint kmlPoint) {
+  kmlPoint.applyDefaultStyling(marker, mDefaultStyle, kmlPlacemark, mKmlDocument, map);
+}
+}}}
+As you will notice, you will have to set some objects as class members (the default style, the KmlDocument). 
+
 
 = 14. Grab overlays in KML structure, save KML locally =
 You can "grab" an overlay and add it in an existing KML folder. 
@@ -104,7 +168,7 @@ kmlDocument.saveAsKML(localFile);
 The default path for KML files is in the external storage, in a "kml" directory. 
 Now, you have a "my_route.kml" file, containing the whole KML content loaded from a url in chapter 10, plus the route shape and route nodes of chapter 1. 
 
-= 14. Loading and saving of GeoJSON content =
+= 15. Loading and saving of GeoJSON content =
 
 [http://en.wikipedia.org/wiki/GeoJSON GeoJSON] is more or less the JSON equivalent to KML. 
 Very easy to use in a HTML/JavaScript context, it rapidly reached a large audience. 
