@@ -3,7 +3,7 @@
 <wiki:toc max_depth="2" />
 
 = Introduction =
-_GeoJSON support is available from v4.2.9. _
+_GeoJSON support is available from OSMBonusPack v4.2.9. _
 
 In OSMBonusPack, support for GeoJSON is done through KML objects. 
 
@@ -19,12 +19,17 @@ The table below shows the mapping in both ways between GeoJSON types and KML cla
 || Point || KmlPoint ||
 || LineString || KmlLineString ||
 || Polygon || KmlPolygon ||
+|| GeometryCollection || KmlMultiGeometry ||
+
+MultiPoint is supported at loading only, and converted to KmlMultiGeometry. 
 
 At loading, other GeoJSON types will be ignored. 
 At saving, other KML classes will be ignored. 
 
 GeoJSON spec doesn't support nested of FeatureCollection. 
 So, at saving, if your KmlFolder contains recursively other KmlFolder, this hierarchy is flattened: the root KmlFolder is converted in a FeatureCollection, containing all KmlPlacemarks converted as Features. 
+
+Nested GeometryCollections are fully supported, as nested KmlMultiGeometry. 
 
 = GeoJSON properties, KML attributes and KML ExtendedData =
 
@@ -58,5 +63,5 @@ As for KML, the only technical limits are about memory and time.
 For memory, you will find the same limits than [KML], related to memory heap on Android. 
 
 For time : note that performance for GeoJSON loading should be significantly slower than for an equivalent in KML. There are 2 reasons: 
- * the usage of the standard JSON library included in the Android SDK - which is not definitely not as efficient as the standard XML SAX parser. 
+ * the usage of the standard JSON library included in the Android SDK - which is definitely not as efficient as the standard XML SAX parser. 
  * cumulated with the structure of GeoJSON coordinates: each position is stored as a JSON array, implying a heavy usage of JSON parsing. In KML, the coordinates of a whole geometry are in a single XML element with a simple formatting, allowing an optimized loading strategy. 
