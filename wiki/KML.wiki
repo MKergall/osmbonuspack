@@ -34,6 +34,7 @@ Supported KML object types are listed in the table below, with their related OSM
 || Point|| KmlPoint ||
 || LineString || KmlLineString ||
 || Polygon || KmlPolygon ||
+|| MultiGeometry || KmlMultiGeometry ||
 || Style || Style ||
 || ColorStyle || ColorStyle ||
 || PolyStyle|| ColorStyle ||
