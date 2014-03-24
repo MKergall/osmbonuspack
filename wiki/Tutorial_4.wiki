@@ -29,12 +29,12 @@ kmlDocument.parseUrl(url);
 }}}
 
 This KmlDocument now contains the whole KML Document. 
-In particular, it contains a KmlFeature: kmlRoot, which is the entry point to the KML hierarchy. 
-Don't hesitate to have a look at [http://code.google.com/p/osmbonuspack/source/browse/trunk/OSMBonusPack/src/org/osmdroid/bonuspack/kml/KmlFeature.java KmlFeature] class to understand its logic. It's quite simple, and you will need to understand it if you want to go further and manipulate your KML structure. 
+In particular, it contains a KmlFolder: kmlRoot, which is the entry point to the KML hierarchy. 
+Don't hesitate to have a look at [KML] Wiki page: you will need to understand the KML classes if you want to go further and manipulate your KML structure. 
 
 But for now, we mainly wish to see the graphics on the screen. 
 
-And build the overlays:
+So we build the overlays:
 {{{
 FolderOverlay kmlOverlay = (FolderOverlay)kmlDocument.mKmlRoot.buildOverlays(this, map, null, null, kmlDocument);
 }}}
@@ -181,7 +181,10 @@ File localFile = kmlDocument.getDefaultPathForAndroid("my_route.json");
 kmlDocument.saveAsGeoJSON(localFile);
 }}}
 
-Refer to [GeoJSON] Wiki page for more details. 
+You can refer to [GeoJSON] Wiki page for more details. 
+
+Note that GeoJSON format doesn't provide styling attributes. So the chapter 13 above about styling will be very useful if you want to display GeoJSON content. 
+
 
 = Conclusion =
 Well, "That's all Folks!"
