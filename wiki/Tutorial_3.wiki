@@ -38,6 +38,7 @@ If you zoom in, each individual marker appears. When you zoom out, they are grou
 
 = 11. Customizing the clusters design - and beyond =
 
+== 11.1 Simple customization ==
 To customize the design of clusters, the first level is to use the available getters, setters and public attributes. 
 
 Example:
@@ -49,14 +50,21 @@ poiMarkers.mAnchorV = Marker.ANCHOR_BOTTOM;
 poiMarkers.mTextAnchorV = 0.40f;
 }}}
 
-But you may want to go deeper. There is a lot of excellent ideas for cluster design: circles with various sizes or colors, set of photos,... 
+== 11.2 Advanced customization ==
+But you may want to go deeper. There is a lot of excellent ideas for cluster design: 
+ * circles with various colors or sizes, 
+ * set of photos,
+ * ... 
+
 You can implement such designs by sub-classing the GridMarkerClusterer. 
-Then you override #buildClusterMarker(StaticCluster cluster, MapView mapView) method, and draw your cluster icon as needed. 
+Then you override #buildClusterMarker(StaticCluster cluster, MapView mapView) method, and you draw your cluster icon as needed. 
 
-Look at GridMarkerClusterer#buildClusterMarker source code to have a good starting point. 
-
+To have a good starting point, you can look 
+ * at GridMarkerClusterer#buildClusterMarker source code
+ * or at OSMBonusPackTuto CirclesGridMarkerClusterer, which implements circles with various colors and sizes. 
 
 If you want to go further, you can also implement your own clustering algorithm. You "just" have to sub-class the MarkerClusterer, and override the #clusterer(MapView mapView) method. 
 
 
-Next step: in [Tutorial_4], you will learn how to use the KML and GeoJSON toolbox. 
+= Next step =
+In [Tutorial_4], you will learn how to use the KML and GeoJSON toolbox. 
