@@ -3,8 +3,19 @@
 Note: sources of these tutorials can be found in the [http://code.google.com/p/osmbonuspack/source/browse/#svn%2Ftrunk%2FOSMBonusPackTuto OSMBonusPackTuto] project. But of course and as usual, we strongly recommend that you follow the tutorials, and build the code yourself. 
 
 
+= Important note =
+For clarity and simplicity, in these tutorials, we do all API calls in the main thread. 
+
+Normally, for network calls, this is not recommended at all: we should use threads and asynchronous tasks. 
+Even worst, since Honeycomb SDK (3.0), it is not allowed to make a network call in the main thread (thanks to the "StrictMode.ThreadPolicy" default settings, a NetworkOnMainThreadException exception will be raised). 
+
+So:
+ # For these tutorials, target an SDK earlier than 3.0
+ # Once you have played with the tutos and want to work on your real app, have a look at the OSMBonusPackDemo source code, where network calls are done in async tasks. 
+
+
 = Introduction =
-Let's assume you have a super-simple Android application using osmdroid, and displaying a map in an activity. Typically, that:
+Let's start with a super-simple Android application using osmdroid, and displaying a map in an activity. Typically, that:
 
 {{{
 public class MainActivity extends Activity {
@@ -25,21 +36,9 @@ public class MainActivity extends Activity {
 }
 }}}
 
-And you want to display a route on your map. 
-
-= Important note =
-For clarity and simplicity, in these tutorials, we do all API calls in the main thread. 
-
-Normally, for network calls, this is not recommended at all: we should use threads and asynchronous tasks. 
-Even worst, since Honeycomb SDK (3.0), it is not allowed to make a network call in the main thread (thanks to the "StrictMode.ThreadPolicy" default settings, a NetworkOnMainThreadException exception will be raised). 
-
-So:
- # For these tutorials, target an SDK earlier than 3.0
- # Once you have played with the tutos and want to work on your real app, have a look at the OSMBonusPackDemo source code, where network calls are done in async tasks. 
-
 
 = 0. Using the Marker overlay =
-As we will make a large usage of OSMBonusPack Marker, let's have a quick presentation. 
+As we will make a large usage of OSMBonusPack Marker in those tutorials, let's start with a quick presentation. 
 
 First of all, you MUST put in your project res directory all resources needed for the default InfoWindow or "bubble": 
  * in your res/layout: bonuspack_bubble.xml
@@ -80,4 +79,4 @@ startMarker.setTitle("Start point");
 
 - Refresh the map!
 
-- Okay, you got it. Now, let's start with really new stuff: routes, in [Tutorial_1]
+- Okay, you got it. Now, let's start with really new stuff: routes and directions, in [Tutorial_1]
