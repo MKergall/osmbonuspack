@@ -1,4 +1,4 @@
-#summary BonusPack Tutorial #4: KML content.
+#summary BonusPack Tutorial #4: Handling KML and GeoJSON content.
 
 (we assume you already followed [Tutorial_1] and [Tutorial_2]])
 
