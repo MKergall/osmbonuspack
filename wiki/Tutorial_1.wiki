@@ -1,85 +1,6 @@
-#summary BonusPack Tutorial #1: routing, bubbles.
+#summary BonusPack Tutorial #1: Routes and Directions.
 
-Note: final sources of these tutorials can be found in the OSMBonusPackTuto project. 
-
-= Introduction =
-Let's assume you have a super-simple Android application using osmdroid, and displaying a map in an activity. Typically, that:
-
-{{{
-public class MainActivity extends Activity {
-
-    @Override public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        MapView map = (MapView) findViewById(R.id.map);
-        map.setTileSource(TileSourceFactory.MAPNIK);
-	map.setBuiltInZoomControls(true);
-	map.setMultiTouchControls(true);
-
-        GeoPoint startPoint = new GeoPoint(48.13, -1.63);
-        IMapController mapController = map.getController();
-	mapController.setZoom(9);
-        mapController.setCenter(startPoint);
-    }
-}
-}}}
-
-And you want to display a route on your map. 
-
-= Important note =
-For clarity and simplicity, in these tutorials, we do all API calls in the main thread. 
-
-Normally, for network calls, this is not recommended at all: we should use threads and asynchronous tasks. 
-Even worst, since Honeycomb SDK (3.0), it is not allowed to make a network call in the main thread (thanks to the "StrictMode.ThreadPolicy" default settings, a NetworkOnMainThreadException exception will be raised). 
-
-So:
- # For these tutorials, target an SDK earlier than 3.0
- # Once you have played with the tutos and want to work on your real app, have a look at the OSMBonusPackDemo source code, where network calls are done in async tasks. 
-
-
-= 0. Using the Marker overlay =
-As we will make a large usage of OSMBonusPack Marker, let's have a quick presentation. 
-
-First of all, you MUST put in your project res directory all resources needed for the default InfoWindow or "bubble": 
- * in your res/layout: bonuspack_bubble.xml
- * in res/drawable-mpi: 
-  * bonuspack_bubble.9.png
-  * moreinfo_arrow.png
-  * moreinfo_arrow_pressed.png
- * in res/drawable: btn_moreinfo.xml
-You will find all those resources in OSMBonusPackDemo res directory. 
-
-Now, back to the code. We create a Marker, we screw it at the start point, we set its anchor at bottom-center, and we add this Marker to the map's overlays. 
-{{{
-Marker startMarker = new Marker(map);
-startMarker.setPosition(startPoint);
-startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-map.getOverlays().add(startMarker);
-}}}
-
-You will certainly notice that 2 Marker classes are available: one in osmdroid, and one in OSMBonusPack. Of course, you need to import the OSMBonusPack one: 
-{{{
-import org.osmdroid.bonuspack.overlays.Marker;
-}}}
-
-And we refresh the map. Yes, we will not repeat it everytime, but in order to see your changes, you need to refresh the map - this way:
-{{{
-map.invalidate();
-}}}
-
-Give it a try. You should see the default osmdroid marker icon. 
-
-Now we can improve a little bit, changing the icon, and setting a title to be shown in the InfoWindow when clicking on the marker:
-{{{
-startMarker.setIcon(getResources().getDrawable(R.drawable.ic_launcher));
-startMarker.setTitle("Start point");
-}}}
-
-- And then? 
-
-- Refresh the map!
-
-- Okay, you got it. So now, let's start with really new stuff. 
+_We assume you already followed [Tutorial_0]._
 
 = 1. "Hello, Routing World!" =
 
@@ -172,12 +93,14 @@ Drawable icon = getResources().getDrawable(R.drawable.ic_continue);
 nodeMarker.setImage(icon);
 }}}
 
-Yes, you are right, it's not the right icon!
+Give it a try, you should get something like that:
+
+<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/tuto_routing.png" height="530">
+
+And, yes, you are right, maneuver icons are not correct!
 
 The maneuver id is in node.mManeuverType. 
 The possible maneuver ids are [http://open.mapquestapi.com/guidance/#maneuvertypes here]. And the maneuver icons are in OSMBonusPackDemo res/drawable-mpi. 
 It's boring, so I'm going downstair to take a coffee, while you handle those icons properly. 
 
 And see you again on [Tutorial_2]. 
-
-<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/tuto_routing.png" height="530">
