@@ -37,11 +37,11 @@ map.invalidate();
 
 - Okay, but I wanted this route for bicycles... 
 
-- First, change to MapQuestRoadManager, as it supports bicycle routes. Bad news, MapQuest service now requires this API key, so you will also have to register at http://developer.mapquest.com, and set-up an API key. 
+- First, change to MapQuestRoadManager, as it supports bicycle routes. Bad news, MapQuest service now requires an API key, so you will also have to register at http://developer.mapquest.com, and obtain this API key. 
 
 Then, in the code, just few changes, not too complicated:
 {{{
-RoadManager roadManager = new MapQuestRoadManager("YOUR MAPQUEST API KEY");
+RoadManager roadManager = new MapQuestRoadManager("_YOUR MAPQUEST API KEY_");
 }}}
 
 Then set appropriate option (before getting the road):
