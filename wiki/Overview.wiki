@@ -18,7 +18,7 @@ So, here comes OSMBonusPack.
 Probably the most desired feature. 
 OSMBonusPack provides a set of classes to get routes, with turn-by-turn information and route shape:
 
-RoadManagers retrieve roads from a variety of service providers. Currently supported: 
+[Tutorial_1 RoadManagers] retrieve roads from a variety of service providers. Currently supported: 
   * *MapQuestRoadManager* using [http://open.mapquestapi.com/guidance/ MapQuest Open Guidance] service
   * and *OSRMRoadManager*, using [http://project-osrm.org/ OSRM] service. 
 
@@ -32,14 +32,14 @@ Also provided, very useful route-related utilities:
 
 
 = Markers with cartoon-bubble =
-The *Marker* overlay mimics as much as possible its Google Maps V2 equivalent. 
+The [Tutorial_0 Marker] overlay mimics as much as possible its Google Maps V2 equivalent. 
 
 It supports the now classical "cartoon-bubble" or *InfoWindow*. 
 Two standard bubble layouts are provided in the demo application, each one with its NinePatch background. You can use your own, and contributors are strongly encouraged to share some nice alternatives... 
 
 This *Marker* also supports drag events, transparency, rotation, and so on. 
 
-= Other Overlays =
+= Polygon, Polyline, GroundOverlay =
 
 The *Polygon* overlay mimics as much as possible its Google Maps V2 equivalent. 
 This *Polygon* overlay also supports cartoon-bubble (something not available in Google Maps V2). 
@@ -51,7 +51,7 @@ The *FolderOverlay* has no Google Maps counterpart. It is a container for other 
 = Marker Clustering =
 Marker Clustering is the now classical solution to the "Too Many Markers Problem". 
 
-*GridMarkerClusterer* displays all Markers which are close together as a single icon - adapting the clustering to the zoom level. 
+[Tutorial_3 GridMarkerClusterer] displays all Markers which are close together as a single icon - adapting the clustering to the zoom level. 
 
 It has been designed to be as simple to use as possible. Basically, you just have to create a GridMarkerClusterer, add it to your map overlays, and put your Markers inside. 
 
@@ -59,7 +59,7 @@ You can easily customize its look&feel (cluster icon, cluster size, text style a
 
 
 = Points Of Interest - POIs =
-POIProviders retrieve POI from a variety of service providers. 
+[Tutorial_2 POIProviders] retrieve POI from a variety of service providers. 
 Currently supported: 
  * *NominatimPOIProvider*, to retrieve OpenStreetMap "features"
  * *GeoNamesPOIProvider*, using [http://www.geonames.org/export/wikipedia-webservice.html GeoNames Wikipedia] service, retrieving Wikipedia geolocalized entries
@@ -90,7 +90,7 @@ Example: long-press on the map to define the destination, a new POI,...
 
 
 = KML and GeoJSON support =
-*KmlDocument* and *KmlFeature* are the major building blocks to read and parse KML and GeoJSON content, to build corresponding overlays, to convert overlays as KML content, and to save KML and GeoJSON documents locally. 
+[Tutorial_4 KmlDocument and KmlFeature] are the major building blocks to read and parse KML and GeoJSON content, to build corresponding overlays, to convert overlays as KML content, and to save KML and GeoJSON documents locally. 
 
 Refer to the [KML KML wiki page] and [GeoJSON GeoJSON wiki page] for more details. 
 
