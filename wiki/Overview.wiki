@@ -39,7 +39,7 @@ Two standard bubble layouts are provided in the demo application, each one with 
 
 This *Marker* also supports drag events, transparency, rotation, and so on. 
 
-= Polygon, Polyline, GroundOverlay, FolderOverlay =
+= Polygon, Polyline, `GroundOverlay`, `FolderOverlay` =
 
 The *Polygon* overlay mimics as much as possible its Google Maps V2 equivalent. 
 This *Polygon* overlay also supports cartoon-bubble (something not available in Google Maps V2). 
