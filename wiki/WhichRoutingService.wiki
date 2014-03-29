@@ -2,7 +2,7 @@
 
 = Introduction =
 
-So now, with this Bonus Pack, you can switch between routing services by just calling the right RoadManager. 
+So now, with OSMBonusPack, you can switch between routing services by just calling the right RoadManager. 
 But choosing the right routing service may not be so simple. 
 Find here some elements to help you in this choice. 
 
@@ -24,10 +24,10 @@ OSRM project is quite new and very active, these issues may be fixed soon.
 
 = MapQuest issues =
  * Route is ending "one node too far". This is probably intentional, to give indications if the driver went too far. But not easy to hide. 
+ * API Key to request (free, and quite easy to obtain)
 
 = Common strengths =
  * Worldwide coverage
  * Waypoints support
  * Route instructions
  * Fresh OSM data
- * And last but not least: No API Key!
