@@ -99,6 +99,7 @@ FolderOverlay kmlOverlay = (FolderOverlay)mKmlDocument.mKmlRoot.buildOverlay(map
 
 Everytime a Placemark has no style defined, the default style will be used to build its Overlay. 
 
+
 == 13.2 Advanced styling with the Styler ==
 If you need more advanced mechanisms, then you can specify a "Styler". 
 This is an interface providing methods to be applied to each kind of KML Feature or Geometry during the Overlays building. 
@@ -146,6 +147,20 @@ In our example, if we have no particular style specificities for Points, we can 
 }}}
 As you will notice, you will have to set some objects as class members (the default style, the KmlDocument). 
 
+== 13.3 Setting-up KML Styles programmatically ==
+Note that you can also create Styles programmatically inside the KML structure:
+{{{
+Style panda_area = new Style(pandaBitmap, 0x901010AA, 3.0f, 0x2010AA10);
+mKmlDocument.putStyle("panda_area", panda_area);
+}}}
+
+And you can assign a Style to KML features. For instance this way:
+{{{
+@Override public void onPoint(Marker marker, KmlPlacemark kmlPlacemark, KmlPoint kmlPoint) {
+  if ("panda_area".equals(kmlPlacemark.getExtendedData("category")))
+    kmlPlacemark.mStyle = "panda_area";
+  kmlPoint.applyDefaultStyling(marker, mDefaultStyle, kmlPlacemark, mKmlDocument, map);
+}}}
 
 = 14. Grab overlays in KML structure, save KML locally =
 You can "grab" an overlay and add it in an existing KML folder. 
