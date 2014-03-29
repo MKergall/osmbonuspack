@@ -9,12 +9,15 @@ First, get a road manager:
 RoadManager roadManager = new OSRMRoadManager();
 }}}
 
-Then, retreive the road between your start and end point:
-
+Set-up your start and end points: 
 {{{
 ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
 waypoints.add(startPoint);
-waypoints.add(new GeoPoint(48.4, -1.9)); //end point
+GeoPoint endPoint = new GeoPoint(48.4, -1.9);
+waypoints.add(endPoint);
+}}}
+And retreive the road between those points:
+{{{
 Road road = roadManager.getRoad(waypoints);
 }}}
 
