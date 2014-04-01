@@ -29,7 +29,7 @@ kmlDocument.parseUrl(url);
 }}}
 
 This KmlDocument now contains the whole KML Document. 
-In particular, it contains a KmlFolder: kmlRoot, which is the entry point to the KML hierarchy. 
+In particular, it contains a KmlFolder: mKmlRoot, which is the entry point to the KML hierarchy. 
 Don't hesitate to have a look at [KML] Wiki page: you will need to understand the KML classes if you want to go further and manipulate your KML structure. 
 
 But for now, we mainly wish to see the graphics on the screen. 
@@ -101,6 +101,8 @@ Everytime a Placemark has no style defined, the default style will be used to bu
 
 
 == 13.2 Advanced styling with the Styler ==
+_Available from OSMBonusPack v4.3_
+
 If you need more advanced mechanisms, then you can specify a "Styler". 
 This is an interface providing methods to be applied to each kind of KML Feature or Geometry during the Overlays building. 
 
@@ -185,10 +187,12 @@ Now, you have a "my_route.kml" file, containing the whole KML content loaded fro
 
 = 15. Loading and saving of GeoJSON content =
 
+_Available from OSMBonusPack v4.2.9_
+
 [http://en.wikipedia.org/wiki/GeoJSON GeoJSON] is more or less the JSON equivalent to KML. 
 Very easy to use in a HTML/JavaScript context, it rapidly reached a large audience. 
 
-From OSMBonusPack v4.2.9, all KML objects support loading of GeoJSON content, and saving locally in GeoJSON format. 
+All KML objects support loading of GeoJSON content, and saving locally in GeoJSON format. 
 
 Let save in GeoJSON the KML structure built in chapters 12 and 13: 
 {{{
@@ -204,4 +208,4 @@ Note that GeoJSON format doesn't provide styling attributes. So the chapter 13 a
 = Conclusion =
 Well, "That's all Folks!"
 
-If you want to go further, have a look on OSMBonusPackDemo/OSMNavigator source code, and on the javadoc. You will discover some useful stuff like *MapEventsOverlay*/*MapEventsReceiver*, *GeocoderNominatim*, *Polygon* overlay, Parcelable objects, and more... 
+If you want to go further, have a look on OSMBonusPackDemo/OSMNavigator source code, and on the javadoc. You will discover some useful stuff like *MapEventsOverlay*/*MapEventsReceiver*, *GeocoderNominatim*, *Polygon* and *GroundOverlay*, Parcelable objects, and more... 
