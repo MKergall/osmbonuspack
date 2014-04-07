@@ -3,7 +3,7 @@
 Note: sources of these tutorials can be found in the [http://code.google.com/p/osmbonuspack/source/browse/#svn%2Ftrunk%2FOSMBonusPackTuto OSMBonusPackTuto] project. But of course and as usual, we strongly recommend that you follow the tutorials, and build the code yourself. 
 
 
-= Important note =
+= Important note about network calls =
 For clarity and simplicity, in these tutorials, we do all API calls in the main thread. 
 
 Normally, for network calls, this is not recommended at all: we should use threads and asynchronous tasks. 
@@ -15,7 +15,9 @@ So:
 
 
 = Introduction =
-Let's start with a super-simple Android application using osmdroid, and displaying a map in an activity. Typically, that:
+To set-up your project, see [HowToInclude] wiki page. 
+
+Then, let's start with a super-simple Android application using osmdroid, and displaying a map in an activity. Typically, that:
 
 {{{
 public class MainActivity extends Activity {
