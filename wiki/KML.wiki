@@ -101,10 +101,15 @@ None of "gx:" elements are supported.
  * *SimpleData* are supported, but with no handling of SchemaData, and no control of the Schema: all values are handled as Java Strings. When saving, they will be saved as Data. 
  * There is no support for ExtendedData using other namespaces. 
 
-== Other aspects ==
+== KMZ support ==
+_Under development_
 
-KMZ files are not supported. But you can easily convert between KML and KMZ with Android zip APIs (ZipFile, ZipInputStream,...). 
+Loading of local KMZ files is also supported. 
+The KMZ file must contain 1 KML file with ".kml" extension. This file will be the "main KML file". It can reference other files (icons, NetworkLinks) inside the KMZ, and external urls (with http/https). 
 
+References to local files external to this KMZ file (using the "../" prefix) is not supported. 
+
+Saving in KMZ format is not supported yet (note that you can easily create a KMZ file from your set of files, using a Zip utility). 
 
 = Limits =
 
