@@ -102,7 +102,7 @@ None of "gx:" elements are supported.
  * There is no support for ExtendedData using other namespaces. 
 
 == KMZ support ==
-_Under development_
+Supported from v4.4
 
 Loading of local KMZ files is also supported. 
 The KMZ file must contain 1 KML file with ".kml" extension. This file will be the "main KML file". It can reference other files (icons, NetworkLinks) inside the KMZ, and external urls (with http/https). 
