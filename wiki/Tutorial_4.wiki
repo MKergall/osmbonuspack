@@ -183,7 +183,7 @@ kmlDocument.saveAsKML(localFile);
 }}}
 
 The default path for KML files is in the external storage, in a "kml" directory. 
-Now, you have a "my_route.kml" file, containing the whole KML content loaded from a url in chapter 10, plus the route shape and route nodes of chapter 1. 
+Now, you have a "my_route.kml" file, containing the whole KML content loaded from a url in chapter 12, plus the route shape and route nodes of chapter 1. 
 
 = 15. Loading and saving of GeoJSON content =
 
@@ -204,5 +204,5 @@ You can refer to [GeoJSON] Wiki page for more details.
 
 Note that GeoJSON format doesn't provide styling attributes. So the chapter 13 above about styling will be very useful if you want to display GeoJSON content. 
 
-
-See you soon on [Tutorial_5], with Map events and GroundOverlay. 
+= Next step =
+See you soon again on [Tutorial_5], with Map events and GroundOverlay. 
