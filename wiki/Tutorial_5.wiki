@@ -1,0 +1,98 @@
+#summary Handling Map events.
+
+= 16. Handling Map events =
+
+It is quite usual to want to react to events done directly on the map - not on any particular marker or overlay. 
+
+Examples: 
+ - On a tap, close all open bubbles (usual Google Maps behaviour). 
+ - On a long press, put a marker at the position the user clicked. 
+
+You can do that using the duo MapEventsOverlay/MapEventsReceiver. 
+
+1) MapEventsOverlay is an overlay that will catch all events that are not catched by other usual overlays. 
+
+You give it the current context (this), and a MapEventsReceiver - let's just put "this" for now. 
+
+{{{
+MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(this, this);
+}}}
+
+Then you add it to your map: 
+{{{
+map.getOverlays().add(mapEventsOverlay);
+}}}
+
+You have to put it at the "bottom" of all overlays, so that other overlays react normally to their events. 
+If you are not sure, here is a simple way to insert it at the bottom:
+{{{
+Overlay removed = map.getOverlays().set(0, mapEventsOverlay);
+map.getOverlays().add(removed);
+}}}
+
+2) MapEventsReceiver is the object that will handle the map events. This is an interface, that you have to implement and pass to the MapEventsOverlay. 
+A smart solution is to simply add this interface to your Activity implementations: 
+{{{
+public class MainActivity extends Activity implements MapEventsReceiver
+}}}
+
+Then you override the abstract methods somewhere in your Activity class. There are 2 methods. 
+One method is the handler of single tap confirmed events: 
+{{{
+@Override public boolean singleTapConfirmedHelper(GeoPoint p) {
+	Toast.makeText(this, "Tapped", Toast.LENGTH_SHORT).show();
+	return true;
+}
+}}}
+
+The other one is the handler of long press events:
+{{{
+@Override public boolean longPressHelper(GeoPoint p) {
+	//DO NOTHING FOR NOW:
+	return false;
+}
+}}}
+
+_Other events are not covered, as they already have a role in default osmdroid usage. If you have a specific need, you can ask by raising an issue._
+
+As for other Android event handlers, if you want to "consume" the event, you return true, and if you don't, you return false. 
+
+For each method, the GeoPoint parameter is the position of the event on the map. A quick test:
+{{{
+Toast.makeText(this, "Tap on ("+p.getLatitude()+","+p.getLongitude()+")", Toast.LENGTH_SHORT).show();
+}}}
+
+Fine, now we can use that to close of all opened bubbles with a tap. Okay?
+{{{
+InfoWindow.closeAllInfoWindowsOn(map);
+}}}
+
+= 17. Using GroundOverlay =
+
+If you don't know what is a GroundOverlay, I let you have a look at [http://developer.android.com/reference/com/google/android/gms/maps/model/GroundOverlay.html Google Maps API]
+
+Use case: every time the user do a long press, we want to "drop" a GroundOverlay at the event position. 
+
+In the longPressHelper method, we create the GroundOverlay, give it the event position, and set relevant parameters: 
+
+{{{
+GroundOverlay myGroundOverlay = new GroundOverlay(this);
+myGroundOverlay.setPosition(p);
+myGroundOverlay.setImage(getResources().getDrawable(R.drawable.ic_launcher).mutate());
+myGroundOverlay.setDimensions(2000.0f);
+}}}
+Of course, we have to add it to the map overlays:
+{{{
+map.getOverlays().add(myGroundOverlay);
+}}}
+
+And then? Yes, refresh the map!
+{{{
+map.invalidate();
+}}}
+
+
+= Conclusion =
+Well, "That's all Folks!"
+
+If you want to go further, have a look on OSMBonusPackDemo/OSMNavigator source code, and on the javadoc. You will discover some useful stuff like *GeocoderNominatim*, *Polygon*, Parcelable objects, and more... 
