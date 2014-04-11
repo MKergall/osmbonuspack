@@ -205,7 +205,4 @@ You can refer to [GeoJSON] Wiki page for more details.
 Note that GeoJSON format doesn't provide styling attributes. So the chapter 13 above about styling will be very useful if you want to display GeoJSON content. 
 
 
-= Conclusion =
-Well, "That's all Folks!"
-
-If you want to go further, have a look on OSMBonusPackDemo/OSMNavigator source code, and on the javadoc. You will discover some useful stuff like *MapEventsOverlay*/*MapEventsReceiver*, *GeocoderNominatim*, *Polygon* and *GroundOverlay*, Parcelable objects, and more... 
+See you soon on [Tutorial_5], with Map events and GroundOverlay. 
