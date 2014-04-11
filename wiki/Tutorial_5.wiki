@@ -1,4 +1,4 @@
-#summary Map events and GroundOverlay.
+#summary BonusPack Tutorial #5: Map events and GroundOverlay.
 
 = 16. Handling Map events =
 
