@@ -1,4 +1,4 @@
-#summary Handling Map events.
+#summary Map events and GroundOverlay.
 
 = 16. Handling Map events =
 
