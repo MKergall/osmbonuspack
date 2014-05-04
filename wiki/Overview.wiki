@@ -80,7 +80,7 @@ So, OSMBonusPack provides *GeocoderNominatim* class, which accesses to a Nominat
  * or any other Nominatim-compliant service (your own installation for example). 
 Migrating from Android Geocoder is a simple change of class name. 
 
-WARNING - WARNING - WARNING : The relevance of Nominatim service is far behind Google Geocoding service. Results are sometimes quite surprising, and there is absolutely no support for any kind of misspelling: missing letter, "street" used instead of "avenue", etc. Take that aspect into account before providing a real-life service. 
+WARNING: The relevance of Nominatim service is far behind Google Geocoding service. Results are sometimes quite surprising, and there is few support for misspelling (e.g. searching for a "Mozar street", you will not find any "Mozart street"). Take this aspect into account before providing a real-life service. 
 
 = Map events handling = 
 [Tutorial_5 MapEventsOverlay and MapEventsReceiver] classes provide a simple way to handle single-press and long-press events somewhere on the map. 
