@@ -5,8 +5,8 @@
 It is quite usual to want to react to events done directly on the map - not on any particular marker or overlay. 
 
 Examples: 
- - On a tap, close all open bubbles (usual Google Maps behaviour). 
- - On a long press, put a marker at the position the user clicked. 
+  * On a tap, close all open bubbles (usual Google Maps behaviour). 
+  * On a long press, put a marker at the position the user clicked. 
 
 You can do that using the duo MapEventsOverlay/MapEventsReceiver. 
 
@@ -67,28 +67,47 @@ Fine, now we can use that to close of all opened bubbles with a tap. Okay?
 InfoWindow.closeAllInfoWindowsOn(map);
 }}}
 
-= 17. Using GroundOverlay =
+= 17. Using Polygon =
+Use case: every time the user long-press on the map, we want to "drop" a circle around the event position. 
+
+We will use the Polygon overlay, which has a method to be defined as a circle. 
+
+In the longPressHelper method, we create the Polygon, give it the event position, and set its radius: 
+{{{
+Polygon circle = new Polygon(this);
+circle.setPointsAsCircle(p, 10000.0);
+}}}
+And we adjust some design aspects: 
+{{{
+circle.setFillColor(0x12121212);
+circle.setStrokeColor(Color.RED);
+circle.setStrokeWidth(2);
+}}}
+
+Of course, we have to add it to the map overlays:
+{{{
+map.getOverlays().add(circle);
+}}}
+
+And then? Yes, refresh the map!
+{{{
+map.invalidate();
+}}}
+
+= 18. Using GroundOverlay =
 
 If you don't know what is a GroundOverlay, I let you have a look at [http://developer.android.com/reference/com/google/android/gms/maps/model/GroundOverlay.html Google Maps API]
 
-Use case: every time the user do a long press, we want to "drop" a GroundOverlay at the event position. 
+Use case: every time the user do a long press, we want to also "drop" a GroundOverlay at the event position. 
 
-In the longPressHelper method, we create the GroundOverlay, give it the event position, and set relevant parameters: 
+We add it to the onLongPress method seen in §17: 
 
 {{{
 GroundOverlay myGroundOverlay = new GroundOverlay(this);
 myGroundOverlay.setPosition(p);
 myGroundOverlay.setImage(getResources().getDrawable(R.drawable.ic_launcher).mutate());
 myGroundOverlay.setDimensions(2000.0f);
-}}}
-Of course, we have to add it to the map overlays:
-{{{
 map.getOverlays().add(myGroundOverlay);
-}}}
-
-And then? Yes, refresh the map!
-{{{
-map.invalidate();
 }}}
 
 
