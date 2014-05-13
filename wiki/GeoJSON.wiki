@@ -62,6 +62,6 @@ As for KML, the only technical limits are about memory and time.
 
 For memory, you will find the same limits than [KML], related to memory heap on Android. 
 
-For time : note that performance for GeoJSON loading should be significantly slower than for an equivalent in KML. There are 2 reasons: 
- * the usage of the standard JSON library included in the Android SDK - which is definitely not as efficient as the standard XML SAX parser. 
- * cumulated with the structure of GeoJSON coordinates: each position is stored as a JSON array, implying a heavy usage of JSON parsing. In KML, the coordinates of a whole geometry are in a single XML element with a simple formatting, allowing an optimized loading strategy. 
+For time: performance for GeoJSON loading should be significantly slower than for its KML equivalent. There are 2 reasons: 
+ * The GSON library which is used - even if better than the standard JSON lib included in the Android SDK - is not as efficient as the standard XML SAX parser. 
+ * Cumulated with the coordinates format of GeoJSON: each position is stored as a JSON array, implying a heavy usage of JSON parsing. In KML, the coordinates of a whole geometry are in a single XML element with a simple formatting, allowing an optimized loading strategy. 
