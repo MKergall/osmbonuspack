@@ -26,7 +26,7 @@ MultiPoint is supported at loading only, and converted to KmlMultiGeometry.
 At loading, other GeoJSON types will be ignored. 
 At saving, other KML classes will be ignored. 
 
-GeoJSON spec doesn't support nested of FeatureCollection. 
+GeoJSON spec doesn't support nesting of FeatureCollection. 
 So, at saving, if your KmlFolder contains recursively other KmlFolder, this hierarchy is flattened: the root KmlFolder is converted in a FeatureCollection, containing all KmlPlacemarks converted as Features. 
 
 Nested GeometryCollections are fully supported, as nested KmlMultiGeometry. 
