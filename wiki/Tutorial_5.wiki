@@ -68,14 +68,14 @@ InfoWindow.closeAllInfoWindowsOn(map);
 }}}
 
 = 17. Using Polygon =
-Use case: every time the user long-press on the map, we want to "drop" a circle around the event position. 
+Use case: every time the user long-press on the map, we want to "drop" a circle centered on the long-press position. 
 
 We will use the Polygon overlay, which has a method to be defined as a circle. 
 
 In the longPressHelper method (seen in chapter 16), we create the Polygon, give it the event position, and set its radius: 
 {{{
 Polygon circle = new Polygon(this);
-circle.setPointsAsCircle(p, 10000.0);
+circle.setPointsAsCircle(p, 2000.0);
 }}}
 And we adjust some design aspects: 
 {{{
@@ -96,8 +96,8 @@ map.invalidate();
 
 And as Polygon supports bubbles, let's add one:
 {{{
-circle.setInfoWindow(new DefaultInfoWindow(R.layout.bonuspackbubble, map));
-circle.setTitle("Centered on "+p.getLatitude+","+p.getLongitude());
+circle.setInfoWindow(new DefaultInfoWindow(R.layout.bonuspack_bubble, map));
+circle.setTitle("Centered on "+p.getLatitude()+","+p.getLongitude());
 }}}
 
 
