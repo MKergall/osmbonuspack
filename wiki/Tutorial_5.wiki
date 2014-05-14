@@ -72,7 +72,7 @@ Use case: every time the user long-press on the map, we want to "drop" a circle 
 
 We will use the Polygon overlay, which has a method to be defined as a circle. 
 
-In the longPressHelper method, we create the Polygon, give it the event position, and set its radius: 
+In the longPressHelper method (seen in chapter 16), we create the Polygon, give it the event position, and set its radius: 
 {{{
 Polygon circle = new Polygon(this);
 circle.setPointsAsCircle(p, 10000.0);
@@ -94,13 +94,20 @@ And then? Yes, refresh the map!
 map.invalidate();
 }}}
 
+And as Polygon supports bubbles, let's add one:
+{{{
+circle.setInfoWindow(new DefaultInfoWindow(R.layout.bonuspackbubble, map));
+circle.setTitle("Centered on "+p.getLatitude+","+p.getLongitude());
+}}}
+
+
 = 18. Using GroundOverlay =
 
 If you don't know what is a GroundOverlay, I let you have a look at [http://developer.android.com/reference/com/google/android/gms/maps/model/GroundOverlay.html Google Maps API]
 
 Use case: every time the user do a long press, we want to also "drop" a GroundOverlay at the event position. 
 
-We add it to the onLongPress method seen in §17: 
+We add it to the longPressHelper method used in chapter 17: 
 
 {{{
 GroundOverlay myGroundOverlay = new GroundOverlay(this);
@@ -114,4 +121,4 @@ map.getOverlays().add(myGroundOverlay);
 = Conclusion =
 Well, "That's all Folks!"
 
-If you want to go further, have a look on OSMBonusPackDemo/OSMNavigator source code, and on the javadoc. You will discover some useful stuff like *GeocoderNominatim*, *Polygon*, Parcelable objects, and more... 
+If you want to go further, have a look on OSMBonusPackDemo/OSMNavigator source code, and on the javadoc. You will discover some useful stuff like *GeocoderNominatim*, Parcelable objects, and more... 
