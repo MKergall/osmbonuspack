@@ -1,4 +1,4 @@
-#summary Why this "OSMBonusPack", and what does it give.
+#summary Why this "OSMBonusPack", and the features it provides.
 
 <wiki:toc max_depth="1" />
 
@@ -41,7 +41,7 @@ This *Marker* also supports drag events, transparency, rotation, and so on.
 
 = Polygon, Polyline, !GroundOverlay, !FolderOverlay =
 
-The *Polygon* overlay mimics as much as possible its Google Maps V2 equivalent. 
+The [Tutorial_5 Polygon] overlay mimics as much as possible its Google Maps V2 equivalent. 
 This *Polygon* overlay also supports cartoon-bubble (something not available in Google Maps V2). 
 
 The *Polyline* overlay and [Tutorial_5 GroundOverlay] also mimic their Google Maps V2 equivalents. 
