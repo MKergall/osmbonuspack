@@ -103,7 +103,7 @@ circle.setTitle("Centered on "+p.getLatitude()+","+p.getLongitude());
 
 = 18. Using GroundOverlay =
 
-If you don't know what is a GroundOverlay, I let you have a look at [http://developer.android.com/reference/com/google/android/gms/maps/model/GroundOverlay.html Google Maps API]
+If you don't know what is a GroundOverlay, have a look at [http://developer.android.com/reference/com/google/android/gms/maps/model/GroundOverlay.html Google Maps API]. This is also similar to the [http://leafletjs.com/reference.html#imageoverlay Leaflet ImageOverlay]. 
 
 Use case: every time the user do a long press, we want to also "drop" a GroundOverlay at the event position. 
 
