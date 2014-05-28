@@ -16,6 +16,7 @@ Let see it in action. I have a Url to a KML file, and I want to show it on my OS
 (Parenthesis - If you don't have such Url, pick one of those:
  * Paris Tour: http://mapsengine.google.com/map/kml?mid=z6IJfj90QEd4.kUUY9FoHFRdE
  * Or a message in the desert: http://mapsengine.google.com/map/kml?mid=z6IJfj90QEd4.kcfEKhi8r5LQ
+ * Or create your own, for instance using this online editor: http://geojson.io/
 End of parenthesis)
 
 First of all, you need a KmlDocument: 
