@@ -117,6 +117,9 @@ myGroundOverlay.setDimensions(2000.0f);
 map.getOverlays().add(myGroundOverlay);
 }}}
 
+The result: 
+
+<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/tuto_polygon_groundoverlay.png" width="300">
 
 = Conclusion =
 Well, "That's all Folks!"
