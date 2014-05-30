@@ -7,7 +7,7 @@ In the explanations, we assume that you are using Eclipse, and that you have an 
 
 = First steps =
 First of all, you must include osmdroid library in your Android project. 
-Refer to [http://code.google.com/p/osmdroid/ osmdroid] documentation. 
+Refer to [https://github.com/osmdroid/osmdroid osmdroid] documentation. 
 
 OSMBonusPack jars from v4.5 are based on osmdroid v4.2. 
 (OSMBonusPack jars from v4.2.6 to v4.4 are based on osmdroid v4.1)
@@ -30,7 +30,7 @@ Right-click on the project, "Build Path", "Configure Build Path...", "Add JARs..
 Select osmbonuspack.jar in libs, and click OK. 
 It's added to the "Referenced Libraries", ready-to-use. 
 
-If you want to use some default OSMBonusPack resources, browse the source, go to trunk/OSMBonusPackDemo and download in your project resources the following files:
+If you are going to use standard OSMBonusPack "bubbles", browse the source, go to trunk/OSMBonusPackDemo and download in your project resources the following files:
  * For a white bubble:
    * drawable-mpi/bonuspack_bubble.9.png
    * layout/bonuspack_bubble.xml
@@ -45,3 +45,5 @@ If you want to use some default OSMBonusPack resources, browse the source, go to
 = 2. Set-up OSMBonusPack as an Android library project = 
 Checkout OSMBonusPack project from the SVN repository and set it up as an "Android library" project in your Eclipse workspace. 
 Then, in the properties of your application project, in the Android section, add OSMBonusPack as a library. 
+
+Then download needed files in your project resources, as described in Chapter 1 above. 
