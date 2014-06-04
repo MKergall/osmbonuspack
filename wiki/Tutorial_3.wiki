@@ -32,7 +32,7 @@ So you can give it a try.
 
 The result when searching for "bakery" with NominatimPOIProvider:
 
-<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/tuto_clustering.png" height="530">
+<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/img/tuto_clustering.png" height="530">
 
 If you zoom in, each individual marker appears. When you zoom out, they are grouped and displayed with the cluster icon. Fine, isn't it?
 
