@@ -119,7 +119,7 @@ map.getOverlays().add(myGroundOverlay);
 
 The result: 
 
-<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/tuto_polygon_groundoverlay.png" width="300">
+<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/img/tuto_polygon_groundoverlay.png" width="300">
 
 = Conclusion =
 Well, "That's all Folks!"
