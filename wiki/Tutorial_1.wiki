@@ -98,7 +98,7 @@ nodeMarker.setImage(icon);
 
 Give it a try, you should get something like that:
 
-<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/tuto_routing.png" height="530">
+<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/img/tuto_routing.png" height="530">
 
 And, yes, you are right, maneuver icons are not correct!
 
