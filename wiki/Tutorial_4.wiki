@@ -43,7 +43,7 @@ Yes, this is doing the job. This FolderOverlay will be the container for all ove
  * KML Point, handled as an OSMBonusPack Marker
  * KML LineString, handled as OSMBonusPack Polyline
  * KML Polygon, handled as OSMBonusPack Polygon
- * and KML Folder, handled as OSMBonusPack FolderOverlay, allowing to keep the hierarchical structure of the KML structure. 
+ * and KML Folder, handled as OSMBonusPack FolderOverlay, allowing to keep the hierarchical organisation of the KML structure. 
 
 Now, add this folder overlay on the map: 
 {{{
@@ -57,14 +57,14 @@ map.invalidate();
 
 Now give this a try. 
 
-You see nothing? Try to move your map at the right place. Or set automatically the view on the whole stuff, using the bounding box which is maintained up-to-date:
+You see nothing? Try to move your map at the right place. Or set automatically the view on the whole stuff, using its bounding box:
 {{{
-map.zoomToBoundingBox(kmlDocument.mKmlRoot.mBB);
+map.zoomToBoundingBox(kmlDocument.mKmlRoot.getBoundingBox());
 }}}
 
 The result when loading "Paris Tour" URL:
 
-<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/tuto_kml.png">
+<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/img/tuto_kml.png">
 
 = 13. Styling overlays =
 In chapter 12, you used KML samples including styles, and the overlays were reflecting these styles. 
