@@ -30,7 +30,7 @@ Right-click on the project, "Build Path", "Configure Build Path...", "Add JARs..
 Select osmbonuspack.jar in libs, and click OK. 
 It's added to the "Referenced Libraries", ready-to-use. 
 
-If you are going to use standard OSMBonusPack "bubbles", browse the source, go to trunk/OSMBonusPackDemo and download in your project resources the following files:
+If you are going to use standard OSMBonusPack "bubbles", browse the source, go to trunk/OSMNavigator and download in your project resources the following files:
  * For a white bubble:
    * drawable-mpi/bonuspack_bubble.9.png
    * layout/bonuspack_bubble.xml
