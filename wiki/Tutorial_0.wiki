@@ -11,7 +11,7 @@ Even worst, since Honeycomb SDK (3.0), it is not allowed to make a network call 
 
 So:
  # For these tutorials, target an SDK earlier than 3.0
- # Once you have played with the tutos and want to work on your real app, have a look at the OSMBonusPackDemo source code, where network calls are done in async tasks. 
+ # Once you have played with the tutos and want to work on your real app, have a look at the OSMNavigator source code, where network calls are done in async tasks. 
 
 
 = Introduction =
