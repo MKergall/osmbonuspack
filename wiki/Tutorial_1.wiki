@@ -70,7 +70,7 @@ for (int i=0; i<road.mNodes.size(); i++){
 	map.getOverlays().add(nodeMarker);
 }}}
 
-You don't have a marker_node icon? Shame on you. Pick the OSMBonusPackDemo one (res/drawable-nodpi/marker_node.png). 
+You don't have a marker_node icon? Shame on you. Pick the OSMNavigator one (res/drawable-nodpi/marker_node.png). 
 
 Here we are! Clicking on a step marker will open its bubble. 
 
@@ -103,7 +103,7 @@ Give it a try, you should get something like that:
 And, yes, you are right, maneuver icons are not correct!
 
 The maneuver id is in node.mManeuverType. 
-The possible maneuver ids are [http://open.mapquestapi.com/guidance/#maneuvertypes here]. And the maneuver icons are in OSMBonusPackDemo res/drawable-mpi. 
+The possible maneuver ids are [http://open.mapquestapi.com/guidance/#maneuvertypes here]. And the maneuver icons are in OSMNavigator res/drawable-mpi. 
 It's boring, so I'm going downstair to take a coffee, while you handle those icons properly. 
 
 And see you again on [Tutorial_2]. 
