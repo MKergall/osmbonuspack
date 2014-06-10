@@ -18,7 +18,7 @@ ArrayList<POI> pois = poiProvider.getPOICloseTo(startPoint, "cinema", 50, 0.1);
 Nominatim searches in OpenStreetMap features using specific keywords: the "Special Phrases" ([http://wiki.openstreetmap.org/wiki/Nominatim/Special_Phrases]). 
 Take care that, either because some features are rarely described in OSM, or because of Nominatim itself, there are keywords that return few or no results. 
 
-You can refer to  [http://code.google.com/p/osmbonuspack/source/browse/trunk/OSMBonusPackDemo/res/values/poi_tags.xml] to get a sub-list of features that are really - really - available through Nominatim. 
+You can refer to  [http://code.google.com/p/osmbonuspack/source/browse/trunk/OSMNavigator/res/values/poi_tags.xml] to get a sub-list of features that are really - really - available through Nominatim. 
 
 
 OK, back to the code. We can build the POI markers, and put them on the map. 
