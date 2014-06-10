@@ -190,7 +190,7 @@ mSelectedPoi.fetchThumbnailOnThread(imageView);
 Much better, isn't it? 
 
 = 9. Creating your own bubble layout =
-Two standard layouts are provided and can be found in OSMBonusPackDemo/res/layout directory: 
+Two standard layouts are provided and can be found in OSMNavigator/res/layout directory: 
  * bonuspack_bubble.xml, which is the default layout
  * bonuspack_bubble_black.xml
 
