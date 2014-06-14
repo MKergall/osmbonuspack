@@ -97,6 +97,10 @@ Inline styles are supported at loading, and converted to shared styles.
 ==  !LineStyle ==
 None of "gx:" elements are supported. 
 
+== !StyleMap ==
+_Support planned for v4.6. _
+
+
 == !ExtendedData ==
  * *Data* are supported, with their name and value. displayName is not handled. 
  * *SimpleData* are supported, but with no handling of SchemaData, and no control of the Schema: all values are handled as Java Strings. When saving, they will be saved as Data. 
