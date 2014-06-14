@@ -18,16 +18,9 @@ You give it the current context (this), and a MapEventsReceiver - let's just put
 MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(this, this);
 }}}
 
-Then you add it to your map: 
+Then you add it to your map. But you have to put it at the "bottom" of all overlays ("behind" other overlays), so that other overlays react normally to their events. You can add it this way: 
 {{{
-map.getOverlays().add(mapEventsOverlay);
-}}}
-
-You have to put it at the "bottom" of all overlays, so that other overlays react normally to their events. 
-If you are not sure, here is a simple way to insert it at the bottom:
-{{{
-Overlay removed = map.getOverlays().set(0, mapEventsOverlay);
-map.getOverlays().add(removed);
+map.getOverlays().add(0, mapEventsOverlay);
 }}}
 
 2) MapEventsReceiver is the object that will handle the map events. This is an interface, that you have to implement and pass to the MapEventsOverlay. 
