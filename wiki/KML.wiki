@@ -40,9 +40,10 @@ Supported KML object types are listed in the table below, with their related OSM
 || PolyStyle|| ColorStyle ||
 || LineStyle || LineStyle ||
 || IconStyle|| IconStyle ||
+|| StyleMap || StyleMap ||
 
 
-Unsupported objects are just ignored, without raising an error. 
+Unsupported objects are - normally - just ignored, without raising an error. 
 
 == Feature ==
 For all supported *Feature*, supported attributes/elements are:
