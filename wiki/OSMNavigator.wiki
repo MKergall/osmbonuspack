@@ -104,7 +104,7 @@ Copy the resulting file on your device, in your SD location, inside a "osmdroid"
 
 All compatible map files found in this directory will be loaded by OSMNavigator when the application starts. 
 
-=== Using MapsForge maps ===
+=== Using !MapsForge maps ===
 You can download a MapsForge map on MapsForge. 
 Copy it on your device, in your SD location, inside a "mapsforge" sub-directory. 
 Take care to select MapsForge as the tile source. 
