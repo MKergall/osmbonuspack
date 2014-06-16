@@ -96,5 +96,5 @@ Refer to the [KML KML wiki page] and [GeoJSON GeoJSON wiki page] for more detail
 = Next steps = 
  * See HowToInclude the lib in your project
  * Follow the [Tutorial_0 Tutorials]
- * Look at (or checkout) [http://code.google.com/p/osmbonuspack/source/browse/ OSMBonusPackDemo source] to see how to use these classes in common use cases
+ * Look at (or checkout) [https://code.google.com/p/osmbonuspack/source/browse/#svn%2Ftrunk%2FOSMNavigator OSMNavigator source] to see how to use these classes in common use cases
  * Download the javadoc to get detailed information on the API. 
