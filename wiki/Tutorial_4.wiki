@@ -36,7 +36,7 @@ But for now, we mainly wish to see the graphics on the screen.
 
 So we build the overlays:
 {{{
-FolderOverlay kmlOverlay = (FolderOverlay)kmlDocument.mKmlRoot.buildOverlays(this, map, null, null, kmlDocument);
+FolderOverlay kmlOverlay = (FolderOverlay)kmlDocument.mKmlRoot.buildOverlay(this, map, null, null, kmlDocument);
 }}}
 
 Yes, this is doing the job. This FolderOverlay will be the container for all overlays that will be found in the KML structure: 
