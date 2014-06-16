@@ -1,0 +1,101 @@
+#summary Features, Hints & Help
+
+<wiki:toc max_depth="2" />
+
+= Introduction =
+
+OSMNavigator is a compact and simple Android application based on OSMBonusPack library. 
+
+It can be downloaded in the site [http://osmbonuspack.googlecode.com/svn/BonusPackDownloads Downloads] section. 
+We have no plan to make it available through Google Play. 
+
+= Features =
+
+== Display an OpenStreetMap map ==
+In the option menu "Tile Provider" item, you can choose the tile source between:
+  * OSM Standard map (also called "Mapnik"), 
+  * OSM by MapQuest, 
+  * MapBox Satellite (a wonderful satellite map),
+  * MapsForge offline map (experimental)
+
+== GPS location ==
+When the GPS is on, a green arrow shows the current location. 
+When moving, this arrow shows the direction of the move. 
+With the button in the lower-left corner, you can switch between 2 modes: 
+  * tracking/driving mode: the map stays centered on the current location, and oriented to the direction of the move
+  * static mode: the map remains oriented to the north
+
+== Departure and destination ==
+Using the top panel, you can search for a departure address ("My Position" text field) and for a Destination address. 
+
+Note that the top panel can be hidden/shown by just tapping on its horizontal separator. 
+
+You can also set the departure/destination location by a long-press on the map at the desired position. 
+
+Once the departure/destination is set, a marker is displayed. 
+After a long-press on this marker, you can drag it at another location. 
+
+
+== Routing ==
+
+When a destination is defined, the route is automatically computed. 
+
+You can change the service provider with "Road Provider" option in the option menu, with the following options: 
+  * OSRM-Fastest: for car, 
+  * MapQuest-Fastest: for car, 
+  * MapQuest for bicycle 
+  * and MapQuest for pedestrian. 
+
+To add a "via-point" (an intermediate point on the route), long-press on the map at the desired position, and choose "Via-point" item. 
+
+To remove a point (the departure, the destination, or any via-point), tap on its marker, then in the bubble, tap on the "Delete" button. 
+
+In the option menu, you can use "Itinerary" item to display the list of directions. 
+
+== Searching for Features ==
+In the top panel, use the "Features" text field to search for various map features (fuel, cinema, supermarket, shoe shop, etc, etc...). If you just enter some letters, suggestions will be listed. 
+
+If there is no route defined, features will be searched in the "view", the area of the map currently displayed. If you move the view (by panning/zooming), there is no automatic refresh: tap "Search" again everytime you want to search. 
+
+Warning: the search returns a maximum of 50 results. Narrow your view if needed. 
+
+If a route is displayed, features will be searched along this route. 
+
+In the options menu, you can use "POIs list" item to display the features as a list. 
+
+== Searching for Wikipedia entries ==
+In the Features text field, you can type "wikipedia". This will search for geolocalized Wikipedia entries. 
+
+
+== Searching for Pictures ==
+In the Features text field, you can type "picasa" or "flickr". This will search for geolocalized pictures from these services. 
+
+== KML Toolbox ==
+In the options menu, the "KML Toolbox" item is the entry point for handling KML layer. 
+
+"Open url..." opens a KML file from its url. 
+
+"Open file..." opens a KML or GeoJSON file. The type is defined by the extension: .kml for KML, .kmz for KMZ, .json for GeoJSON. 
+
+With "Pick Overlays", all overlays currently displayed are copied as KML entries. 
+
+"Edit..." opens a simple KML editor, with the following features: 
+  * Edit the name and description of a Feature
+  * Set its visibility
+  * For a Folder: 
+    ** list all its items
+    ** open an item: tap on it
+    ** copy/cut an item: long-press on it to open the menu
+    ** paste item from clipboard: using the option menu
+  * For a Polygon/Polyline: change its fill & outline colors
+
+"Save as..." saves the current KML layer, either as a KML or GeoJSON file, depending on the extension (.kml or .json). 
+
+"Clear" empties the current KML layer. 
+
+== Working off-line ==
+
+
+= Hints & Help =
+
+== Address Search ==
