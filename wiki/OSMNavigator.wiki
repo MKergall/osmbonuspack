@@ -11,7 +11,7 @@ We have no plan to make it available through Google Play.
 
 = Features =
 
-== Display an OpenStreetMap! map ==
+== Display an !OpenStreetMap map ==
 In the option menu "Tile Provider" item, you can choose the tile source between:
   * OSM Standard map (also called "Mapnik"), 
   * OSM by MapQuest, 
