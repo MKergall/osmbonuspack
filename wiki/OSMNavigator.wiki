@@ -40,7 +40,7 @@ After a long-press on this marker, you can drag it at another location.
 
 When a destination is defined, the route is automatically computed. 
 
-You can change the service provider with "Road Provider" option in the option menu, with the following options: 
+On the "Road Provider" option in the option menu, you will find the following options: 
   * OSRM-Fastest: for car, 
   * MapQuest-Fastest: for car, 
   * MapQuest for bicycle 
@@ -50,10 +50,10 @@ To add a "via-point" (an intermediate point on the route), long-press on the map
 
 To remove a point (the departure, the destination, or any via-point), tap on its marker, then in the bubble, tap on the "Delete" button. 
 
-In the option menu, you can use "Itinerary" item to display the list of directions. 
+In the option menu, use "Itinerary" item to display the route directions as a list. Tap on a direction to open it on the map. 
 
 == Searching for Features ==
-In the top panel, use the "Features" text field to search for various map features (fuel, cinema, supermarket, shoe shop, etc, etc...). If you just enter some letters, suggestions will be listed. 
+In the top panel, use the "Features" text field to search for various map features (fuel, cinema, supermarket, shoe shop, etc, etc...). If you just enter some letters, suggestions will be proposed. 
 
 If there is no route defined, features will be searched in the "view", the area of the map currently displayed. If you move the view (by panning/zooming), there is no automatic refresh: tap "Search" again everytime you want to search. 
 
@@ -94,6 +94,26 @@ With "Pick Overlays", all overlays currently displayed are copied as KML entries
 "Clear" empties the current KML layer. 
 
 == Working off-line ==
+
+You have the following options: 
+
+=== Using MOBAC ===
+You can create maps using MOBAC. Most MOBAC formats mentionning "osmdroid" should be supported. Use osmdroid ZIP format if you don't care. 
+
+Copy the resulting file on your device, in your SD location, inside a "osmdroid" sub-directory (if you already used OSMNavigator before, this "osmdroid" sub-directory already exists). 
+
+All compatible map files found in this directory will be loaded by OSMNavigator when the application starts. 
+
+=== Using MapsForge maps ===
+You can download a MapsForge map on MapsForge. 
+Copy it on your device, in your SD location, inside a "mapsforge" sub-directory. 
+Take care to select MapsForge as the tile source. 
+Only the first ".map" file found in this directory will be loaded. 
+
+=== Using the Cache Manager ===
+In the options menu, you can use the "Cache Manager" option to download in advance the tiles of an area. 
+
+Note that the "depth" is limited to 5 zoom levels, from the current zoom level. 
 
 
 = Hints & Help =
