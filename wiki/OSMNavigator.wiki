@@ -13,10 +13,10 @@ We have no plan to make it available through Google Play.
 
 == Display an !OpenStreetMap map ==
 In the option menu "Tile Provider" item, you can choose the tile source between:
-  * OSM Standard map (also called "Mapnik"), 
+  * OSM Standard map, 
   * OSM by MapQuest, 
   * MapBox Satellite (a wonderful satellite map),
-  * MapsForge offline map (experimental)
+  * MapsForge offline map: see "Working off-line" below. 
 
 == GPS location ==
 When the GPS is on, a green arrow shows the current location. 
@@ -48,7 +48,7 @@ On the "Road Provider" option in the option menu, you will find the following op
 
 To add a "via-point" (an intermediate point on the route), long-press on the map at the desired position, and choose "Via-point" item. 
 
-To remove a point (the departure, the destination, or any via-point), tap on its marker, then in the bubble, tap on the "Delete" button. 
+To remove a point (the departure, the destination, or any via-point), tap on its marker, then in the bubble, tap on the "Delete" icon on the right. 
 
 In the option menu, use "Itinerary" item to display the route directions as a list. Tap on a direction to open it on the map. 
 
@@ -59,7 +59,7 @@ If there is no route defined, features will be searched in the "view", the area 
 
 Warning: the search returns a maximum of 50 results. Narrow your view if needed. 
 
-If a route is displayed, features will be searched along this route. 
+If a route is displayed, features are searched along this route. 
 
 In the options menu, you can use "POIs list" item to display the features as a list. 
 
@@ -73,9 +73,11 @@ In the Features text field, you can type "picasa" or "flickr". This will search 
 == KML Toolbox ==
 In the options menu, the "KML Toolbox" item is the entry point for handling KML layer. 
 
-"Open url..." opens a KML file from its url. 
+"Open url..." opens a KML file from its url (KMZ and GeoJSON content are not supported). 
 
-"Open file..." opens a KML or GeoJSON file. The type is defined by the extension: .kml for KML, .kmz for KMZ, .json for GeoJSON. 
+"Open file..." opens a file. The type is defined from the file name extension: .kml for KML, .kmz for KMZ, .json for GeoJSON. 
+
+Files are loaded from the SD card directory, from the "kml" sub-directory. Using the Android file manager, it is also possible to open a file located anywhere on the device (as long as its extension is .kml, .kmz or .json). 
 
 With "Pick Overlays", all overlays currently displayed are copied as KML entries. 
 
@@ -89,7 +91,7 @@ With "Pick Overlays", all overlays currently displayed are copied as KML entries
     ** paste item from clipboard: using the option menu
   * For a Polygon/Polyline: change its fill & outline colors
 
-"Save as..." saves the current KML layer, either as a KML or GeoJSON file, depending on the extension (.kml or .json). 
+"Save as..." saves the current KML layer, either as a KML or GeoJSON file, depending on the extension (.kml or .json). Files are saved on the SD card directory, in the "kml" sub-directory. 
 
 "Clear" empties the current KML layer. 
 
@@ -120,7 +122,3 @@ In the options menu, you can use the "Cache Manager" option to download in advan
 Note that the "depth" is limited to 5 zoom levels, from the current zoom level. 
 
 The Cache Manager downloads the tiles in the standard osmdroid cache. It can be used multiple times, at various positions and zoom levels. 
-
-= Hints & Help =
-
-== Address Search ==
