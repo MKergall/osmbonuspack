@@ -95,26 +95,31 @@ With "Pick Overlays", all overlays currently displayed are copied as KML entries
 
 == Working off-line ==
 
-You have the following options: 
+The options to display a map when offline are described below. 
+Note that when offline, you will have no search and no routing. 
 
 === Using MOBAC ===
-You can create maps using MOBAC. Most MOBAC formats mentionning "osmdroid" should be supported. Use osmdroid ZIP format if you don't care. 
+You can create maps using [http://mobac.sourceforge.net MOBAC]. Most MOBAC formats mentionning "osmdroid" should be supported. Use Osmdroid ZIP format if you don't care. 
+You can refer to this [http://stackoverflow.com/questions/22862534/download-maps-for-osmdroid/22868462#22868462 StackOverflow answer] for more details. 
 
-Copy the resulting file on your device, in your SD location, inside a "osmdroid" sub-directory (if you already used OSMNavigator before, this "osmdroid" sub-directory already exists). 
+
+Copy the resulting file on your device, in your SD card directory, inside an "osmdroid" sub-directory (if you already used OSMNavigator before, this "osmdroid" sub-directory already exists). 
 
 All compatible map files found in this directory will be loaded by OSMNavigator when the application starts. 
 
 === Using !MapsForge maps ===
-You can download a MapsForge map on MapsForge. 
-Copy it on your device, in your SD location, inside a "mapsforge" sub-directory. 
+You can download a MapsForge map on [http://download.mapsforge.org MapsForge Download server]. 
+Copy it on your device, in your SD card directory, inside a "mapsforge" sub-directory. 
 Take care to select MapsForge as the tile source. 
-Only the first ".map" file found in this directory will be loaded. 
+If you have multiple ".map" files in this directory, the first one (in alphabetical order) will be loaded. 
+
 
 === Using the Cache Manager ===
 In the options menu, you can use the "Cache Manager" option to download in advance the tiles of an area. 
 
 Note that the "depth" is limited to 5 zoom levels, from the current zoom level. 
 
+The Cache Manager downloads the tiles in the standard osmdroid cache. It can be used multiple times, at various positions and zoom levels. 
 
 = Hints & Help =
 
