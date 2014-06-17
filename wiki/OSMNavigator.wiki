@@ -112,7 +112,8 @@ All compatible map files found in this directory will be loaded by OSMNavigator 
 === Using !MapsForge maps ===
 You can download a MapsForge map on [http://download.mapsforge.org MapsForge Download server]. 
 Copy it on your device, in your SD card directory, inside a "mapsforge" sub-directory. 
-Take care to select MapsForge as the tile source. 
+In the "Tile Provider" option item, take care to select MapsForge. 
+
 If you have multiple ".map" files in this directory, the first one (in alphabetical order) will be loaded. 
 
 
