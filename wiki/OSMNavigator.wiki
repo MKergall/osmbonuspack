@@ -4,9 +4,9 @@
 
 = Introduction =
 
-OSMNavigator is a compact and simple Android application based on OSMBonusPack library. 
+[http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/OSMNavigator_v4.5.apk.zip OSMNavigator] is a generic map application for Android, based on OSMBonusPack library. It is simple and compact. 
 
-It can be downloaded in the site [http://osmbonuspack.googlecode.com/svn/BonusPackDownloads Downloads] section. 
+It can be downloaded in the [http://osmbonuspack.googlecode.com/svn/BonusPackDownloads Downloads] section of this site. 
 We have no plan to make it available through Google Play. 
 
 = Features =
@@ -59,9 +59,14 @@ If there is no route defined, features will be searched in the "view", the area 
 
 Warning: the search returns a maximum of 50 results. Narrow your view if needed. 
 
+<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/img/osmbonuspackdemo_4_2.png" height="530"><br>
+
 If a route is displayed, features are searched along this route. 
 
+<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/img/osmbonuspackdemo_4_1.png"><br>
+
 In the options menu, you can use "POIs list" item to display the features as a list. 
+
 
 == Searching for Wikipedia entries ==
 In the Features text field, you can type "wikipedia". This will search for geolocalized Wikipedia entries. 
@@ -94,6 +99,9 @@ With "Pick Overlays", all overlays currently displayed are copied as KML entries
 "Save as..." saves the current KML layer, either as a KML or GeoJSON file, depending on the extension (.kml or .json). Files are saved on the SD card directory, in the "kml" sub-directory. 
 
 "Clear" empties the current KML layer. 
+
+With a long-press directly at the desired location on the map, you can add a KML Point. 
+Long-press on a KML Point marker to drag it at another location. 
 
 == Working off-line ==
 
