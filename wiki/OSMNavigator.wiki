@@ -4,7 +4,7 @@
 
 = Introduction =
 
-[http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/OSMNavigator_v4.5.apk.zip OSMNavigator] is a generic map application for Android, based on OSMBonusPack library. It is simple and compact. 
+[http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/OSMNavigator_v4.6.apk.zip OSMNavigator] is a generic map application for Android, based on OSMBonusPack library. It is simple and compact. 
 
 It can be downloaded in the [http://osmbonuspack.googlecode.com/svn/BonusPackDownloads Downloads] section of this site. 
 We have no plan to make it available through Google Play. 
@@ -94,6 +94,7 @@ With "Pick Overlays", all overlays currently displayed are copied as KML entries
     ** open an item: tap on it
     ** copy/cut an item: long-press on it to open the menu
     ** paste item from clipboard: using the option menu
+    ** add a new folder: using the option menu
   * For a Polygon/Polyline: change its fill & outline colors
 
 "Save as..." saves the current KML layer, either as a KML or GeoJSON file, depending on the extension (.kml or .json). Files are saved on the SD card directory, in the "kml" sub-directory. 
