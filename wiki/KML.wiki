@@ -98,7 +98,7 @@ Inline styles are supported at loading, and converted to shared styles.
 None of "gx:" elements are supported. 
 
 == !StyleMap ==
-_Support planned for v4.6. _
+Supported from v4.6
 
 
 == !ExtendedData ==
