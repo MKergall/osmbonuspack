@@ -93,6 +93,15 @@ Example: long-press on the map to define the destination, a new POI,...
 
 Refer to the [KML KML wiki page] and [GeoJSON GeoJSON wiki page] for more details. 
 
+= Integrated tools for off-line maps and Cache Management =
+CacheManager allows to download tiles on areas, for later off-line usage. This feature can be completely integrated in Android applications (as shown in OSMNavigator). 
+For end-users, this means:
+ * no need to find, install and learn external tools 
+ * no need to transfer map files from a PC to the device
+ * no issue about map file formats
+
+CacheManager also provides various utilities for managing the osmdroid cache: usage, capacity, cleaning. 
+
 = Next steps = 
  * See HowToInclude the lib in your project
  * Follow the [Tutorial_0 Tutorials]
