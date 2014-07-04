@@ -23,7 +23,7 @@ OSMBonusPack provides a set of classes to get routes, with turn-by-turn informat
   * and *OSRMRoadManager*, using [http://project-osrm.org/ OSRM] service. 
 
 Result is a *Road* object, containing: 
-  * the road shape, as a list of GeoPoint => RoadManager can build an osmdroid PathOverlay from this road shape, ready-to-display. 
+  * the road shape, as a list of GeoPoint => RoadManager can build a Polyline overlay from this road shape, ready-to-display. 
   * turn-by-turn information, as a list of RoadNode
 
 Also provided, very useful route-related utilities: 
