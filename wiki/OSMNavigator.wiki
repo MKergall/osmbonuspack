@@ -65,7 +65,7 @@ If a route is displayed, features are searched along this route.
 
 <img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/img/osmbonuspackdemo_4_1.png"><br>
 
-In the options menu, you can use "POIs list" item to display the features as a list. 
+In the options menu, you can use "Features list" item to display all the features as a list. 
 
 
 == Searching for Wikipedia entries ==
