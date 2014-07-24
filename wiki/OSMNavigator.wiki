@@ -82,20 +82,29 @@ In the options menu, the "KML Toolbox" item is the entry point for handling KML 
 
 "Open file..." opens a file. The type is defined from the file name extension: .kml for KML, .kmz for KMZ, .json for GeoJSON. 
 
-Files are loaded from the SD card directory, from the "kml" sub-directory. Using the Android file manager, it is also possible to open a file located anywhere on the device (as long as its extension is .kml, .kmz or .json). 
+Files are loaded from the SD card directory, from the "kml" sub-directory. Using the Android file manager, it is also possible to open a file located anywhere on the device, as long as its extension is .kml, .kmz or .json. 
 
 With "Pick Overlays", all overlays currently displayed are copied as KML entries. 
 
-"Edit..." opens a simple KML editor, with the following features: 
+"Edit Features..." opens a simple KML editor, where you can: 
   * Edit the name and description of a Feature
   * Set its visibility
+  * Set its style, by choosing one of the Shared Styles of the KML document (see below)
   * For a Folder: 
     ** list all its items
     ** open an item: tap on it
     ** copy/cut an item: long-press on it to open the menu
     ** paste item from clipboard: using the option menu
     ** add a new folder: using the option menu
-  * For a Polygon/Polyline: change its fill & outline colors
+    ** center the map on the selected item
+
+"Edit Shared Styles" lists all Shared Styles of the current KML document. You can add a new style (option menu), delete a style (long-press), and edit a style (tap). When editing a style, you can:
+  * change its "style id"
+  * define its icon. 2 methods:
+    ** It can be the full url. 
+    ** If the KML document was opened from a local file, it can be the path relative to this local file (e.g. "img/icon.png"). 
+  * define the fill & outline colors
+  * define the outline width
 
 "Save as..." saves the current KML layer, either as a KML or GeoJSON file, depending on the extension (.kml or .json). Files are saved on the SD card directory, in the "kml" sub-directory. 
 
