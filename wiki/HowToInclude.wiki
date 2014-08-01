@@ -30,6 +30,12 @@ Right-click on the project, "Build Path", "Configure Build Path...", "Add JARs..
 Select osmbonuspack.jar in libs, and click OK. 
 It's added to the "Referenced Libraries", ready-to-use. 
 
+Following exactly the same method, you will also have to add the following libs: 
+ * The Google-gson parser: [https://code.google.com/p/google-gson/downloads/list gson-2.2.4.jar]
+ * The Apache Commons Lang: [http://commons.apache.org/proper/commons-lang/ commons-lang3-3.3.2.jar]
+
+You can get them [https://code.google.com/p/osmbonuspack/source/browse/#svn%2Ftrunk%2FOSMBonusPack%2Flibs here]. 
+
 If you are going to use standard OSMBonusPack "bubbles", browse the source, go to trunk/OSMNavigator and download in your project resources the following files:
  * For a white bubble:
    * drawable-mpi/bonuspack_bubble.9.png
