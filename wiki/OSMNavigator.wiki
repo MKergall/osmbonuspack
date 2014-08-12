@@ -4,7 +4,7 @@
 
 = Introduction =
 
-[http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/OSMNavigator_v4.7.apk.zip OSMNavigator] is a generic map application for Android, based on OSMBonusPack library. It is simple and compact. 
+[http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/OSMNavigator_v4.8.apk.zip OSMNavigator] is a generic map application for Android, based on OSMBonusPack library. It is simple and compact. 
 
 It can be downloaded in the [http://osmbonuspack.googlecode.com/svn/BonusPackDownloads Downloads] section of this site. 
 We have no plan to make it available through Google Play. 
@@ -42,9 +42,9 @@ When a destination is defined, the route is automatically computed.
 
 On the "Road Provider" option in the option menu, you will find the following options: 
   * OSRM-Fastest: for car, 
-  * MapQuest-Fastest: for car, 
-  * MapQuest for bicycle 
-  * and MapQuest for pedestrian. 
+  * GraphHopper-Fastest: for car, 
+  * GraphHopper for bicycle 
+  * and GraphHopper for pedestrian. 
 
 To add a "via-point" (an intermediate point on the route), long-press on the map at the desired position, and choose "Via-point" item. 
 
