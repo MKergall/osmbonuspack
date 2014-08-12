@@ -19,12 +19,15 @@ Probably the most desired feature.
 OSMBonusPack provides a set of classes to get routes, with turn-by-turn information and route shape:
 
 [Tutorial_1 RoadManagers] retrieve roads from a variety of service providers. Currently supported: 
+  * *OSRMRoadManager*, using [http://project-osrm.org/ OSRM] service
+  * *GraphHopperRoadManager*, using [http://graphhopper.com/ GraphHopper] online service
   * *MapQuestRoadManager* using [http://open.mapquestapi.com/guidance/ MapQuest Open Guidance] service
-  * and *OSRMRoadManager*, using [http://project-osrm.org/ OSRM] service. 
 
-Result is a *Road* object, containing: 
+In all cases, the result is a *Road* object, containing: 
   * the road shape, as a list of GeoPoint => RoadManager can build a Polyline overlay from this road shape, ready-to-display. 
-  * turn-by-turn information, as a list of RoadNode
+  * turn-by-turn information, as a list of RoadNode. 
+
+[WhichRoutingService] page may help you in choosing the routing service corresponding to your needs. 
 
 Also provided, very useful route-related utilities: 
   * *PolylineEncoder*, a polyline encoder/decoder
