@@ -38,6 +38,21 @@ public class MainActivity extends Activity {
 }
 }}}
 
+And its "main.xml" layout, with the map:
+{{{
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical" 
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        
+        <org.osmdroid.views.MapView android:id="@+id/map"
+                android:layout_width="fill_parent" 
+                android:layout_height="fill_parent" />
+                
+</LinearLayout>
+}}}
 
 = 0. Using the Marker overlay =
 As we will make a large usage of OSMBonusPack Marker in those tutorials, let's start with a quick presentation. 
