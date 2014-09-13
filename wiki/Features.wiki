@@ -44,10 +44,10 @@ This *Marker* also supports drag events, transparency, rotation, and so on.
 
 = Polygon, Polyline, !GroundOverlay, !FolderOverlay =
 
-The [Tutorial_5 Polygon] overlay mimics as much as possible its Google Maps V2 equivalent. 
-This *Polygon* overlay also supports cartoon-bubble (something not available in Google Maps V2). 
+The [Tutorial_5 Polygon] and Polyline overlays mimic as much as possible their Google Maps V2 equivalents. 
+Both of them also support touch detection and cartoon-bubbles (something not available in Google Maps V2). 
 
-The *Polyline* overlay and [Tutorial_5 GroundOverlay] also mimic their Google Maps V2 equivalents. 
+The [Tutorial_5 GroundOverlay] also mimic its Google Maps V2 equivalents. 
 
 The *FolderOverlay* has no Google Maps counterpart. It is a container for other overlays. It can contain any Overlay object - including other FolderOverlays. 
 It is perfect for managing easily logical groups of overlays - for instance a list of Markers - without adding dedicated lists or HashMaps in your code, as usually needed when using Google Maps V2 API. 
