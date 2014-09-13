@@ -89,7 +89,7 @@ map.invalidate();
 
 And as Polygon supports bubbles, let's add one:
 {{{
-circle.setInfoWindow(new DefaultInfoWindow(R.layout.bonuspack_bubble, map));
+circle.setInfoWindow(new BasicInfoWindow(R.layout.bonuspack_bubble, map));
 circle.setTitle("Centered on "+p.getLatitude()+","+p.getLongitude());
 }}}
 
