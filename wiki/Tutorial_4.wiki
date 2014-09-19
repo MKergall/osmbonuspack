@@ -206,4 +206,4 @@ You can refer to [GeoJSON] Wiki page for more details.
 Note that GeoJSON format doesn't provide styling attributes. So the chapter 13 above about styling will be very useful if you want to display GeoJSON content. 
 
 = Next step =
-See you soon again on [Tutorial_5], with Map events and GroundOverlay. 
+See you soon on [Tutorial_5], to discover Map events handling, Polygons and GroundOverlays. 
