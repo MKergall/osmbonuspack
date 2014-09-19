@@ -162,6 +162,7 @@ And you can assign a Style to KML features. For instance this way:
   if ("panda_area".equals(kmlPlacemark.getExtendedData("category")))
     kmlPlacemark.mStyle = "panda_area";
   kmlPoint.applyDefaultStyling(marker, mDefaultStyle, kmlPlacemark, mKmlDocument, map);
+}
 }}}
 
 = 14. Grab overlays in KML structure, save KML locally =
