@@ -68,6 +68,7 @@ for (int i=0; i<road.mNodes.size(); i++){
 	nodeMarker.setIcon(nodeIcon);
 	nodeMarker.setTitle("Step "+i);
 	map.getOverlays().add(nodeMarker);
+}
 }}}
 
 You don't have a marker_node icon? Shame on you. Pick the OSMNavigator one (res/drawable-nodpi/marker_node.png). 
