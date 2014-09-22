@@ -15,7 +15,8 @@ Let see it in action. I have a Url to a KML file, and I want to show it on my OS
 
 (Parenthesis - If you don't have such Url, pick one of those:
  * Paris Tour: http://mapsengine.google.com/map/kml?mid=z6IJfj90QEd4.kUUY9FoHFRdE
- * Or a message in the desert: http://mapsengine.google.com/map/kml?mid=z6IJfj90QEd4.kcfEKhi8r5LQ
+ * Chicago Transit map (a sample from Google Maps JavaScript API v3 doc): http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml
+ * a message in the desert: http://mapsengine.google.com/map/kml?mid=z6IJfj90QEd4.kcfEKhi8r5LQ
  * Or a guided visit of the "Puy du Fou Grand Parc" - a famous Theme Park in France: http://mapsengine.google.com/map/kml?mid=z6IJfj90QEd4.kABxpiwxshvA
 End of parenthesis)
 
