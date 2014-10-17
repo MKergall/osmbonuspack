@@ -96,6 +96,8 @@ Example: long-press on the map to define the destination, a new POI,...
 
 Refer to the [KML KML wiki page] and [GeoJSON GeoJSON wiki page] for more details. 
 
+You can also look at [OverpassAPIProvider], a powerful tool to get OSM data as KML content. 
+
 = Integrated tools for off-line maps and Cache Management =
 CacheManager allows to download tiles on areas, for later off-line usage. This feature can be completely integrated in Android applications (as shown in OSMNavigator). 
 For end-users, this means:
