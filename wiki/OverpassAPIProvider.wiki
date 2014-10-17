@@ -25,5 +25,5 @@ Some use cases:
   * Get all features having "website" tag => urlForTagSearchKml("website", bb, limit, timeout);
 
 For more complex searches, you can have a look at #urlForTagSearchKml, and then build your own OverpassAPI request. To use #addInKmlFolder, your request must ensure that: 
-  * Content is in JSON format
-  * ways and relations have the "geometry" element
+  * Content is in JSON format => obtained with the "[out:json]" setting
+  * ways and relations have the "geometry" element => obtained with the "out geom" setting. 
