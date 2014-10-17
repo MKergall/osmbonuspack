@@ -1,29 +1,52 @@
 #summary Accessing OSM data, as POI or as KML.
 
+<wiki:toc/>
+
 = Introduction =
-Overpass API is a super-powerful search API directly accessing to OpenSteetMap data. 
+[http://wiki.openstreetmap.org/wiki/Overpass_API Overpass API] is a super-powerful search API directly accessing to OpenSteetMap data. 
 
-OverpassAPIProvider gives you access to this API through 2 flavors: either using the simple "POI" approach, or using the KML flavor to get full geometry and tags. 
+OSMBonusPack OverpassAPIProvider gives you access to this API. It comes with 2 flavors: either using the simple "POI" approach, or using the KML flavor to get full geometry and tags. 
 
-= 1. POI approach =
-TODO
+_OverpassAPIProvider is currently available in the Source trunk, and will be made available from OSMBonusPack v5.0_
 
-= 2. KML flavor =
+= POI approach =
+
+OverpassAPIProvider#urlForPOISearch is a helper method to build a request for a simple tag search. 
+
+OverpassAPIProvider#getPOIsFromUrl performs the query, and convert the result as POI objects. 
+
+For each element, only 1 position is retrieved, not the whole geometry. This approach is simple (homogeneous), and quite efficient (small amount of data). 
+
+You can safely get up to 500 features in one request (cinemas, fuel stations, speed cameras, shops, .......). 
+
+
+= KML flavor =
 It combines the power of OverpassAPI query language, with the power of KML  representation. 
 
 OverpassAPIProvider#urlForTagSearchKml(String tag, BoundingBoxE6 bb, int limit, int timeout) is a helper method to build a request for a simple tag search. 
 
-OverpassAPIProvider#addInKmlFolder(KmlFolder kmlFolder, String url) performs the query, and convert the result to KML content:
-  * OSM Nodes are converted to KML Point. 
-  * OSM Ways: open ways are converted to KML LineString, closed ways are converted to KML Polygon. 
-  * OSM Relations are converted to KML MultiGeometry. 
+OverpassAPIProvider#addInKmlFolder(KmlFolder kmlFolder, String url) performs the query, and convert the result to KML content, that is added in the kmlFolder. 
+Each OSM element becomes a KML Placemark, with a KML Geometry depending on the OSM type of the element: 
+  * OSM node becomes a KML Point
+  * OSM open way becomes a KML LineString
+  * OSM closed way becomes a KML Polygon
+  * OSM relation becomes a KML MultiGeometry
+
+For each element:
+  * The OSM id is copied as the KML Placemark id. 
+  * All OSM tags (key=value) are copied as KML Extended Data. 
+  * The "name" tag is copied as the KML Placemark name. 
+
 
 Some use cases: 
   * Get cinemas => urlForTagSearchKml("amenity=cinema", bb, limit, timeout);
-  * Get all kind of shops => urlForTagSearchKml("shop", bb, limit, timeout);
-  * Get buildings => urlForTagSearchKml("building", bb, limit, timeout);
+  * Get all shops => urlForTagSearchKml("shop", bb, limit, timeout);
+  * Get buildings with their shape => urlForTagSearchKml("building", bb, limit, timeout);
   * Get all features having "website" tag => urlForTagSearchKml("website", bb, limit, timeout);
 
-For more complex searches, you can have a look at #urlForTagSearchKml, and then build your own OverpassAPI request. To use #addInKmlFolder, your request must ensure that: 
+
+For more complex searches, have a look at #urlForTagSearchKml, and then you can build your own Overpass API request. You should be familiar with the [http://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL OverpassQL] query syntax. 
+
+To use #addInKmlFolder, your url request must ensure that: 
   * Content is in JSON format => obtained with the "[out:json]" setting
   * ways and relations have the "geometry" element => obtained with the "out geom" setting. 
