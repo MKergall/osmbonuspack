@@ -1,6 +1,6 @@
 #summary Why this "OSMBonusPack", and the features it provides.
 
-<wiki:toc max_depth="1" />
+<wiki:toc />
 
 = Introduction =
 osmdroid is an opensource library which provides a simple and efficient way to port an Android application from Google Maps to OpenStreetMap. 
