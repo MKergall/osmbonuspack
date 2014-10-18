@@ -66,6 +66,7 @@ You can easily customize its look&feel (cluster icon, cluster size, text style a
 [Tutorial_2 POIProviders] retrieve POI from a variety of service providers. 
 Currently supported: 
  * *NominatimPOIProvider*, to retrieve OpenStreetMap "features"
+ * [OverpassAPIProvider], an other way to retrieve OpenSteetMap "features"
  * *GeoNamesPOIProvider*, using [http://www.geonames.org/export/wikipedia-webservice.html GeoNames Wikipedia] service, retrieving Wikipedia geolocalized entries
  * *FlickrPOIProvider* and *PicasaPOIProvider*, using Flickr and Picasa services to search among the billions of Flickr and Picasa photos and retrieve geolocalized photos for an area. 
 
