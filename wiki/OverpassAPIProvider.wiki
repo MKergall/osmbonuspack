@@ -13,9 +13,9 @@ _OverpassAPIProvider is currently available in the Source trunk, and will be off
 
 OverpassAPIProvider#urlForPOISearch is a helper method to build a request for a simple tag search. Have a look at [http://wiki.openstreetmap.org/wiki/Map_Features OSM Map Features] to discover usual OSM tags (cinemas, fuel stations, speed cameras, shops,...). 
 
-OverpassAPIProvider#getPOIsFromUrl performs the query, and convert the result as POI objects. 
+OverpassAPIProvider#getPOIsFromUrl performs the query, and convert the features found as POI objects. 
 
-For each element, only 1 position is retrieved, not the whole geometry. This approach is simple (homogeneous), and quite efficient (small amount of data). 
+For each feature, only 1 position is retrieved, not the whole geometry. This approach is simple (homogeneous), and quite efficient (small amount of data). 
 
 You can safely get up to 500 features in one request. 
 
