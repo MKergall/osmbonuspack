@@ -11,14 +11,17 @@ _OverpassAPIProvider is currently available in the Source trunk, and will be off
 
 = POI approach =
 
-OverpassAPIProvider#urlForPOISearch is a helper method to build a request for a simple tag search. 
+OverpassAPIProvider#urlForPOISearch is a helper method to build a request for a simple tag search. Have a look at [http://wiki.openstreetmap.org/wiki/Map_Features OSM Map Features] to discover usual OSM tags (cinemas, fuel stations, speed cameras, shops,...). 
 
 OverpassAPIProvider#getPOIsFromUrl performs the query, and convert the result as POI objects. 
 
 For each element, only 1 position is retrieved, not the whole geometry. This approach is simple (homogeneous), and quite efficient (small amount of data). 
 
-You can safely get up to 500 features in one request (cinemas, fuel stations, speed cameras, shops, .......). 
+You can safely get up to 500 features in one request. 
 
+Example when querying "amenity=cinema":
+
+<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/img/osmbonuspackdemo_4_2.png" height="530">
 
 = KML flavor =
 It combines the power of OverpassAPI query language, with the power of KML  representation. 
@@ -44,6 +47,9 @@ Some use cases:
   * Get buildings with their shape => urlForTagSearchKml("building", bb, limit, timeout);
   * Get all features having "website" tag => urlForTagSearchKml("website", bb, limit, timeout);
 
+Example when querying "building":
+
+<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/img/osmbonuspackdemo_13.png" height="530">
 
 For more complex searches, have a look at #urlForTagSearchKml, and then you can build your own Overpass API request. You should be familiar with the [http://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL OverpassQL] query syntax. 
 
