@@ -80,7 +80,13 @@ In the options menu, the "KML Toolbox" item is the entry point for handling KML 
 
 Files are loaded from the SD card directory, from the "kml" sub-directory. Using the Android file manager, it is also possible to open a file located anywhere on the device, as long as its extension is .kml, .kmz or .json. 
 
-With "Pick Overlays", all overlays currently displayed are copied as KML entries. 
+With "OverpassAPI Wizard", you can directly query OpenStreetMap underlying data using OverpassAPI service, and get the resulting OSM features (nodes, ways and relations) displayed as KML features. 
+The query should be an [http://wiki.openstreetmap.org/wiki/Tags OSM tag], in the form "key=value", or just "key". 
+
+Some examples: "shop=bakery", "amenity=cinema", or "building". 
+
+
+With "Pick Overlays", all overlays currently displayed are copied as KML features. 
 
 "Edit Features..." opens a simple KML editor, where you can: 
   * Edit the name and description of a Feature
