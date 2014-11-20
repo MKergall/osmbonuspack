@@ -57,13 +57,9 @@ In the top panel, use the "Features" text field to search for various map featur
 
 If there is no route defined, features will be searched in the "view", the area of the map currently displayed. If you move the view (by panning/zooming), there is no automatic refresh: tap "Search" again everytime you want to search. 
 
-Warning: the search returns a maximum of 50 results. Narrow your view if needed. 
+Warning: the search returns a maximum of 100 results. Narrow your view if needed. 
 
 <img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/img/osmbonuspackdemo_4_2.png" height="530"><br>
-
-If a route is displayed, features are searched along this route. 
-
-<img src="http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/img/osmbonuspackdemo_4_1.png"><br>
 
 In the options menu, you can use "Features list" item to display all the features as a list. 
 
