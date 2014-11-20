@@ -7,7 +7,7 @@
 
 OSMBonusPack OverpassAPIProvider gives you access to this API. It comes with 2 flavors: either using the simple "POI" approach, or using the KML flavor to get full geometry and tags. 
 
-_OverpassAPIProvider is currently available in the Source trunk, and will be officially released in OSMBonusPack v5.0_
+OverpassAPIProvider is available from OSMBonusPack v5.0. 
 
 = POI approach =
 
