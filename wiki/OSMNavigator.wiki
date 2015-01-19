@@ -4,7 +4,7 @@
 
 = Introduction =
 
-[http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/OSMNavigator_v5.0.apk.zip OSMNavigator] is a generic map application for Android, based on OSMBonusPack library. It is simple and compact. 
+[http://osmbonuspack.googlecode.com/svn/BonusPackDownloads/OSMNavigator_v5.1.apk.zip OSMNavigator] is a generic map application for Android, based on OSMBonusPack library. It is simple and compact. 
 
 It can be downloaded in the [http://osmbonuspack.googlecode.com/svn/BonusPackDownloads Downloads] section of this site. 
 We have no plan to make it available through Google Play. 
