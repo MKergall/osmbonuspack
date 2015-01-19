@@ -6,12 +6,12 @@
 
 Marker Clustering is a now classical technique when you have a lot of markers on a map, to group markers which are close together in a single "cluster" marker, displaying the number of markers it "contains". 
 
-This (cool) feature is available in OSMBonusPack with the GridMarkerClusterer. 
+This (cool) feature is available in OSMBonusPack with the RadiusMarkerClusterer. 
 
 If you already grouped your markers in a FolderOverlay (as we did in chapter 5 with poiMarkers), introducing marker clustering is trivial. 
-You replace the FolderOverlay by a GridMarkerClusterer: 
+You replace the FolderOverlay by a RadiusMarkerClusterer: 
 {{{
-GridMarkerClusterer poiMarkers = new GridMarkerClusterer(this);
+RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(this);
 }}}
 
 You also have to set an icon for the clusters. This is the icon to be used when there are many markers in a cluster. 
@@ -56,11 +56,11 @@ But you may want to go deeper. There is a lot of excellent ideas for cluster des
  * set of photos,
  * ... 
 
-You can implement such designs by sub-classing the GridMarkerClusterer. 
+You can implement such designs by sub-classing the RadiusMarkerClusterer. 
 Then you override #buildClusterMarker(StaticCluster cluster, MapView mapView) method, and you draw your cluster icon as needed. 
 
 To have a good starting point, you can look 
- * at GridMarkerClusterer#buildClusterMarker source code
+ * at RadiusMarkerClusterer#buildClusterMarker source code
  * or at OSMBonusPackTuto CirclesGridMarkerClusterer, which implements circles with various colors and sizes. 
 
 If you want to go further, you can also implement your own clustering algorithm. You "just" have to sub-class the MarkerClusterer, and override the #clusterer(MapView mapView) method. 
