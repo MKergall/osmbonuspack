@@ -9,8 +9,10 @@ In the explanations, we assume that you are using Eclipse, and that you have an 
 First of all, you must include osmdroid library in your Android project. 
 Refer to [https://github.com/osmdroid/osmdroid osmdroid] documentation. 
 
-OSMBonusPack jars from v4.5 are based on osmdroid v4.2. 
-(OSMBonusPack jars from v4.2.6 to v4.4 are based on osmdroid v4.1)
+OSMBonusPack jars from v5.1 are based on osmdroid v4.3
+
+(OSMBonusPack jars from v4.5 to v5.0 are based on osmdroid v4.2; 
+OSMBonusPack jars from v4.2.6 to v4.4 are based on osmdroid v4.1)
 
 Take care to:
  * put the osmdroid.jar in a "libs" directory
