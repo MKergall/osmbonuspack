@@ -2,8 +2,12 @@
 
 = Introduction =
 
-So now, with OSMBonusPack, you have simple access to 3 routing services: MapQuest, OSRM and GraphHopper. 
-And you can switch between routing services, by just calling the right RoadManager. 
+So now, with OSMBonusPack, you have simple access to 3 routing services:  
+ * GraphHopper
+ * MapQuest
+ * OSRM
+
+And you can switch between those routing services, by just calling the right RoadManager. 
 But choosing the right routing service may not be so simple. 
 You will find here some elements to help you in this choice. 
 
@@ -13,6 +17,9 @@ They all provide:
  * Waypoints support
  * Route instructions
  * Fresh OSM data
+
+Not surprisingly, they are the 3 routing services chosen by the official [https://blog.openstreetmap.org/2015/02/16/routing-on-openstreetmap-org OpenStreetMap web site] for providing directions. 
+
 
 = Performance = 
 On a 350km trip (in France, Rennes-Paris), the duration of an end-to-end route retrieval (including full parsing of server response) is, on an average of 5 requests: 
