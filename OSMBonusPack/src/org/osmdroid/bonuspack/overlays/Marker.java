@@ -8,9 +8,15 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.Projection;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -69,9 +75,13 @@ public class Marker extends OverlayWithIW {
 		this(mapView, new DefaultResourceProxyImpl(mapView.getContext()));
 	}
 
-	public Marker(MapView mapView, final ResourceProxy resourceProxy) {
+    final Resources resource;
+    public Marker(MapView mapView, final ResourceProxy resourceProxy) {
+
 		super(resourceProxy);
-		mBearing = 0.0f;
+
+        resource = mapView.getContext().getResources();
+        mBearing = 0.0f;
 		mAlpha = 1.0f; //opaque
 		mPosition = new GeoPoint(0.0, 0.0);
 		mAnchorU = ANCHOR_CENTER;
@@ -107,9 +117,35 @@ public class Marker extends OverlayWithIW {
 	public void setIcon(Drawable icon){
 		if (icon != null)
 			mIcon = icon;
-		else 
-			mIcon = mDefaultIcon;
+		else if (this.getTitle()!=null) {
+            Paint background = new Paint();
+            background.setColor(Color.WHITE);
+
+            Paint p = new Paint();
+            p.setTextSize(24);
+            p.setColor(Color.BLACK);
+
+            p.setAntiAlias(true);
+            p.setTypeface(Typeface.DEFAULT_BOLD);
+            p.setTextAlign(Paint.Align.LEFT);
+            int width=(int)(p.measureText(getTitle()) + 0.5f);
+            float baseline=(int)(-p.ascent() + 0.5f);
+            int height=(int) (baseline +p.descent() + 0.5f);
+            Bitmap image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas c = new Canvas(image);
+            c.drawPaint(background);
+            c.drawText(getTitle(),0,baseline,p);
+
+            mIcon=new BitmapDrawable(resource,image);
+        }
+        else{
+            mIcon = mDefaultIcon;
+        }
 	}
+
+    public Drawable getIcon(){
+        return mIcon;
+    }
 	
 	public GeoPoint getPosition(){
 		return mPosition;
@@ -126,7 +162,11 @@ public class Marker extends OverlayWithIW {
 	public void setRotation(float rotation){
 		mBearing = rotation;
 	}
-	
+
+    public float[] getAnchor(){
+        return new float[]{mAnchorU, mAnchorV};
+    }
+
 	public void setAnchor(float anchorU, float anchorV){
 		mAnchorU = anchorU;
 		mAnchorV= anchorV;
