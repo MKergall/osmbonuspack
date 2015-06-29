@@ -28,4 +28,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:22.2.0"
     compile 'org.osmdroid:osmdroid-android:4.3'
     compile 'org.slf4j:slf4j-android:1.6.1-RC1'
+
+    compile 'io.reactivex:rxjava:1.0.11'
+    compile 'io.reactivex:rxandroid:0.24.0'
 }
