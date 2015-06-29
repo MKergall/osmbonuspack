@@ -50,6 +50,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -62,16 +64,21 @@ import android.widget.Toast;
  * @author M.Kergall
  *
  */
-public class MainActivity extends Activity implements MapEventsReceiver {
+public class MainActivity extends AppCompatActivity implements MapEventsReceiver {
 
 	MapView map;
 	KmlDocument mKmlDocument;
+	Toolbar toolbar;
 	
 	@Override protected void onCreate(Bundle savedInstanceState) {
 
 		//Introduction
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+
 		map = (MapView) findViewById(R.id.map);
 		map.setBuiltInZoomControls(true);
 		map.setMultiTouchControls(true);
