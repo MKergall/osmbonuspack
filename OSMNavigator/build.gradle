@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 4
+    compileSdkVersion 22
     buildToolsVersion "22.0.1"
 
     defaultConfig {
         applicationId "com.osmnavigator"
-        minSdkVersion 4
-        targetSdkVersion 4
+        minSdkVersion 16
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
@@ -25,6 +25,10 @@ dependencies {
     compile project(":OSMBonusPack")
     compile project(":MapsForgeForOsmdroid")
 
+    compile "com.android.support:appcompat-v7:22.2.0"
     compile 'org.osmdroid:osmdroid-android:4.3'
     compile 'org.slf4j:slf4j-android:1.6.1-RC1'
+
+    compile 'io.reactivex:rxjava:1.0.11'
+    compile 'io.reactivex:rxandroid:0.24.0'
 }

@@ -101,6 +101,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.Subscriptions;
+
 /**
  * Simple and general-purpose map/navigation Android application, including a KML viewer and editor. 
  * It is based on osmdroid and OSMBonusPack
@@ -151,6 +159,8 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	static String PREF_LOCATIONS_KEY = "PREF_LOCATIONS";
 	
 	OnlineTileSourceBase MAPBOXSATELLITELABELLED;
+
+	private Subscription addressSubscription = Subscriptions.empty();
 	
 	/** IMPORTANT - these API keys and accounts have been provided EXCLUSIVELY to OSMNavigator application. 
 	 * Developers of other applications must request their own API key from the corresponding service provider. */
@@ -312,8 +322,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		setPOITagButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				//Hide the soft keyboard:
-				InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(poiTagText.getWindowToken(), 0);
+				hideKeyboard(poiTagText);
 				//Start search:
 				String feature = poiTagText.getText().toString();
 				if (!feature.equals(""))
@@ -519,11 +528,10 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
     /**
      * Geocoding of the departure or destination address
      */
-	public void handleSearchButton(int index, int editResId){
+	public void handleSearchButton(final int index, int editResId){
 		EditText locationEdit = (EditText)findViewById(editResId);
 		//Hide the soft keyboard:
-		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(locationEdit.getWindowToken(), 0);
+		hideKeyboard(locationEdit);
 		
 		String locationAddress = locationEdit.getText().toString();
 		
@@ -535,43 +543,86 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		
 		Toast.makeText(this, "Searching:\n"+locationAddress, Toast.LENGTH_LONG).show();
 		AutoCompleteOnPreferences.storePreference(this, locationAddress, SHARED_PREFS_APPKEY, PREF_LOCATIONS_KEY);
-		GeocoderNominatim geocoder = new GeocoderNominatim(this, userAgent);
-		geocoder.setOptions(true); //ask for enclosing polygon (if any)
-		try {
-			BoundingBoxE6 viewbox = map.getBoundingBox();
-			List<Address> foundAdresses = geocoder.getFromLocationName(locationAddress, 1, 
-					viewbox.getLatSouthE6()*1E-6, viewbox.getLonEastE6()*1E-6, 
-					viewbox.getLatNorthE6()*1E-6, viewbox.getLonWestE6()*1E-6, false);
-			if (foundAdresses.size() == 0) { //if no address found, display an error
-				Toast.makeText(this, "Address not found.", Toast.LENGTH_SHORT).show();
-			} else {
-				Address address = foundAdresses.get(0); //get first address
-				String addressDisplayName = address.getExtras().getString("display_name");
-				if (index == START_INDEX){
-					startPoint = new GeoPoint(address.getLatitude(), address.getLongitude());
-					markerStart = updateItineraryMarker(markerStart, startPoint, START_INDEX,
-						R.string.departure, R.drawable.marker_departure, -1, addressDisplayName);
-					map.getController().setCenter(startPoint);
-				} else if (index == DEST_INDEX){
-					destinationPoint = new GeoPoint(address.getLatitude(), address.getLongitude());
-					markerDestination = updateItineraryMarker(markerDestination, destinationPoint, DEST_INDEX,
-						R.string.destination, R.drawable.marker_destination, -1, addressDisplayName);
-					map.getController().setCenter(destinationPoint);
+
+		addressSubscription = getAddressesForLocation(locationAddress)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Action1<List<Address>>() {
+					@Override
+					public void call(List<Address> foundAdresses) {
+						onGeocodingSuccess(foundAdresses, index);
+					}
+				}, new Action1<Throwable>() {
+					@Override
+					public void call(Throwable throwable) {
+						Toast.makeText(MapActivity.this, "Geocoding error", Toast.LENGTH_SHORT).show();
+					}
+				});
+
+	}
+
+	private void hideKeyboard(EditText locationEdit) {
+		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(locationEdit.getWindowToken(), 0);
+	}
+
+	private void onGeocodingSuccess(List<Address> foundAdresses, int index) {
+		if (foundAdresses.size() == 0) { //if no address found, display an error
+            Toast.makeText(MapActivity.this, "Address not found.", Toast.LENGTH_SHORT).show();
+        } else {
+            Address address = foundAdresses.get(0); //get first address
+            String addressDisplayName = address.getExtras().getString("display_name");
+            if (index == START_INDEX){
+                startPoint = new GeoPoint(address.getLatitude(), address.getLongitude());
+                markerStart = updateItineraryMarker(markerStart, startPoint, START_INDEX,
+                        R.string.departure, R.drawable.marker_departure, -1, addressDisplayName);
+                map.getController().setCenter(startPoint);
+            } else if (index == DEST_INDEX){
+                destinationPoint = new GeoPoint(address.getLatitude(), address.getLongitude());
+                markerDestination = updateItineraryMarker(markerDestination, destinationPoint, DEST_INDEX,
+                        R.string.destination, R.drawable.marker_destination, -1, addressDisplayName);
+                map.getController().setCenter(destinationPoint);
+            }
+            getRoadAsync();
+            //get and display enclosing polygon:
+            Bundle extras = address.getExtras();
+            if (extras != null && extras.containsKey("polygonpoints")){
+                ArrayList<GeoPoint> polygon = extras.getParcelableArrayList("polygonpoints");
+                //Log.d("DEBUG", "polygon:"+polygon.size());
+                updateUIWithPolygon(polygon, addressDisplayName);
+            } else {
+                updateUIWithPolygon(null, "");
+            }
+        }
+	}
+
+	private Observable<List<Address>> getAddressesForLocation(final String locationAddress) {
+		return Observable.create(
+				new Observable.OnSubscribe<List<Address>>() {
+					@Override
+					public void call(Subscriber<? super List<Address>> subscriber) {
+						GeocoderNominatim geocoder = new GeocoderNominatim(MapActivity.this, userAgent);
+						geocoder.setOptions(true); //ask for enclosing polygon (if any)
+
+						BoundingBoxE6 viewbox = map.getBoundingBox();
+						List<Address> addressList = null;
+						try {
+							addressList = geocoder.getFromLocationName(locationAddress, 1,
+									viewbox.getLatSouthE6() * 1E-6, viewbox.getLonEastE6() * 1E-6,
+									viewbox.getLatNorthE6() * 1E-6, viewbox.getLonWestE6() * 1E-6, false);
+						} catch (IOException e) {
+							subscriber.onError(e);
+						}
+
+						if (addressList == null) {
+							return;
+						}
+						subscriber.onNext(addressList);
+						subscriber.onCompleted();
+
+					}
 				}
-				getRoadAsync();
-				//get and display enclosing polygon:
-				Bundle extras = address.getExtras();
-				if (extras != null && extras.containsKey("polygonpoints")){
-					ArrayList<GeoPoint> polygon = extras.getParcelableArrayList("polygonpoints");
-					//Log.d("DEBUG", "polygon:"+polygon.size());
-					updateUIWithPolygon(polygon, addressDisplayName);
-				} else {
-					updateUIWithPolygon(null, "");
-				}
-			}
-		} catch (Exception e) {
-			Toast.makeText(this, "Geocoding error", Toast.LENGTH_SHORT).show();
-		}
+		);
 	}
 	
 	//add or replace the polygon overlay
