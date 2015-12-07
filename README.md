@@ -71,6 +71,32 @@ Start with the [installation guide](https://github.com/MKergall/osmbonuspack/wik
 
 In the [releases](https://github.com/MKergall/osmbonuspack/releases), you will find the library (jar file), the javadoc, and the [OSMNavigator](https://github.com/MKergall/osmbonuspack/wiki/OSMNavigator) application.
 
+# Gradle Dependency
+
+[![Release](https://img.shields.io/github/release/MKergall/osmbonuspack.svg?label=jitpack)](https://jitpack.io/#MKergall/osmbonuspack)
+
+Add this in your root `build.gradle` file (**not** your module `build.gradle` file):
+
+```gradle
+allprojects {
+	repositories {
+		...
+		maven { url "https://jitpack.io" }
+	}
+}
+```
+
+Add this in your module `build.gradle` file:
+
+```gradle
+dependencies {
+	...
+    compile('com.github.MKergall.osmbonuspack:OSMBonusPack:-SNAPSHOT@aar') {
+      transitive = true
+    }
+}
+```
+
 # How to get help
 If you need help to use osmdroid or OSMBonusPack, go to [StackOverflow](http://stackoverflow.com/questions/tagged/osmdroid) with "osmdroid" tag. 
 
