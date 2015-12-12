@@ -1,20 +1,5 @@
 package org.osmdroid.bonuspack.overlays;
 
-import android.graphics.Canvas;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.view.MotionEvent;
-
-import org.osmdroid.DefaultResourceProxyImpl;
-import org.osmdroid.ResourceProxy;
-import org.osmdroid.ResourceProxy.bitmap;
-import org.osmdroid.bonuspack.R;
-import org.osmdroid.bonuspack.utils.BonusPackHelper;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.Projection;
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -25,8 +10,15 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.MotionEvent;
+
+import org.osmdroid.DefaultResourceProxyImpl;
+import org.osmdroid.ResourceProxy;
+import org.osmdroid.ResourceProxy.bitmap;
+import org.osmdroid.bonuspack.R;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.Projection;
 
 /**
  * An icon placed at a particular point on the map's surface. 
