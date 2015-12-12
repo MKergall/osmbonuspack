@@ -70,7 +70,8 @@ public class Marker extends OverlayWithIW {
 	protected Point mPositionPixels;
 	protected static MarkerInfoWindow mDefaultInfoWindow = null;
 	protected static Drawable mDefaultIcon = null; //cache for default icon (resourceProxy.getDrawable being slow)
-	
+	protected Resources mResource;
+
 	/** Usual values in the (U,V) coordinates system of the icon image */
 	public static final float ANCHOR_CENTER=0.5f, ANCHOR_LEFT=0.0f, ANCHOR_TOP=0.0f, ANCHOR_RIGHT=1.0f, ANCHOR_BOTTOM=1.0f;
 	
@@ -78,10 +79,9 @@ public class Marker extends OverlayWithIW {
 		this(mapView, new DefaultResourceProxyImpl(mapView.getContext()));
 	}
 
-    final Resources resource;
     public Marker(MapView mapView, final ResourceProxy resourceProxy) {
 		super(resourceProxy);
-        resource = mapView.getContext().getResources();
+		mResource = mapView.getContext().getResources();
         mBearing = 0.0f;
 		mAlpha = 1.0f; //opaque
 		mPosition = new GeoPoint(0.0, 0.0);
@@ -139,7 +139,7 @@ public class Marker extends OverlayWithIW {
             c.drawPaint(background);
             c.drawText(getTitle(),0,baseline,p);
 
-            mIcon=new BitmapDrawable(resource,image);
+            mIcon=new BitmapDrawable(mResource,image);
         }
 		if (!ENABLE_TEXT_LABELS_WHEN_NO_IMAGE && icon!=null)
 			this.mIcon=icon;
@@ -297,6 +297,7 @@ public class Marker extends OverlayWithIW {
 	public void onDetach(MapView mapView) {
 		mDefaultIcon = null;
         mDefaultInfoWindow = null;
+		mResource=null;
         super.onDetach(mapView);
     }
 
