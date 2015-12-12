@@ -47,6 +47,9 @@ public class Marker extends OverlayWithIW {
 
 
 	public static boolean ENABLE_TEXT_LABELS_WHEN_NO_IMAGE=false;
+	public static int TEXT_LABEL_BACKGROUND_COLOR=Color.WHITE;
+	public static int TEXT_LABEL_FOREGROUND_COLOR=Color.BLACK;
+	public static int TEXT_LABEL_FONT=24;
 	/*attributes for standard features:*/
 	protected Drawable mIcon;
 	protected GeoPoint mPosition;
@@ -119,13 +122,13 @@ public class Marker extends OverlayWithIW {
 	public void setIcon(Drawable icon){
 		if (icon != null)
 			mIcon = icon;
-		else if (ENABLE_TEXT_LABELS_WHEN_NO_IMAGE && this.getTitle()!=null) {
+		else if (ENABLE_TEXT_LABELS_WHEN_NO_IMAGE && this.getTitle()!=null && this.getTitle().length() > 0) {
             Paint background = new Paint();
-            background.setColor(Color.WHITE);
+            background.setColor(TEXT_LABEL_BACKGROUND_COLOR);
 
             Paint p = new Paint();
-            p.setTextSize(24);
-            p.setColor(Color.BLACK);
+            p.setTextSize(TEXT_LABEL_FONT);
+            p.setColor(TEXT_LABEL_FOREGROUND_COLOR);
 
             p.setAntiAlias(true);
             p.setTypeface(Typeface.DEFAULT_BOLD);
