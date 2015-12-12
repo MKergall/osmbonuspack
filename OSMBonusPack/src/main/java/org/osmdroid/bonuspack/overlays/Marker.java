@@ -53,6 +53,8 @@ import android.view.MotionEvent;
  */
 public class Marker extends OverlayWithIW {
 
+
+	public static boolean ENABLE_TEXT_LABELS_WHEN_NO_IMAGE=false;
 	/*attributes for standard features:*/
 	protected Drawable mIcon;
 	protected GeoPoint mPosition;
@@ -125,7 +127,7 @@ public class Marker extends OverlayWithIW {
 	public void setIcon(Drawable icon){
 		if (icon != null)
 			mIcon = icon;
-		else if (this.getTitle()!=null) {
+		else if (ENABLE_TEXT_LABELS_WHEN_NO_IMAGE && this.getTitle()!=null) {
             Paint background = new Paint();
             background.setColor(Color.WHITE);
 
