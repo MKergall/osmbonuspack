@@ -13,9 +13,13 @@ buildscript {
     }
 }
 
+apply from: "https://gist.githubusercontent.com/larsgrefer/30b36bd74b162631f143/raw/d4155e673d7908193eb65f9bb6640250d7f282d8/git-version.gradle"
+
 allprojects {
     repositories {
         jcenter()
         maven { url "https://jitpack.io" }
     }
+
+    version = rootProject.version
 }
