@@ -120,9 +120,7 @@ public class Marker extends OverlayWithIW {
 	 * @param icon if null, the default osmdroid marker is used. 
 	 */
 	public void setIcon(Drawable icon){
-		if (icon != null)
-			mIcon = icon;
-		else if (ENABLE_TEXT_LABELS_WHEN_NO_IMAGE && this.getTitle()!=null && this.getTitle().length() > 0) {
+		if (ENABLE_TEXT_LABELS_WHEN_NO_IMAGE && icon==null && this.mTitle!=null && this.mTitle.length() > 0) {
             Paint background = new Paint();
             background.setColor(TEXT_LABEL_BACKGROUND_COLOR);
 
@@ -143,9 +141,12 @@ public class Marker extends OverlayWithIW {
 
             mIcon=new BitmapDrawable(resource,image);
         }
-        else{
+		if (!ENABLE_TEXT_LABELS_WHEN_NO_IMAGE && icon!=null)
+			this.mIcon=icon;
+		//there's still an edge case here, title label no defined, icon is null and textlabel is enabled
+        if (this.mIcon==null)
             mIcon = mDefaultIcon;
-        }
+
 	}
 
     public Drawable getIcon(){
