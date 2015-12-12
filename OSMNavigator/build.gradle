@@ -17,6 +17,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        warning 'InvalidPackage' //needed for okio
+        warning 'MissingTranslation' //nice to know, but we dont want to fail because of this
+    }
 }
 
 dependencies {
