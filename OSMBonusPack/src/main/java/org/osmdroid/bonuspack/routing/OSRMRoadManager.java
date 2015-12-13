@@ -192,13 +192,12 @@ public class OSRMRoadManager extends RoadManager {
 			JSONObject jSummary = jObject.getJSONObject("route_summary");
 			road.mLength = jSummary.getInt("total_distance")/1000.0;
 			road.mDuration = jSummary.getInt("total_time");
-			String found_alternative = jObject.getString("found_alternative");
-			if ("true".equals(found_alternative)) {
+			if (jObject.has("found_alternative") && "true".equals(jObject.getString("found_alternative"))) {
 				JSONArray alternative_geometries = jObject.getJSONArray("alternative_geometries");
 				int nbAltRoads = alternative_geometries.length();
 				roads = new Road[nbAltRoads+1];
 				roads[0] = road;
-				for (int i=0; i<nbAltRoads; i++){
+				for (int i=0; i<nbAltRoads; i++) {
 					roads[i+1] = new Road(waypoints);
 					getAlternateRoad(roads[i+1], i, jObject);
 				}
