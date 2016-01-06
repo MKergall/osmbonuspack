@@ -392,7 +392,7 @@ public class MainActivity extends Activity implements MapEventsReceiver {
 		//18. Using GroundOverlay
 		GroundOverlay myGroundOverlay = new GroundOverlay(this);
 		myGroundOverlay.setPosition(p);
-		myGroundOverlay.setImage(getResources().getDrawable(R.drawable.ic_launcher).mutate());
+		myGroundOverlay.setImage(getResources().getDrawable(R.mipmap.ic_launcher).mutate());
 		myGroundOverlay.setDimensions(2000.0f);
 		//myGroundOverlay.setTransparency(0.25f);
 		myGroundOverlay.setBearing(mGroundOverlayBearing);
