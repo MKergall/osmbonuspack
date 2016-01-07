@@ -231,6 +231,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		map.getOverlays().add(myLocationOverlay);
 
 		if (savedInstanceState == null){
+            // TODO: Revisit. Abstract code to initialize location. When requesting location, also request storage.
             Location location = null;
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
