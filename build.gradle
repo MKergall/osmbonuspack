@@ -18,4 +18,12 @@ allprojects {
         jcenter()
         maven { url "https://jitpack.io" }
     }
+
+    ext{
+        minSdkVersion = 10
+        targetSdkVersion = 23
+        versionCode = 57
+        versionName ="5.7-SNAPSHOT"
+    }
+
 }

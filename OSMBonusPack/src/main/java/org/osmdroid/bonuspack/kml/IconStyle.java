@@ -94,9 +94,16 @@ public class IconStyle extends ColorStyle implements Parcelable {
 	public void styleMarker(Marker marker, Context context){
 		BitmapDrawable icon = getFinalIcon(context);
 		marker.setIcon(icon);
+		if (icon==null)
+			//this bit is for when we're using text anchors without an image defined (see issue 123)
+			marker.setIcon(icon);
+		icon = getFinalIcon(context);
+		if (icon==null)
+			//this happens when there's no text label (null or empty) and no image or href defined for the marker
+			return;
 		marker.setAnchor(mHotSpot.getX(icon.getIntrinsicWidth()/mScale),
 				1.0f-mHotSpot.getY(icon.getIntrinsicHeight()/mScale));
-				//Y coords are top->bottom for Marker Anchor, and bottom->up for KML hotSpot
+		//Y coords are top->bottom for Marker Anchor, and bottom->up for KML hotSpot
 		marker.setRotation(mHeading);
 	}
 	

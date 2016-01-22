@@ -1,8 +1,14 @@
 package org.osmdroid.bonuspack.overlays;
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 
@@ -39,6 +45,11 @@ import org.osmdroid.views.Projection;
  */
 public class Marker extends OverlayWithIW {
 
+
+	public static boolean ENABLE_TEXT_LABELS_WHEN_NO_IMAGE=false;
+	public static int TEXT_LABEL_BACKGROUND_COLOR=Color.WHITE;
+	public static int TEXT_LABEL_FOREGROUND_COLOR=Color.BLACK;
+	public static int TEXT_LABEL_FONT=24;
 	/*attributes for standard features:*/
 	protected Drawable mIcon;
 	protected GeoPoint mPosition;
@@ -59,7 +70,8 @@ public class Marker extends OverlayWithIW {
 	protected Point mPositionPixels;
 	protected static MarkerInfoWindow mDefaultInfoWindow = null;
 	protected static Drawable mDefaultIcon = null; //cache for default icon (resourceProxy.getDrawable being slow)
-	
+	protected Resources mResource;
+
 	/** Usual values in the (U,V) coordinates system of the icon image */
 	public static final float ANCHOR_CENTER=0.5f, ANCHOR_LEFT=0.0f, ANCHOR_TOP=0.0f, ANCHOR_RIGHT=1.0f, ANCHOR_BOTTOM=1.0f;
 	
@@ -67,9 +79,10 @@ public class Marker extends OverlayWithIW {
 		this(mapView, new DefaultResourceProxyImpl(mapView.getContext()));
 	}
 
-	public Marker(MapView mapView, final ResourceProxy resourceProxy) {
+    public Marker(MapView mapView, final ResourceProxy resourceProxy) {
 		super(resourceProxy);
-		mBearing = 0.0f;
+		mResource = mapView.getContext().getResources();
+        mBearing = 0.0f;
 		mAlpha = 1.0f; //opaque
 		mPosition = new GeoPoint(0.0, 0.0);
 		mAnchorU = ANCHOR_CENTER;
@@ -107,12 +120,39 @@ public class Marker extends OverlayWithIW {
 	 * @param icon if null, the default osmdroid marker is used. 
 	 */
 	public void setIcon(Drawable icon){
-		if (icon != null)
-			mIcon = icon;
-		else 
-			mIcon = mDefaultIcon;
+		if (ENABLE_TEXT_LABELS_WHEN_NO_IMAGE && icon==null && this.mTitle!=null && this.mTitle.length() > 0) {
+            Paint background = new Paint();
+            background.setColor(TEXT_LABEL_BACKGROUND_COLOR);
+
+            Paint p = new Paint();
+            p.setTextSize(TEXT_LABEL_FONT);
+            p.setColor(TEXT_LABEL_FOREGROUND_COLOR);
+
+            p.setAntiAlias(true);
+            p.setTypeface(Typeface.DEFAULT_BOLD);
+            p.setTextAlign(Paint.Align.LEFT);
+            int width=(int)(p.measureText(getTitle()) + 0.5f);
+            float baseline=(int)(-p.ascent() + 0.5f);
+            int height=(int) (baseline +p.descent() + 0.5f);
+            Bitmap image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas c = new Canvas(image);
+            c.drawPaint(background);
+            c.drawText(getTitle(),0,baseline,p);
+
+            mIcon=new BitmapDrawable(mResource,image);
+        }
+		if (!ENABLE_TEXT_LABELS_WHEN_NO_IMAGE && icon!=null)
+			this.mIcon=icon;
+		//there's still an edge case here, title label no defined, icon is null and textlabel is enabled
+        if (this.mIcon==null)
+            mIcon = mDefaultIcon;
+
 	}
-	
+
+    public Drawable getIcon(){
+        return mIcon;
+    }
+
 	public GeoPoint getPosition(){
 		return mPosition;
 	}
@@ -128,7 +168,11 @@ public class Marker extends OverlayWithIW {
 	public void setRotation(float rotation){
 		mBearing = rotation;
 	}
-	
+
+    public float[] getAnchor(){
+        return new float[]{mAnchorU, mAnchorV};
+    }
+
 	public void setAnchor(float anchorU, float anchorV){
 		mAnchorU = anchorU;
 		mAnchorV= anchorV;
@@ -205,7 +249,7 @@ public class Marker extends OverlayWithIW {
 	public void setPanToView(boolean panToView){
 		mPanToView = panToView;
 	}
-	
+
 	public void showInfoWindow(){
 		if (mInfoWindow == null)
 			return;
@@ -253,6 +297,7 @@ public class Marker extends OverlayWithIW {
 	public void onDetach(MapView mapView) {
 		mDefaultIcon = null;
         mDefaultInfoWindow = null;
+		mResource=null;
         super.onDetach(mapView);
     }
 
