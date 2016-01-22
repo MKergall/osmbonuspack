@@ -5,10 +5,10 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        minSdkVersion 10
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
     }
     buildTypes {
         release {
@@ -22,4 +22,12 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile 'org.osmdroid:osmdroid-android:5.0.1@aar'
+}
+
+apply from: '../maven.gradle'
+
+install {
+    repositories.mavenInstaller {
+        pom.version = rootProject.ext.versionName
+    }
 }

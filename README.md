@@ -56,10 +56,6 @@ When searching a place by name, shows its enclosing polygon
 
 ![Enclosing polygon](https://github.com/MKergall/osmbonuspack/wiki/images/osmbonuspackdemo_9_2.png)
 
-MapBox Satellite maps in OSMNavigator:
-
-![MapBox Satellite maps in OSMNavigator](https://github.com/MKergall/osmbonuspack/wiki/images/osmbonuspackdemo_10_1.png)
-
 Support for KML content.
 
 Google Maps "My Places"  | rendered with OSMBonusPack
@@ -69,7 +65,7 @@ Google Maps "My Places"  | rendered with OSMBonusPack
 # How to use it
 Start with the [installation guide](https://github.com/MKergall/osmbonuspack/wiki/HowToInclude), then follow the [Tutorials](https://github.com/MKergall/osmbonuspack/wiki/Tutorial_0).
 
-In the [releases](https://github.com/MKergall/osmbonuspack/releases), you will find the library (jar file), the javadoc, and the [OSMNavigator](https://github.com/MKergall/osmbonuspack/wiki/OSMNavigator) application.
+In the [releases](https://github.com/MKergall/osmbonuspack/releases), you will find the library (aar file) and the javadoc. 
 
 # How to get help
 If you need help to use osmdroid or OSMBonusPack, go to [StackOverflow](http://stackoverflow.com/questions/tagged/osmdroid) with "osmdroid" tag. 
