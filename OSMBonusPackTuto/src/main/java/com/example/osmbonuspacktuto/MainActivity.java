@@ -124,7 +124,7 @@ public class MainActivity extends Activity implements MapEventsReceiver {
 			//4. Filling the bubbles
 			nodeMarker.setTitle("Step " + i);
 			nodeMarker.setSnippet(node.mInstructions);
-			nodeMarker.setSubDescription(Road.getLengthDurationText(node.mLength, node.mDuration));
+			nodeMarker.setSubDescription(Road.getLengthDurationText(this, node.mLength, node.mDuration));
 			Drawable iconContinue = getResources().getDrawable(R.drawable.ic_continue);
 			nodeMarker.setImage(iconContinue);
 			//4. end

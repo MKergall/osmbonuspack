@@ -21,7 +21,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'org.osmdroid:osmdroid-android:5.0.1@aar'
+    compile 'org.osmdroid:osmdroid-android:5.1@aar'
 }
 
 apply from: '../maven.gradle'

@@ -98,6 +98,7 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.DirectedLocationOverlay;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
+import org.osmdroid.views.overlay.TilesOverlay;
 
 import java.io.File;
 import java.io.IOException;
@@ -182,9 +183,9 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		
 		SharedPreferences prefs = getSharedPreferences("OSMNAVIGATOR", MODE_PRIVATE);
 
-		MapBoxTileSource.retrieveAccessToken(this);
-		MapBoxTileSource.retrieveMapBoxMapId(this);
 		MAPBOXSATELLITELABELLED = new MapBoxTileSource("MapBoxSatelliteLabelled", 1, 19, 256, ".png");
+		((MapBoxTileSource) MAPBOXSATELLITELABELLED).retrieveAccessToken(this);
+		((MapBoxTileSource) MAPBOXSATELLITELABELLED).retrieveMapBoxMapId(this);
 		TileSourceFactory.addTileSource(MAPBOXSATELLITELABELLED);
 
 		graphHopperApiKey = ManifestUtil.retrieveKey(this, "GRAPHHOPPER_API_KEY");
@@ -202,6 +203,9 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		try {
 			ITileSource tileSource = TileSourceFactory.getTileSource(tileProviderName);
 			map.setTileSource(tileSource);
+			if (map.getTileProvider().getTileSource() == TileSourceFactory.MAPQUESTOSM)
+				//restore night mode (as MapQuestOSM is used for night mode. Simple but really ugly solution...)
+				map.getOverlayManager().getTilesOverlay().setColorFilter(TilesOverlay.INVERT_COLORS);
 		} catch (IllegalArgumentException e) {
 			map.setTileSource(TileSourceFactory.MAPNIK);
 		}
@@ -209,7 +213,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		map.setBuiltInZoomControls(true);
 		map.setMultiTouchControls(true);
 		IMapController mapController = map.getController();
-		
+
 		//To use MapEventsReceiver methods, we add a MapEventsOverlay:
 		MapEventsOverlay overlay = new MapEventsOverlay(this, this);
 		map.getOverlays().add(overlay);
@@ -248,8 +252,8 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			destinationPoint = savedInstanceState.getParcelable("destination");
 			viaPoints = savedInstanceState.getParcelableArrayList("viapoints");
 		}
-		
-		ScaleBarOverlay scaleBarOverlay = new ScaleBarOverlay(this);
+
+		ScaleBarOverlay scaleBarOverlay = new ScaleBarOverlay(map);
 		map.getOverlays().add(scaleBarOverlay);
 		
 		// Itinerary markers:
@@ -1426,7 +1430,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		if (map.getTileProvider().getTileSource() == TileSourceFactory.MAPNIK)
 			menu.findItem(R.id.menu_tile_mapnik).setChecked(true);
 		else if (map.getTileProvider().getTileSource() == TileSourceFactory.MAPQUESTOSM)
-			menu.findItem(R.id.menu_tile_mapquest_osm).setChecked(true);
+			menu.findItem(R.id.menu_tile_mapnik_by_night).setChecked(true);
 		else if (map.getTileProvider().getTileSource() == MAPBOXSATELLITELABELLED)
 			menu.findItem(R.id.menu_tile_mapbox_satellite).setChecked(true);
 		
@@ -1575,16 +1579,19 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		case R.id.menu_tile_mapnik:
 			setStdTileProvider();
 			map.setTileSource(TileSourceFactory.MAPNIK);
+			map.getOverlayManager().getTilesOverlay().setColorFilter(null);
 			item.setChecked(true);
 			return true;
-		case R.id.menu_tile_mapquest_osm:
+			case R.id.menu_tile_mapnik_by_night:
 			setStdTileProvider();
 			map.setTileSource(TileSourceFactory.MAPQUESTOSM);
+				map.getOverlayManager().getTilesOverlay().setColorFilter(TilesOverlay.INVERT_COLORS);
 			item.setChecked(true);
 			return true;
 		case R.id.menu_tile_mapbox_satellite:
 			setStdTileProvider();
 			map.setTileSource(MAPBOXSATELLITELABELLED);
+			map.getOverlayManager().getTilesOverlay().setColorFilter(null);
 			item.setChecked(true);
 			return true;
 		case R.id.menu_tile_mapsforge:
@@ -1855,16 +1862,17 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		Drawable iconOnline = getResources().getDrawable(R.drawable.marker_car_on);
 		Drawable iconOffline = getResources().getDrawable(R.drawable.marker_friend_off);
 		for (Friend friend : mFriends) {
+			//MarkerLabeled marker = new MarkerLabeled(map);
 			Marker marker = new Marker(map);
 			marker.setPosition(friend.mPosition);
 			marker.setTitle(friend.mNickName);
 			marker.setSnippet(friend.mMessage);
 			if (friend.mOnline) {
-				marker.setIcon(iconOnline);
+				marker.setIcon(iconOnline); //((BitmapDrawable) iconOnline).getBitmap());
 				marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
 				marker.setRotation(friend.mBearing);
 			} else {
-				marker.setIcon(iconOffline);
+				marker.setIcon(iconOffline); //((BitmapDrawable)iconOffline).getBitmap());
 			}
 			if (!friend.mHasLocation)
 				marker.setEnabled(false);

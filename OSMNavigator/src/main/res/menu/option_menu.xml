@@ -56,8 +56,8 @@
 				    android:title="OSM Standard"
 				    android:checked="true"/>
 				<item
-				    android:id="@+id/menu_tile_mapquest_osm"
-				    android:title="OSM by MapQuest"/>
+					android:id="@+id/menu_tile_mapnik_by_night"
+					android:title="OSM by night"/>
 				<item
 				    android:id="@+id/menu_tile_mapbox_satellite"
 				    android:title="MapBox Satellite"/>
