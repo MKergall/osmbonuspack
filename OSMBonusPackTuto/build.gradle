@@ -29,10 +29,10 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile project(":OSMBonusPack")
+//    compile project(":OSMBonusPack")
 
     //including using JitPack:
-//    compile 'com.github.MKergall.osmbonuspack:OSMBonusPack:v5.7'
+    compile 'com.github.MKergall.osmbonuspack:OSMBonusPack:v5.7'
 
     // including as local lib
     /*
