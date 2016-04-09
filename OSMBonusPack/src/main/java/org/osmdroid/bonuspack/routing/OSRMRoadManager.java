@@ -2,7 +2,6 @@ package org.osmdroid.bonuspack.routing;
 
 import android.content.Context;
 import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,7 +10,6 @@ import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.bonuspack.utils.PolylineEncoder;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -21,15 +19,14 @@ import java.util.HashMap;
  * It requests by default the OSRM demo site.
  * Use setService() to request an other (for instance your own) OSRM service. <br>
  *
- * TODO: improve internationalization of instructions
- *
  * @see <a href="https://github.com/DennisOSRM/Project-OSRM/wiki/Server-api">OSRM</a>
+ * @see <a href="https://github.com/Project-OSRM/osrm-backend/wiki/New-Server-api">V5 API</a>
  *
  * @author M.Kergall
  */
 public class OSRMRoadManager extends RoadManager {
 
-	static final String SERVICE = "http://router.project-osrm.org/viaroute?";
+	static final String SERVICE = "http://router.project-osrm.org/route/v1/driving/";
 	private final Context mContext;
 	protected String mServiceUrl;
 	protected String mUserAgent;
@@ -37,27 +34,27 @@ public class OSRMRoadManager extends RoadManager {
 	/** mapping from OSRM directions to MapQuest maneuver IDs: */
 	static final HashMap<String, Integer> MANEUVERS;
 	static {
-		MANEUVERS = new HashMap<String, Integer>();
-		MANEUVERS.put("0", 0); //No instruction
-		MANEUVERS.put("1", 1); //Continue
-		MANEUVERS.put("2", 6); //Slight right
-		MANEUVERS.put("3", 7); //Right
-		MANEUVERS.put("4", 8); //Sharp right
-		MANEUVERS.put("5", 12); //U-turn
-		MANEUVERS.put("6", 5); //Sharp left
-		MANEUVERS.put("7", 4); //Left
-		MANEUVERS.put("8", 3); //Slight left
-		MANEUVERS.put("9", 24); //Arrived (at waypoint)
-		MANEUVERS.put("10", 24); //"Head" => used by OSRM as the start node. Considered here as a "waypoint". 
-		MANEUVERS.put("11-1", 27); //Round-about, 1st exit
-		MANEUVERS.put("11-2", 28); //2nd exit, etc ...
-		MANEUVERS.put("11-3", 29);
-		MANEUVERS.put("11-4", 30);
-		MANEUVERS.put("11-5", 31);
-		MANEUVERS.put("11-6", 32);
-		MANEUVERS.put("11-7", 33);
-		MANEUVERS.put("11-8", 34); //Round-about, 8th exit
-		MANEUVERS.put("15", 24); //Arrived
+		MANEUVERS = new HashMap<>();
+		MANEUVERS.put("new name", 2); //road name change
+		MANEUVERS.put("turn-straight", 1); //Continue straight
+		MANEUVERS.put("turn-slight right", 6); //Slight right
+		MANEUVERS.put("turn-right", 7); //Right
+		MANEUVERS.put("turn-sharp right", 8); //Sharp right
+		MANEUVERS.put("turn-uturn", 12); //U-turn
+		MANEUVERS.put("turn-sharp left", 5); //Sharp left
+		MANEUVERS.put("turn-left", 4); //Left
+		MANEUVERS.put("turn-slight left", 3); //Slight left
+		MANEUVERS.put("depart", 24); //"Head" => used by OSRM as the start node. Considered here as a "waypoint".
+			// TODO - to check...
+		MANEUVERS.put("arrive", 24); //Arrived (at waypoint)
+		MANEUVERS.put("roundabout-1", 27); //Round-about, 1st exit
+		MANEUVERS.put("roundabout-2", 28); //2nd exit, etc ...
+		MANEUVERS.put("roundabout-3", 29);
+		MANEUVERS.put("roundabout-4", 30);
+		MANEUVERS.put("roundabout-5", 31);
+		MANEUVERS.put("roundabout-6", 32);
+		MANEUVERS.put("roundabout-7", 33);
+		MANEUVERS.put("roundabout-8", 34); //Round-about, 8th exit
 	}
 	
 	//From: Project-OSRM-Web / WebContent / localization / OSRM.Locale.en.js
@@ -65,30 +62,27 @@ public class OSRMRoadManager extends RoadManager {
 	// %s: road name
 	// %d: direction => removed
 	// <*>: will only be printed when there actually is a road name
-	static final HashMap<String, Object> DIRECTIONS;
+	static final HashMap<Integer, Object> DIRECTIONS;
 	static {
 		DIRECTIONS = new HashMap<>();
-    DIRECTIONS.put("0", R.string.osmbonuspack_directions_0);
-    DIRECTIONS.put("1", R.string.osmbonuspack_directions_1);
-    DIRECTIONS.put("2", R.string.osmbonuspack_directions_2);
-    DIRECTIONS.put("3", R.string.osmbonuspack_directions_3);
-    DIRECTIONS.put("4", R.string.osmbonuspack_directions_4);
-    DIRECTIONS.put("5", R.string.osmbonuspack_directions_5);
-    DIRECTIONS.put("6", R.string.osmbonuspack_directions_6);
-    DIRECTIONS.put("7", R.string.osmbonuspack_directions_7);
-    DIRECTIONS.put("8", R.string.osmbonuspack_directions_8);
-    DIRECTIONS.put("9", R.string.osmbonuspack_directions_9);
-    DIRECTIONS.put("10", R.string.osmbonuspack_directions_10);
-    DIRECTIONS.put("11-1", R.string.osmbonuspack_directions_11_1);
-    DIRECTIONS.put("11-2", R.string.osmbonuspack_directions_11_2);
-    DIRECTIONS.put("11-3", R.string.osmbonuspack_directions_11_3);
-    DIRECTIONS.put("11-4", R.string.osmbonuspack_directions_11_4);
-    DIRECTIONS.put("11-5", R.string.osmbonuspack_directions_11_5);
-    DIRECTIONS.put("11-6", R.string.osmbonuspack_directions_11_6);
-    DIRECTIONS.put("11-7", R.string.osmbonuspack_directions_11_7);
-    DIRECTIONS.put("11-8", R.string.osmbonuspack_directions_11_8);
-    DIRECTIONS.put("11-9", R.string.osmbonuspack_directions_11_9);
-    DIRECTIONS.put("15", R.string.osmbonuspack_directions_15);
+		DIRECTIONS.put(1, R.string.osmbonuspack_directions_1);
+		DIRECTIONS.put(2, R.string.osmbonuspack_directions_2);
+		DIRECTIONS.put(3, R.string.osmbonuspack_directions_3);
+		DIRECTIONS.put(4, R.string.osmbonuspack_directions_4);
+		DIRECTIONS.put(5, R.string.osmbonuspack_directions_5);
+		DIRECTIONS.put(6, R.string.osmbonuspack_directions_6);
+		DIRECTIONS.put(7, R.string.osmbonuspack_directions_7);
+		DIRECTIONS.put(8, R.string.osmbonuspack_directions_8);
+		DIRECTIONS.put(12, R.string.osmbonuspack_directions_12);
+		DIRECTIONS.put(24, R.string.osmbonuspack_directions_24);
+		DIRECTIONS.put(27, R.string.osmbonuspack_directions_27);
+		DIRECTIONS.put(28, R.string.osmbonuspack_directions_28);
+		DIRECTIONS.put(29, R.string.osmbonuspack_directions_29);
+		DIRECTIONS.put(30, R.string.osmbonuspack_directions_30);
+		DIRECTIONS.put(31, R.string.osmbonuspack_directions_31);
+		DIRECTIONS.put(32, R.string.osmbonuspack_directions_32);
+		DIRECTIONS.put(33, R.string.osmbonuspack_directions_33);
+		DIRECTIONS.put(34, R.string.osmbonuspack_directions_34);
 	}
 
 	public OSRMRoadManager(Context context){
@@ -114,13 +108,17 @@ public class OSRMRoadManager extends RoadManager {
 		StringBuffer urlString = new StringBuffer(mServiceUrl);
 		for (int i=0; i<waypoints.size(); i++){
 			GeoPoint p = waypoints.get(i);
-			urlString.append("&loc="+geoPointAsString(p));
+			if (i>0)
+				urlString.append(';');
+			urlString.append(""+Double.toString(p.getLongitude())+","+Double.toString(p.getLatitude()));
 		}
-		urlString.append("&instructions=true&alt="+(getAlternate?"true":"false"));
+		urlString.append("?alternatives="+(getAlternate?"true":"false"));
+		urlString.append("&overview=full");
 		urlString.append(mOptions);
 		return urlString.toString();
 	}
 
+	/*
 	protected void getInstructions(Road road, JSONArray jInstructions){
 		try {
 			int n = jInstructions.length();
@@ -151,88 +149,87 @@ public class OSRMRoadManager extends RoadManager {
 			e.printStackTrace();
 		}
 	}
+	*/
 
-	protected void getAlternateRoad(Road road, int altRoadIndex, JSONObject jObject){
-		try {
-			JSONArray alternative_geometries = jObject.getJSONArray("alternative_geometries");
-			String route_geometry = alternative_geometries.getString(altRoadIndex);
-			road.mRouteHigh = PolylineEncoder.decode(route_geometry, 1, false);
-			JSONArray jInstructions = jObject.getJSONArray("alternative_instructions");
-			getInstructions(road, jInstructions.getJSONArray(altRoadIndex));
-			JSONArray jSummaries = jObject.getJSONArray("alternative_summaries");
-			JSONObject jSummary = jSummaries.getJSONObject(altRoadIndex);
-			road.mLength = jSummary.getInt("total_distance")/1000.0;
-			road.mDuration = jSummary.getInt("total_time");
-			road.mStatus = Road.STATUS_OK;
-		} catch (JSONException e) {
-			road.mStatus = Road.STATUS_TECHNICAL_ISSUE;
-			e.printStackTrace();
-		}
+	protected Road[] defaultRoad(ArrayList<GeoPoint> waypoints){
+		Road[] roads = new Road[1];
+		roads[0] = new Road(waypoints);
+		return roads;
 	}
-
-	protected final static int OSRM_STATUS_OK = 200;
 
 	protected Road[] getRoads(ArrayList<GeoPoint> waypoints, boolean getAlternate) {
 		String url = getUrl(waypoints, getAlternate);
-		Log.d(BonusPackHelper.LOG_TAG, "OSRMRoadManager.getRoads:"+url);
+		Log.d(BonusPackHelper.LOG_TAG, "OSRMRoadManager.getRoads:" + url);
 		String jString = BonusPackHelper.requestStringFromUrl(url, mUserAgent);
 		if (jString == null) {
 			Log.e(BonusPackHelper.LOG_TAG, "OSRMRoadManager::getRoad: request failed.");
-			Road[] roads = new Road[1];
-			roads[0] = new Road(waypoints);
-			return roads;
+			return defaultRoad(waypoints);
 		}
-		Road roads[] = new Road[0];
-		Road road = new Road();
+
 		try {
 			JSONObject jObject = new JSONObject(jString);
-			int jStatus = jObject.getInt("status");
-			if (jStatus != OSRM_STATUS_OK)
-				road.mStatus = Road.STATUS_TECHNICAL_ISSUE;
-			else {
-				road.mStatus = Road.STATUS_OK;
-				String route_geometry = jObject.getString("route_geometry");
-				road.mRouteHigh = PolylineEncoder.decode(route_geometry, 1, false);
-				JSONArray jInstructions = jObject.getJSONArray("route_instructions");
-				getInstructions(road, jInstructions);
-				JSONObject jSummary = jObject.getJSONObject("route_summary");
-				road.mLength = jSummary.getInt("total_distance") / 1000.0;
-				road.mDuration = jSummary.getInt("total_time");
-				String found_alternative = jObject.getString("found_alternative");
-				if ("true".equals(found_alternative)) {
-					JSONArray alternative_geometries = jObject.getJSONArray("alternative_geometries");
-					int nbAltRoads = alternative_geometries.length();
-					roads = new Road[nbAltRoads + 1];
-					roads[0] = road;
-					for (int i = 0; i < nbAltRoads; i++) {
-						roads[i + 1] = new Road(waypoints);
-						getAlternateRoad(roads[i + 1], i, jObject);
-					}
-				} else {
-					roads = new Road[1];
-					roads[0] = road;
+			String jCode = jObject.getString("code");
+			if (!"Ok".equals(jCode)) {
+				Log.e(BonusPackHelper.LOG_TAG, "OSRMRoadManager::getRoad: error code=" + jCode);
+				Road[] roads = defaultRoad(waypoints);
+				if ("NoRoute".equals(jCode)) {
+					roads[0].mStatus = Road.STATUS_INVALID;
 				}
-			} //if status OK
+				return roads;
+			} else {
+				JSONArray jRoutes = jObject.getJSONArray("routes");
+				Road[] roads = new Road[jRoutes.length()];
+				for (int i=0; i<jRoutes.length(); i++){
+					Road road = new Road();
+					roads[i] = road;
+					road.mStatus = Road.STATUS_OK;
+					JSONObject jRoute = jRoutes.getJSONObject(i);
+					String route_geometry = jRoute.getString("geometry");
+					road.mRouteHigh = PolylineEncoder.decode(route_geometry, 1, false);
+					road.mBoundingBox = BoundingBoxE6.fromGeoPoints(road.mRouteHigh);
+					road.mLength = jRoute.getDouble("distance") / 1000.0;
+					road.mDuration = jRoute.getDouble("duration");
+					//legs:
+					JSONArray jLegs = jRoute.getJSONArray("legs");
+					for (int l=0; l<jLegs.length(); l++) {
+						//leg:
+						JSONObject jLeg = jLegs.getJSONObject(l);
+						RoadLeg leg = new RoadLeg();
+						road.mLegs.add(leg);
+						leg.mLength = jLeg.getDouble("distance");
+						leg.mDuration = jLeg.getDouble("duration");
+						//steps:
+						JSONArray jSteps = jLeg.getJSONArray("legs");
+						for (int s=0; s<jSteps.length(); s++) {
+							JSONObject jStep = jSteps.getJSONObject(s);
+							RoadNode node = new RoadNode();
+							road.mNodes.add(node);
+							node.mLength = jStep.getDouble("distance");
+							node.mDuration = jStep.getDouble("duration");
+							JSONObject jStepManeuver = jStep.getJSONObject("maneuver");
+							JSONArray jLocation = jStepManeuver.getJSONArray("location");
+							node.mLocation = new GeoPoint(jLocation.getDouble(1), jLocation.getDouble(0));
+							String direction = jStepManeuver.getString("type");
+							if (direction.equals("turn")){
+								String modifier = jStepManeuver.getString("modifier");
+								direction = direction + '-' + modifier;
+							} else if (direction.equals("roundabout")){
+								int exit = jStepManeuver.getInt("exit");
+								direction = direction + '-' + exit;
+							}
+							node.mManeuverType = getManeuverCode(direction);
+							String roadName = jStep.optString("name", "");
+							node.mInstructions = buildInstructions(node.mManeuverType, roadName);
+						} //steps
+					} //legs
+				} //routes
+				Log.d(BonusPackHelper.LOG_TAG, "OSRMRoadManager.getRoads - finished");
+				return roads;
+			} //if code is Ok
 		} catch (JSONException e) {
-			road.mStatus = Road.STATUS_TECHNICAL_ISSUE;
 			e.printStackTrace();
+			return defaultRoad(waypoints);
 		}
-		if (road.mStatus != Road.STATUS_OK){
-			//Create default road:
-			int status = road.mStatus;
-			road = new Road(waypoints);
-			road.mStatus = status;
-			roads = new Road[1];
-			roads[0] = road;
-		} else {
-			for (int i = 0; i < roads.length; i++){
-				roads[i].buildLegs(waypoints);
-				roads[i].mBoundingBox = BoundingBoxE6.fromGeoPoints(road.mRouteHigh);
-				roads[i].mStatus = Road.STATUS_OK;
-			}
-		}
-		Log.d(BonusPackHelper.LOG_TAG, "OSRMRoadManager.getRoads - finished");
-		return roads;
 	}
 
 	@Override public Road[] getRoads(ArrayList<GeoPoint> waypoints) {
@@ -240,7 +237,7 @@ public class OSRMRoadManager extends RoadManager {
 	}
 
 	@Override public Road getRoad(ArrayList<GeoPoint> waypoints) {
-		Road[] roads = getRoads(waypoints, false);
+			Road[] roads = getRoads(waypoints, false);
 		return roads[0];
 	}
 
@@ -248,14 +245,15 @@ public class OSRMRoadManager extends RoadManager {
 		Integer code = MANEUVERS.get(direction);
 		if (code != null)
 			return code;
-		else 
+		else
 			return 0;
 	}
 
-	protected String buildInstructions(String direction, String roadName){
-		Integer resDirection = (Integer) DIRECTIONS.get(direction);
-		if (resDirection == null) return null;
-		direction = mContext.getString(resDirection);
+	protected String buildInstructions(int maneuver, String roadName){
+		Integer resDirection = (Integer) DIRECTIONS.get(maneuver);
+		if (resDirection == null)
+			return null;
+		String direction = mContext.getString(resDirection);
 		String instructions;
 		if (roadName.equals(""))
 			//remove "<*>"
