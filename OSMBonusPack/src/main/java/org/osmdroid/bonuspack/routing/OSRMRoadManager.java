@@ -2,6 +2,7 @@ package org.osmdroid.bonuspack.routing;
 
 import android.content.Context;
 import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,6 +11,7 @@ import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.bonuspack.utils.PolylineEncoder;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -31,7 +33,9 @@ public class OSRMRoadManager extends RoadManager {
 	protected String mServiceUrl;
 	protected String mUserAgent;
 
-	/** mapping from OSRM directions to MapQuest maneuver IDs: */
+	/**
+	 * mapping from OSRM StepManeuver types to MapQuest maneuver IDs:
+	 */
 	static final HashMap<String, Integer> MANEUVERS;
 	static {
 		MANEUVERS = new HashMap<>();
@@ -55,6 +59,24 @@ public class OSRMRoadManager extends RoadManager {
 		MANEUVERS.put("roundabout-6", 32);
 		MANEUVERS.put("roundabout-7", 33);
 		MANEUVERS.put("roundabout-8", 34); //Round-about, 8th exit
+		//TODO: other OSRM types to handle properly:
+		MANEUVERS.put("merge-left", 20);
+		MANEUVERS.put("merge-sharp left", 20);
+		MANEUVERS.put("merge-slight left", 20);
+		MANEUVERS.put("merge-right", 21);
+		MANEUVERS.put("merge-sharp right", 21);
+		MANEUVERS.put("merge-slight right", 21);
+		MANEUVERS.put("merge-straight", 22);
+		MANEUVERS.put("ramp-left", 17);
+		MANEUVERS.put("ramp-sharp left", 17);
+		MANEUVERS.put("ramp-slight left", 17);
+		MANEUVERS.put("ramp-right", 18);
+		MANEUVERS.put("ramp-sharp right", 18);
+		MANEUVERS.put("ramp-slight right", 18);
+		MANEUVERS.put("ramp-straight", 19);
+		//MANEUVERS.put("fork", );
+		//MANEUVERS.put("end of road", );
+		//MANEUVERS.put("continue", );
 	}
 	
 	//From: Project-OSRM-Web / WebContent / localization / OSRM.Locale.en.js
@@ -74,6 +96,12 @@ public class OSRMRoadManager extends RoadManager {
 		DIRECTIONS.put(7, R.string.osmbonuspack_directions_7);
 		DIRECTIONS.put(8, R.string.osmbonuspack_directions_8);
 		DIRECTIONS.put(12, R.string.osmbonuspack_directions_12);
+		DIRECTIONS.put(17, R.string.osmbonuspack_directions_17);
+		DIRECTIONS.put(18, R.string.osmbonuspack_directions_18);
+		DIRECTIONS.put(19, R.string.osmbonuspack_directions_19);
+		DIRECTIONS.put(20, R.string.osmbonuspack_directions_20);
+		DIRECTIONS.put(21, R.string.osmbonuspack_directions_21);
+		DIRECTIONS.put(22, R.string.osmbonuspack_directions_22);
 		DIRECTIONS.put(24, R.string.osmbonuspack_directions_24);
 		DIRECTIONS.put(27, R.string.osmbonuspack_directions_27);
 		DIRECTIONS.put(28, R.string.osmbonuspack_directions_28);
@@ -104,16 +132,16 @@ public class OSRMRoadManager extends RoadManager {
 		mUserAgent = userAgent;
 	}
 	
-	protected String getUrl(ArrayList<GeoPoint> waypoints, boolean getAlternate){
-		StringBuffer urlString = new StringBuffer(mServiceUrl);
+	protected String getUrl(ArrayList<GeoPoint> waypoints, boolean getAlternate) {
+		StringBuilder urlString = new StringBuilder(mServiceUrl);
 		for (int i=0; i<waypoints.size(); i++){
 			GeoPoint p = waypoints.get(i);
 			if (i>0)
 				urlString.append(';');
-			urlString.append(""+Double.toString(p.getLongitude())+","+Double.toString(p.getLatitude()));
+			urlString.append(Double.toString(p.getLongitude()) + "," + Double.toString(p.getLatitude()));
 		}
-		urlString.append("?alternatives="+(getAlternate?"true":"false"));
-		urlString.append("&overview=full");
+		urlString.append("?alternatives="+(getAlternate?"true" : "false"));
+		urlString.append("&overview=full&steps=true");
 		urlString.append(mOptions);
 		return urlString.toString();
 	}
@@ -160,6 +188,7 @@ public class OSRMRoadManager extends RoadManager {
 	protected Road[] getRoads(ArrayList<GeoPoint> waypoints, boolean getAlternate) {
 		String url = getUrl(waypoints, getAlternate);
 		Log.d(BonusPackHelper.LOG_TAG, "OSRMRoadManager.getRoads:" + url);
+		//url = "http://comob.free.fr/osrm_sample.json"; //DEBUG - waiting for OSRM V5 live
 		String jString = BonusPackHelper.requestStringFromUrl(url, mUserAgent);
 		if (jString == null) {
 			Log.e(BonusPackHelper.LOG_TAG, "OSRMRoadManager::getRoad: request failed.");
@@ -185,7 +214,7 @@ public class OSRMRoadManager extends RoadManager {
 					road.mStatus = Road.STATUS_OK;
 					JSONObject jRoute = jRoutes.getJSONObject(i);
 					String route_geometry = jRoute.getString("geometry");
-					road.mRouteHigh = PolylineEncoder.decode(route_geometry, 1, false);
+					road.mRouteHigh = PolylineEncoder.decode(route_geometry, 10, false);
 					road.mBoundingBox = BoundingBoxE6.fromGeoPoints(road.mRouteHigh);
 					road.mLength = jRoute.getDouble("distance") / 1000.0;
 					road.mDuration = jRoute.getDouble("duration");
@@ -199,23 +228,26 @@ public class OSRMRoadManager extends RoadManager {
 						leg.mLength = jLeg.getDouble("distance");
 						leg.mDuration = jLeg.getDouble("duration");
 						//steps:
-						JSONArray jSteps = jLeg.getJSONArray("legs");
+						JSONArray jSteps = jLeg.getJSONArray("steps");
 						for (int s=0; s<jSteps.length(); s++) {
 							JSONObject jStep = jSteps.getJSONObject(s);
 							RoadNode node = new RoadNode();
 							road.mNodes.add(node);
-							node.mLength = jStep.getDouble("distance");
+							node.mLength = jStep.getDouble("distance") / 1000.0;
 							node.mDuration = jStep.getDouble("duration");
 							JSONObject jStepManeuver = jStep.getJSONObject("maneuver");
 							JSONArray jLocation = jStepManeuver.getJSONArray("location");
 							node.mLocation = new GeoPoint(jLocation.getDouble(1), jLocation.getDouble(0));
 							String direction = jStepManeuver.getString("type");
-							if (direction.equals("turn")){
+							if (direction.equals("turn") || direction.equals("ramp") || direction.equals("merge")){
 								String modifier = jStepManeuver.getString("modifier");
 								direction = direction + '-' + modifier;
 							} else if (direction.equals("roundabout")){
 								int exit = jStepManeuver.getInt("exit");
 								direction = direction + '-' + exit;
+							} else if (direction.equals("rotary")) {
+								int exit = jStepManeuver.getInt("exit");
+								direction = "roundabout" + '-' + exit; //convert rotary in roundabout...
 							}
 							node.mManeuverType = getManeuverCode(direction);
 							String roadName = jStep.optString("name", "");

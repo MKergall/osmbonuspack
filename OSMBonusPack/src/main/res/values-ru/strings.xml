@@ -18,7 +18,6 @@
   <string name="osmbonuspack.directions.32">На кольцевой развилке поверните на шестом съезде[ на %s]</string>
   <string name="osmbonuspack.directions.33">На кольцевой развилке поверните на седьмом съезде[ на %s]</string>
   <string name="osmbonuspack.directions.34">На кольцевой развилке поверните на восьмом съезде[ на %s]</string>
-  <string name="osmbonuspack.directions.35">На кольцевой развилке поверните на девятом съезде[ на %s]</string>
 
   <string name="osmbonuspack.format_distance_kilometers">%s км</string>
   <string name="osmbonuspack.format_distance_meters">%s м</string>

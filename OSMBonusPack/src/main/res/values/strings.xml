@@ -18,7 +18,12 @@
   <string name="osmbonuspack.directions.32">Enter roundabout and leave at sixth exit[ on %s]</string>
   <string name="osmbonuspack.directions.33">Enter roundabout and leave at seventh exit[ on %s]</string>
   <string name="osmbonuspack.directions.34">Enter roundabout and leave at eighth exit[ on %s]</string>
-  <string name="osmbonuspack.directions.35">Enter roundabout and leave at nineth exit[ on %s]</string>
+  <string name="osmbonuspack.directions.20">Merge left[ on %s]</string>
+  <string name="osmbonuspack.directions.21">Merge right[ on %s]</string>
+  <string name="osmbonuspack.directions.22">Merge[ on %s]</string>
+  <string name="osmbonuspack.directions.17">Take the ramp on the left[ on %s]</string>
+  <string name="osmbonuspack.directions.18">Take the ramp on the right[ on %s]</string>
+  <string name="osmbonuspack.directions.19">Take the ramp straight ahead[ on %s]</string>
 
   <string name="osmbonuspack.format_distance_kilometers">%skm</string>
   <string name="osmbonuspack.format_distance_meters">%sm</string>
