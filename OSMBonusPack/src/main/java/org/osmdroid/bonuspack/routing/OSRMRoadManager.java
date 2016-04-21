@@ -229,10 +229,11 @@ public class OSRMRoadManager extends RoadManager {
 						leg.mDuration = jLeg.getDouble("duration");
 						//steps:
 						JSONArray jSteps = jLeg.getJSONArray("steps");
+						RoadNode lastNode = null;
+						String lastRoadName = "";
 						for (int s=0; s<jSteps.length(); s++) {
 							JSONObject jStep = jSteps.getJSONObject(s);
 							RoadNode node = new RoadNode();
-							road.mNodes.add(node);
 							node.mLength = jStep.getDouble("distance") / 1000.0;
 							node.mDuration = jStep.getDouble("duration");
 							JSONObject jStepManeuver = jStep.getJSONObject("maneuver");
@@ -252,6 +253,17 @@ public class OSRMRoadManager extends RoadManager {
 							node.mManeuverType = getManeuverCode(direction);
 							String roadName = jStep.optString("name", "");
 							node.mInstructions = buildInstructions(node.mManeuverType, roadName);
+							if (lastNode != null && node.mManeuverType == 2 && lastRoadName.equals(roadName)) {
+								//workaround for https://github.com/Project-OSRM/osrm-backend/issues/2273
+								//"new name", but identical to previous name:
+								//skip, but update values of last node:
+								lastNode.mDuration += node.mDuration;
+								lastNode.mLength += node.mLength;
+							} else {
+								road.mNodes.add(node);
+								lastNode = node;
+								lastRoadName = roadName;
+							}
 						} //steps
 					} //legs
 				} //routes
