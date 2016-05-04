@@ -1,25 +1,25 @@
 package org.osmdroid.bonuspack.kml;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.osmdroid.bonuspack.utils.BonusPackHelper;
+import org.osmdroid.bonuspack.utils.WebImageCache;
+import org.osmdroid.views.overlay.Marker;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.osmdroid.bonuspack.overlays.Marker;
-import org.osmdroid.bonuspack.utils.BonusPackHelper;
-import org.osmdroid.bonuspack.utils.WebImageCache;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Point;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.util.Log;
 
 /** Handling of KML IconStyle */
 public class IconStyle extends ColorStyle implements Parcelable {

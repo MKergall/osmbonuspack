@@ -7,12 +7,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import org.osmdroid.bonuspack.clustering.MarkerClusterer;
-import org.osmdroid.bonuspack.clustering.StaticCluster;
-import org.osmdroid.bonuspack.overlays.Marker;
+
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 

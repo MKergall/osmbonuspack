@@ -1,21 +1,23 @@
 package org.osmdroid.bonuspack.kml;
 
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import org.osmdroid.bonuspack.overlays.Marker;
-import org.osmdroid.bonuspack.overlays.Polygon;
-import org.osmdroid.bonuspack.overlays.Polyline;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import android.os.Parcel;
-import android.os.Parcelable;
+import org.osmdroid.views.overlay.Polygon;
+import org.osmdroid.views.overlay.Polyline;
+
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * KML Placemark. Support the following Geometry: Point, LineString, and Polygon. 

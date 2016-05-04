@@ -2,8 +2,8 @@ package org.osmdroid.bonuspack.routing;
 
 import android.content.Context;
 
-import org.osmdroid.bonuspack.overlays.Polyline;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.Polyline;
 
 import java.util.ArrayList;
 

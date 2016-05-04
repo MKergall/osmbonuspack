@@ -1,14 +1,16 @@
 package org.osmdroid.bonuspack.clustering;
 
-import java.util.ArrayList;
-import org.osmdroid.bonuspack.overlays.Marker;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.Overlay;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.view.MotionEvent;
+
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
+
+import java.util.ArrayList;
 
 /** 
  * An overlay allowing to perform markers clustering. 

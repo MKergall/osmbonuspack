@@ -18,4 +18,7 @@
   <string name="osmbonuspack.directions.32">Au rond-point, prenez la sixième sortie[ sur %s]</string>
   <string name="osmbonuspack.directions.33">Au rond-point, prenez la septième sortie[ sur %s]</string>
   <string name="osmbonuspack.directions.34">Au rond-point, prenez la huitième sortie[ sur %s]</string>
+  <string name="osmbonuspack.directions.17">Prenez la rampe sur la gauche[ sur %s]</string>
+  <string name="osmbonuspack.directions.18">Prenez la rampe sur la droite[ sur %s]</string>
+  <string name="osmbonuspack.directions.19">Prenez la rampe droit devant[ sur %s]</string>
 </resources>

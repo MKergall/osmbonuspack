@@ -99,9 +99,9 @@ public class OSRMRoadManager extends RoadManager {
 		DIRECTIONS.put(17, R.string.osmbonuspack_directions_17);
 		DIRECTIONS.put(18, R.string.osmbonuspack_directions_18);
 		DIRECTIONS.put(19, R.string.osmbonuspack_directions_19);
-		DIRECTIONS.put(20, R.string.osmbonuspack_directions_20);
-		DIRECTIONS.put(21, R.string.osmbonuspack_directions_21);
-		DIRECTIONS.put(22, R.string.osmbonuspack_directions_22);
+		//DIRECTIONS.put(20, R.string.osmbonuspack_directions_20);
+		//DIRECTIONS.put(21, R.string.osmbonuspack_directions_21);
+		//DIRECTIONS.put(22, R.string.osmbonuspack_directions_22);
 		DIRECTIONS.put(24, R.string.osmbonuspack_directions_24);
 		DIRECTIONS.put(27, R.string.osmbonuspack_directions_27);
 		DIRECTIONS.put(28, R.string.osmbonuspack_directions_28);

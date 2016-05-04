@@ -1,10 +1,11 @@
 package com.osmnavigator;
 
-import org.osmdroid.bonuspack.overlays.Marker;
-import org.osmdroid.bonuspack.overlays.MarkerInfoWindow;
-import org.osmdroid.views.MapView;
 import android.view.View;
 import android.widget.Button;
+
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 
 /**
  * A customized InfoWindow handling "itinerary" points (start, destination and via-points). 

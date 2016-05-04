@@ -1,15 +1,15 @@
 package com.osmnavigator;
 
-import org.osmdroid.bonuspack.location.POI;
-import org.osmdroid.bonuspack.overlays.Marker;
-import org.osmdroid.bonuspack.overlays.MarkerInfoWindow;
-import org.osmdroid.views.MapView;
 import android.content.Intent;
 import android.net.Uri;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import org.osmdroid.bonuspack.location.POI;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 
 /**
  * A customized InfoWindow handling POIs. 

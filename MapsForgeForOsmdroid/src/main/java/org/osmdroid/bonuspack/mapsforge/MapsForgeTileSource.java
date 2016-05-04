@@ -1,24 +1,24 @@
 package org.osmdroid.bonuspack.mapsforge;
 
-import java.io.File;
-import org.mapsforge.map.reader.MapDatabase;
-import org.mapsforge.android.maps.DebugSettings;
-import org.mapsforge.android.maps.mapgenerator.JobParameters;
-import org.mapsforge.android.maps.mapgenerator.MapGeneratorJob;
-import org.mapsforge.android.maps.mapgenerator.databaserenderer.DatabaseRenderer;
-import org.mapsforge.map.reader.header.FileOpenResult;
-import org.osmdroid.ResourceProxy;
-import org.osmdroid.ResourceProxy.string;
-import org.osmdroid.tileprovider.MapTile;
-import org.osmdroid.tileprovider.tilesource.BitmapTileSourceBase;
-import org.mapsforge.map.rendertheme.InternalRenderTheme;
-import org.mapsforge.map.rendertheme.XmlRenderTheme;
-import org.mapsforge.core.model.Tile;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+
+import org.mapsforge.android.maps.DebugSettings;
+import org.mapsforge.android.maps.mapgenerator.JobParameters;
+import org.mapsforge.android.maps.mapgenerator.MapGeneratorJob;
+import org.mapsforge.android.maps.mapgenerator.databaserenderer.DatabaseRenderer;
+import org.mapsforge.core.model.Tile;
+import org.mapsforge.map.reader.MapDatabase;
+import org.mapsforge.map.reader.header.FileOpenResult;
+import org.mapsforge.map.rendertheme.InternalRenderTheme;
+import org.mapsforge.map.rendertheme.XmlRenderTheme;
+import org.osmdroid.tileprovider.MapTile;
+import org.osmdroid.tileprovider.tilesource.BitmapTileSourceBase;
+
+import java.io.File;
 
 /**
  * http://www.salidasoftware.com/how-to-render-mapsforge-tiles-in-osmdroid/

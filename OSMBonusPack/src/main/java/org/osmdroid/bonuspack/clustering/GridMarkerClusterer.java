@@ -1,9 +1,5 @@
 package org.osmdroid.bonuspack.clustering;
 
-import java.util.ArrayList;
-import org.osmdroid.bonuspack.overlays.Marker;
-import org.osmdroid.util.BoundingBoxE6;
-import org.osmdroid.views.MapView;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -12,6 +8,12 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.util.LongSparseArray;
+
+import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
+
+import java.util.ArrayList;
 
 /** 
  * Grid-based Clustering algorithm: all markers inside the same cell belong to the same cluster. 

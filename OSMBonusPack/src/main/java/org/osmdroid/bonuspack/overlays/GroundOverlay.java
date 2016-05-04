@@ -1,16 +1,15 @@
 package org.osmdroid.bonuspack.overlays;
 
-import org.osmdroid.DefaultResourceProxyImpl;
-import org.osmdroid.ResourceProxy;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Point;
+import android.graphics.drawable.Drawable;
+
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.Overlay;
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 
 /**
  * A ground overlay is an image that is fixed to a map. 
@@ -31,12 +30,8 @@ public class GroundOverlay extends Overlay {
 	protected float mTransparency;
 	public final static float NO_DIMENSION = -1.0f;
 	protected Point mPositionPixels, mSouthEastPixels;
-	
-	public GroundOverlay(Context ctx) {
-		this(new DefaultResourceProxyImpl(ctx));
-	}
 
-	public GroundOverlay(final ResourceProxy resourceProxy) {
+	public GroundOverlay(final Context resourceProxy) {
 		super(resourceProxy);
 		mWidth = 10.0f;
 		mHeight = NO_DIMENSION;

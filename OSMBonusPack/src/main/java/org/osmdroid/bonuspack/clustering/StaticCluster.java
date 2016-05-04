@@ -1,8 +1,9 @@
 package org.osmdroid.bonuspack.clustering;
 
-import java.util.ArrayList;
-import org.osmdroid.bonuspack.overlays.Marker;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.Marker;
+
+import java.util.ArrayList;
 
 /** 
  * Cluster of Markers. 

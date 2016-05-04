@@ -1,21 +1,24 @@
 package org.osmdroid.bonuspack.kml;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.ArrayList;
+import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import org.osmdroid.bonuspack.kml.KmlFeature.Styler;
-import org.osmdroid.bonuspack.overlays.FolderOverlay;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.Overlay;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.ArrayList;
 
 /**
  * KML MultiGeometry and/or GeoJSON GeometryCollection. 

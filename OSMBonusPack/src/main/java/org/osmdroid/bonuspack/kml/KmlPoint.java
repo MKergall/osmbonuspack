@@ -1,20 +1,23 @@
 package org.osmdroid.bonuspack.kml;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.ArrayList;
-import org.osmdroid.bonuspack.kml.KmlFeature.Styler;
-import org.osmdroid.bonuspack.overlays.Marker;
-import org.osmdroid.bonuspack.overlays.Marker.OnMarkerDragListener;
-import org.osmdroid.util.BoundingBoxE6;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.Overlay;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import org.osmdroid.bonuspack.kml.KmlFeature.Styler;
+import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Marker.OnMarkerDragListener;
+import org.osmdroid.views.overlay.Overlay;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.ArrayList;
 
 /**
  * KML and/or GeoJSON Point

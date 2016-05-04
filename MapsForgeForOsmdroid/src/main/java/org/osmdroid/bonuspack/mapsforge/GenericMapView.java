@@ -1,17 +1,15 @@
 package org.osmdroid.bonuspack.mapsforge;
 
-import java.util.List;
+import android.content.Context;
+import android.util.AttributeSet;
+import android.widget.FrameLayout;
 
-import org.osmdroid.DefaultResourceProxyImpl;
-import org.osmdroid.ResourceProxy;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.MapTileProviderBase;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Overlay;
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.widget.FrameLayout;
+import java.util.List;
 
 /** 
  * A pseudo MapView allowing to set (and change) its TileProvider. Two key features:<br>
@@ -33,8 +31,7 @@ public class GenericMapView extends FrameLayout {
 		if (mMapView != null){
 			this.removeView(mMapView);
 		}
-		ResourceProxy resourceProxy = new DefaultResourceProxyImpl(this.getContext());
-		MapView newMapView = new MapView(this.getContext(), resourceProxy, aTileProvider);
+		MapView newMapView = new MapView(this.getContext(), aTileProvider);
 		
 		if (mMapView != null){
 			//restore as much parameters as possible from previous map:
