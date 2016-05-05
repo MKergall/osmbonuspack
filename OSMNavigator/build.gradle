@@ -23,5 +23,9 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile project(":OSMBonusPack")
-    compile project(":MapsForgeForOsmdroid")
+
+    //compile project(":MapsForgeForOsmdroid")
+    compile 'org.osmdroid:osmdroid-mapsforge:5.2@aar'
+    compile 'org.mapsforge:mapsforge-map-android:0.6.0'
+    compile 'org.mapsforge:mapsforge-map:0.6.0'
 }

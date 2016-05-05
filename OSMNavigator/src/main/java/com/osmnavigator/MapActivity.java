@@ -49,6 +49,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
+import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.cachemanager.CacheManager;
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
@@ -64,8 +65,6 @@ import org.osmdroid.bonuspack.location.GeocoderNominatim;
 import org.osmdroid.bonuspack.location.OverpassAPIProvider;
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.bonuspack.location.PicasaPOIProvider;
-import org.osmdroid.bonuspack.mapsforge.GenericMapView;
-import org.osmdroid.bonuspack.mapsforge.MapsForgeTileProvider;
 import org.osmdroid.bonuspack.routing.GoogleRoadManager;
 import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
@@ -74,6 +73,8 @@ import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.bonuspack.routing.RoadNode;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.events.MapEventsReceiver;
+import org.osmdroid.mapsforge.MapsForgeTileProvider;
+import org.osmdroid.mapsforge.MapsForgeTileSource;
 import org.osmdroid.tileprovider.MapTileProviderBase;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
@@ -1483,6 +1484,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		File[] listOfFiles = folder.listFiles();
 		if (listOfFiles == null)
 			return false;
+		/*
 		File mapFile = null;
 		for (File file:listOfFiles){
 			if (file.isFile() && file.getName().endsWith(".map")){
@@ -1491,7 +1493,11 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		}
 		if (mapFile == null)
 			return false;
-		MapsForgeTileProvider mfProvider = new MapsForgeTileProvider(new SimpleRegisterReceiver(this), mapFile);
+		*/
+		if (AndroidGraphicFactory.INSTANCE == null)
+			AndroidGraphicFactory.createInstance(this.getApplication());
+		MapsForgeTileProvider mfProvider = new MapsForgeTileProvider(new SimpleRegisterReceiver(this),
+				MapsForgeTileSource.createFromFiles(listOfFiles));
 		GenericMapView genericMap = (GenericMapView) findViewById(R.id.map);
 		genericMap.setTileProvider(mfProvider);
 		map = genericMap.getMapView();
