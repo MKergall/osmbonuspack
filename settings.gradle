@@ -1,1 +1,1 @@
-include ':OSMBonusPack', ':OSMBonusPackTuto', ':OSMNavigator', 'MapsForgeForOsmdroid'
+include ':OSMBonusPack', ':OSMBonusPackTuto', ':OSMNavigator'
