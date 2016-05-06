@@ -194,12 +194,8 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		flickrApiKey = ManifestUtil.retrieveKey(this, "FLICKR_API_KEY");
 		geonamesAccount = ManifestUtil.retrieveKey(this, "GEONAMES_ACCOUNT");
 
-		//map = (MapView) findViewById(R.id.map);
-		GenericMapView genericMap = (GenericMapView) findViewById(R.id.map);
-		MapTileProviderBasic bitmapProvider = new MapTileProviderBasic(getApplicationContext());
-		genericMap.setTileProvider(bitmapProvider);
-		map = genericMap.getMapView();
-		
+		map = (MapView) findViewById(R.id.map);
+
 		String tileProviderName = prefs.getString("TILE_PROVIDER", "Mapnik");
 		try {
 			ITileSource tileSource = TileSourceFactory.getTileSource(tileProviderName);
@@ -1471,10 +1467,8 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	
 	void setStdTileProvider(){
 		if (!(map.getTileProvider() instanceof MapTileProviderBasic)){
-			GenericMapView genericMap = (GenericMapView) findViewById(R.id.map);
 			MapTileProviderBasic bitmapProvider = new MapTileProviderBasic(this);
-			genericMap.setTileProvider(bitmapProvider);
-			map = genericMap.getMapView();
+			map.setTileProvider(bitmapProvider);
 		}
 	}
 	
@@ -1498,9 +1492,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			AndroidGraphicFactory.createInstance(this.getApplication());
 		MapsForgeTileProvider mfProvider = new MapsForgeTileProvider(new SimpleRegisterReceiver(this),
 				MapsForgeTileSource.createFromFiles(listOfFiles));
-		GenericMapView genericMap = (GenericMapView) findViewById(R.id.map);
-		genericMap.setTileProvider(mfProvider);
-		map = genericMap.getMapView();
+		map.setTileProvider(mfProvider);
 		return true;
 	}
 	

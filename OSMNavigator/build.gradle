@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.osmnavigator"
         minSdkVersion 10
-        targetSdkVersion 23
+        targetSdkVersion 22 //the limit to avoid implementing new permissions granting.
         versionCode 14
         versionName "1.4"
     }
