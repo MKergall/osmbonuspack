@@ -8,8 +8,8 @@ android {
         applicationId "com.osmnavigator"
         minSdkVersion 10
         targetSdkVersion 22 //the limit to avoid implementing new permissions granting.
-        versionCode 14
-        versionName "1.4"
+        versionCode 15
+        versionName "1.5"
     }
     buildTypes {
         release {
@@ -24,7 +24,6 @@ dependencies {
 
     compile project(":OSMBonusPack")
 
-    //compile project(":MapsForgeForOsmdroid")
     compile 'org.osmdroid:osmdroid-mapsforge:5.2@aar'
     compile 'org.mapsforge:mapsforge-map-android:0.6.0'
     compile 'org.mapsforge:mapsforge-map:0.6.0'
