@@ -1,8 +1,10 @@
 package com.example.osmbonuspacktuto;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,8 +12,11 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -51,7 +56,13 @@ import org.osmdroid.views.overlay.infowindow.BasicInfoWindow;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * This is the implementation of OSMBonusPack tutorials.
@@ -64,8 +75,9 @@ public class MainActivity extends Activity implements MapEventsReceiver {
 
 	MapView map;
 	KmlDocument mKmlDocument;
+    final int STORAGE=1;
 
-	@Override protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
 
 		//Disable StrictMode.ThreadPolicy to perform network calls in the UI thread.
 		//Yes, it's not the good practice, but this is just a tutorial!
@@ -230,6 +242,49 @@ public class MainActivity extends Activity implements MapEventsReceiver {
 		//16. Handling Map events
 		MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(this, this);
 		map.getOverlays().add(0, mapEventsOverlay); //inserted at the "bottom" of all overlays
+
+        // Request permissions to support Android Marshmallow and above devices
+        if (Build.VERSION.SDK_INT >= 23) {
+            checkPermission();
+        }
+	}
+
+	private void checkPermission() {
+		List<String> permissions = new ArrayList<>();
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "Storage permission is required to store map tiles to reduce data usage and for offline usage.", Toast.LENGTH_LONG).show();
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+		}
+		if (!permissions.isEmpty()) {
+			String[] params = permissions.toArray(new String[permissions.size()]);
+			ActivityCompat.requestPermissions(this, params, STORAGE);
+		} // else // We already have permissions, so handle as normal
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+		switch (requestCode) {
+			case STORAGE:{
+				Map<String, Integer> perms = new HashMap<>();
+				// Initial
+				perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+				// Fill with results
+				for (int i = 0; i < permissions.length; i++)
+					perms.put(permissions[i], grantResults[i]);
+				// Check for WRITE_EXTERNAL_STORAGE
+				Boolean storage = perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+				if (!storage) {
+                    // Permission Denied
+                    Toast.makeText(this, "Storage permission is required to store map tiles to reduce data usage and for offline usage.", Toast.LENGTH_LONG).show();
+				} // else // permission was granted, yay!
+			}
+		}
+	}
+
+	public String dateToString(Date date, String format) {
+		SimpleDateFormat df = new SimpleDateFormat(format, Locale.getDefault());
+
+		return df.format(date);
 	}
 
 	//0. Using the Marker and Polyline overlays - advanced options

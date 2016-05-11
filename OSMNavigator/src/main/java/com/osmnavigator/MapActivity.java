@@ -1,5 +1,6 @@
 package com.osmnavigator;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -27,6 +29,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.v4.content.ContextCompat;
 import android.text.InputType;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -229,9 +232,13 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		map.getOverlays().add(myLocationOverlay);
 
 		if (savedInstanceState == null){
-			Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-			if (location == null)
-				location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            // TODO: Revisit. Abstract code to initialize location. When requesting location, also request storage.
+            Location location = null;
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if (location == null)
+                    location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            }
 			if (location != null) {
 				//location known:
 				onLocationChanged(location);
@@ -511,7 +518,9 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	boolean startLocationUpdates(){
 		boolean result = false;
 		for (final String provider : mLocationManager.getProviders(true)) {
-			mLocationManager.requestLocationUpdates(provider, 2*1000, 0.0f, this);
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                mLocationManager.requestLocationUpdates(provider, 2 * 1000, 0.0f, this);
+            }
 			result = true;
 		}
 		return result;
@@ -530,7 +539,9 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 
 	@Override protected void onPause() {
 		super.onPause();
-		mLocationManager.removeUpdates(this);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mLocationManager.removeUpdates(this);
+        }
 		//TODO: mSensorManager.unregisterListener(this);
 		stopSharingTimer();
 		savePrefs();
