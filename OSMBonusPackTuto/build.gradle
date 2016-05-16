@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.example.osmbonuspacktuto"
         minSdkVersion 10
-        targetSdkVersion 23
+        targetSdkVersion 22 //the limit to avoid implementing new permissions granting.
         versionCode 1
         versionName "1.0"
     }

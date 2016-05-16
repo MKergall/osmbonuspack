@@ -36,7 +36,7 @@ public class FriendsActivity extends Activity {
 
         Intent myIntent = getIntent();
         //STATIC - final ArrayList<Friend> friends = myIntent.getParcelableArrayListExtra("FRIENDS");
-        ArrayList<Friend> friends = MapActivity.mFriends;
+        ArrayList<Friend> friends = FriendsManager.mFriends;
         if (friends != null && friends.size() > 0) {
             title.setText(R.string.FriendsActivity_Title);
         } else {

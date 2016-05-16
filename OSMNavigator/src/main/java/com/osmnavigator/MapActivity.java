@@ -1,5 +1,6 @@
 package com.osmnavigator;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -25,10 +27,9 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.InputType;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -42,12 +43,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.osmdroid.api.IMapController;
@@ -103,17 +98,17 @@ import org.osmdroid.views.overlay.mylocation.DirectedLocationOverlay;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Simple and general-purpose map/navigation Android application, including a KML viewer and editor. 
+ * Simple and general-purpose map/navigation Android application, including a KML viewer and editor.
  * It is based on osmdroid and OSMBonusPack
  * @see <a href="https://github.com/MKergall/osmbonuspack">OSMBonusPack</a>
  * @author M.Kergall
@@ -121,7 +116,7 @@ import java.util.concurrent.Executors;
  */
 public class MapActivity extends Activity implements MapEventsReceiver, LocationListener, SensorEventListener {
 	protected MapView map;
-	
+
 	protected GeoPoint startPoint, destinationPoint;
 	protected ArrayList<GeoPoint> viaPoints;
 	protected static int START_INDEX=-2, DEST_INDEX=-1;
@@ -140,7 +135,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	float mAzimuthAngleSpeed = 0.0f;
 
 	protected Polygon mDestinationPolygon; //enclosing polygon of destination location
-	
+
 	public static Road[] mRoads;  //made static to pass between activities
 	protected int mSelectedRoad;
 	protected Polyline[] mRoadOverlays;
@@ -148,7 +143,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	protected static final int ROUTE_REQUEST = 1;
 	static final int OSRM=0, GRAPHHOPPER_FASTEST=1, GRAPHHOPPER_BICYCLE=2, GRAPHHOPPER_PEDESTRIAN=3, GOOGLE_FASTEST=4;
 	int mWhichRouteProvider;
-	
+
 	public static ArrayList<POI> mPOIs; //made static to pass between activities
 	RadiusMarkerClusterer mPoiMarkers;
 	AutoCompleteTextView poiTagText;
@@ -159,16 +154,11 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	public static Stack<KmlFeature> mKmlStack; //passed between activities, top is the current KmlFeature to edit. 
 	public static KmlFolder mKmlClipboard; //passed between activities. Folder for multiple items selection. 
 
-	protected static final int START_SHARING_REQUEST = 3;
-	protected static final int FRIENDS_REQUEST = 4;
-	Button mFriendsButton;
-	protected static ArrayList<Friend> mFriends; //
-	protected boolean mIsSharing;
-	protected FolderOverlay mFriendsMarkers; //
+	FriendsManager mFriendsManager;
 
 	static String SHARED_PREFS_APPKEY = "OSMNavigator";
 	static String PREF_LOCATIONS_KEY = "PREF_LOCATIONS";
-	
+
 	OnlineTileSourceBase MAPBOXSATELLITELABELLED;
 
 	static final String userAgent = "OsmNavigator/1.0";
@@ -181,7 +171,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		
+
 		SharedPreferences prefs = getSharedPreferences("OSMNAVIGATOR", MODE_PRIVATE);
 
 		MAPBOXSATELLITELABELLED = new MapBoxTileSource("MapBoxSatelliteLabelled", 1, 19, 256, ".png");
@@ -206,7 +196,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		} catch (IllegalArgumentException e) {
 			map.setTileSource(TileSourceFactory.MAPNIK);
 		}
-		
+
 		map.setBuiltInZoomControls(true);
 		map.setMultiTouchControls(true);
 		IMapController mapController = map.getController();
@@ -214,24 +204,27 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		//To use MapEventsReceiver methods, we add a MapEventsOverlay:
 		MapEventsOverlay overlay = new MapEventsOverlay(this, this);
 		map.getOverlays().add(overlay);
-		
+
 		mLocationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
-		
+
 		//mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		//mOrientation = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 
 		//map prefs:
 		mapController.setZoom(prefs.getInt("MAP_ZOOM_LEVEL", 5));
-		mapController.setCenter(new GeoPoint((double)prefs.getFloat("MAP_CENTER_LAT", 48.5f), 
+		mapController.setCenter(new GeoPoint((double) prefs.getFloat("MAP_CENTER_LAT", 48.5f),
 				(double)prefs.getFloat("MAP_CENTER_LON", 2.5f)));
-		
+
 		myLocationOverlay = new DirectedLocationOverlay(this);
 		map.getOverlays().add(myLocationOverlay);
 
 		if (savedInstanceState == null){
-			Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-			if (location == null)
-				location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			Location location = null;
+			if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+				location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+				if (location == null)
+					location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			}
 			if (location != null) {
 				//location known:
 				onLocationChanged(location);
@@ -252,14 +245,14 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 
 		ScaleBarOverlay scaleBarOverlay = new ScaleBarOverlay(map);
 		map.getOverlays().add(scaleBarOverlay);
-		
+
 		// Itinerary markers:
 		mItineraryMarkers = new FolderOverlay(this);
 		mItineraryMarkers.setName(getString(R.string.itinerary_markers_title));
 		map.getOverlays().add(mItineraryMarkers);
 		mViaPointInfoWindow = new ViaPointInfoWindow(R.layout.itinerary_bubble, map);
 		updateUIWithItineraryMarkers();
-		
+
 		//Tracking system:
 		mTrackingModeButton = (Button)findViewById(R.id.buttonTrackingMode);
 		mTrackingModeButton.setOnClickListener(new View.OnClickListener() {
@@ -271,29 +264,29 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		if (savedInstanceState != null){
 			mTrackingMode = savedInstanceState.getBoolean("tracking_mode");
 			updateUIWithTrackingMode();
-		} else 
+		} else
 			mTrackingMode = false;
-		
+
 		AutoCompleteOnPreferences departureText = (AutoCompleteOnPreferences) findViewById(R.id.editDeparture);
 		departureText.setPrefKeys(SHARED_PREFS_APPKEY, PREF_LOCATIONS_KEY);
-		
+
 		Button searchDepButton = (Button)findViewById(R.id.buttonSearchDep);
 		searchDepButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				handleSearchButton(START_INDEX, R.id.editDeparture);
 			}
 		});
-		
+
 		AutoCompleteOnPreferences destinationText = (AutoCompleteOnPreferences) findViewById(R.id.editDestination);
 		destinationText.setPrefKeys(SHARED_PREFS_APPKEY, PREF_LOCATIONS_KEY);
-		
+
 		Button searchDestButton = (Button)findViewById(R.id.buttonSearchDest);
 		searchDestButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				handleSearchButton(DEST_INDEX, R.id.editDestination);
 			}
 		});
-		
+
 		View expander = (View)findViewById(R.id.expander);
 		expander.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
@@ -311,19 +304,19 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		registerForContextMenu(searchDestButton);
 		//context menu for clicking on the map is registered on this button. 
 		//(a little bit strange, but if we register it on mapView, it will catch map drag events)
-		
+
 		//Route and Directions
 		mWhichRouteProvider = prefs.getInt("ROUTE_PROVIDER", OSRM);
-		
+
 		mRoadNodeMarkers = new FolderOverlay(this);
 		mRoadNodeMarkers.setName("Route Steps");
 		map.getOverlays().add(mRoadNodeMarkers);
-		
+
 		if (savedInstanceState != null){
 			//STATIC mRoad = savedInstanceState.getParcelable("road");
 			updateUIWithRoads(mRoads);
 		}
-		
+
 		//POIs:
 		//POI search interface:
 		String[] poiTags = getResources().getStringArray(R.array.poi_tags);
@@ -377,35 +370,58 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		}
 
 		//Sharing
-		mFriendsMarkers = new FolderOverlay(this);
-		map.getOverlays().add(mFriendsMarkers);
-		if (savedInstanceState != null) {
-			//STATIC mFriends = savedInstanceState.getParcelable("friends");
-			mIsSharing = savedInstanceState.getBoolean("is_sharing");
-			updateUIWithFriendsMarkers();
-		} else {
-			mFriends = null;
-			mIsSharing = false;
+		mFriendsManager = new FriendsManager(this, map);
+		mFriendsManager.onCreate(savedInstanceState);
+
+		checkPermissions();
+	}
+
+	final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
+
+	void checkPermissions() {
+		List<String> permissions = new ArrayList<>();
+		String message = "Application permissions:";
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+			permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+			message += "\nLocation to show user location.";
 		}
-		mFriendsButton = (Button) findViewById(R.id.buttonFriends);
-		mFriendsButton.setVisibility(mIsSharing ? View.VISIBLE : View.GONE);
-		mFriendsButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View view) {
-				if (mIsSharing) {
-					Intent myIntent = new Intent(view.getContext(), FriendsActivity.class);
-					myIntent.putExtra("ID", getIndexOfBubbledMarker(mFriendsMarkers.getItems()));
-					startActivityForResult(myIntent, FRIENDS_REQUEST);
-				}
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+			permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+			message += "\nStorage access to store map tiles.";
+		}
+		if (!permissions.isEmpty()) {
+			Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+			String[] params = permissions.toArray(new String[permissions.size()]);
+			ActivityCompat.requestPermissions(this, params, REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+		} // else: We already have permissions, so handle as normal
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+		switch (requestCode) {
+			case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
+				Map<String, Integer> perms = new HashMap<>();
+				// Initial
+				perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+				// Fill with results
+				for (int i = 0; i < permissions.length; i++)
+					perms.put(permissions[i], grantResults[i]);
+				// Check for WRITE_EXTERNAL_STORAGE
+				Boolean storage = perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+				if (!storage) {
+					// Permission Denied
+					Toast.makeText(this, "Storage permission is required to store map tiles to reduce data usage and for offline usage.", Toast.LENGTH_LONG).show();
+				} // else: permission was granted, yay!
 			}
-		});
+		}
 	}
 
 	void setViewOn(BoundingBoxE6 bb){
 		if (bb != null){
-			map.zoomToBoundingBox(bb);
+			map.zoomToBoundingBox(bb, true);
 		}
 	}
-	
+
 	void savePrefs(){
 		SharedPreferences prefs = getSharedPreferences("OSMNAVIGATOR", MODE_PRIVATE);
 		SharedPreferences.Editor ed = prefs.edit();
@@ -421,7 +437,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		ed.putInt("ROUTE_PROVIDER", mWhichRouteProvider);
 		ed.commit();
 	}
-	
+
 	/**
 	 * callback to store activity status before a restart (orientation change for instance)
 	 */
@@ -435,66 +451,49 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		//STATIC - outState.putParcelableArrayList("poi", mPOIs);
 		//STATIC - outState.putParcelable("kml", mKmlDocument);
 		//STATIC - outState.putParcelable("friends", mFriends);
-		outState.putBoolean("is_sharing", mIsSharing);
+		mFriendsManager.onSaveInstanceState(outState);
 
 		savePrefs();
 	}
-	
+
 	@Override protected void onActivityResult (int requestCode, int resultCode, Intent intent) {
 		switch (requestCode) {
-			case START_SHARING_REQUEST:
-			if (resultCode == RESULT_OK) {
-				String login = intent.getStringExtra("NICKNAME");
-				String group = intent.getStringExtra("GROUP");
-				String message = intent.getStringExtra("MESSAGE");
-				new StartSharingTask().execute(login, group, message);
-			}
-				break;
-			case FRIENDS_REQUEST:
-				if (resultCode == RESULT_OK) {
-					int id = intent.getIntExtra("ID", 0);
-					Friend selected = mFriends.get(id);
-					if (selected.mHasLocation) {
-						map.getController().setCenter(selected.mPosition);
-						Marker friendMarker = (Marker) mFriendsMarkers.getItems().get(id);
-						friendMarker.showInfoWindow();
-					}
-				}
+			case FriendsManager.START_SHARING_REQUEST:
+			case FriendsManager.FRIENDS_REQUEST:
+				mFriendsManager.onActivityResult(requestCode, resultCode, intent);
 				break;
 			case ROUTE_REQUEST:
 				if (resultCode == RESULT_OK) {
-				int nodeId = intent.getIntExtra("NODE_ID", 0);
-				map.getController().setCenter(mRoads[mSelectedRoad].mNodes.get(nodeId).mLocation);
-				Marker roadMarker = (Marker)mRoadNodeMarkers.getItems().get(nodeId);
-				roadMarker.showInfoWindow();
-			}
-			break;
-		case POIS_REQUEST:
-			if (resultCode == RESULT_OK) {
-				int id = intent.getIntExtra("ID", 0);
-				map.getController().setCenter(mPOIs.get(id).mLocation);
-				Marker poiMarker = mPoiMarkers.getItem(id);
-				poiMarker.showInfoWindow();
-			}
-			break;
-		case KmlTreeActivity.KML_TREE_REQUEST:
-			mKmlStack.pop();
-			updateUIWithKml();
-			if (intent == null)
+					int nodeId = intent.getIntExtra("NODE_ID", 0);
+					map.getController().setCenter(mRoads[mSelectedRoad].mNodes.get(nodeId).mLocation);
+					Marker roadMarker = (Marker) mRoadNodeMarkers.getItems().get(nodeId);
+					roadMarker.showInfoWindow();
+				}
 				break;
-			KmlFeature selectedFeature = intent.getParcelableExtra("KML_FEATURE");
-			if (selectedFeature == null)
+			case POIS_REQUEST:
+				if (resultCode == RESULT_OK) {
+					int id = intent.getIntExtra("ID", 0);
+					map.getController().setCenter(mPOIs.get(id).mLocation);
+					Marker poiMarker = mPoiMarkers.getItem(id);
+					poiMarker.showInfoWindow();
+				}
 				break;
-			BoundingBoxE6 bb = selectedFeature.getBoundingBox();
-			if (bb == null)
+			case KmlTreeActivity.KML_TREE_REQUEST:
+				mKmlStack.pop();
+				updateUIWithKml();
+				if (intent == null)
+					break;
+				KmlFeature selectedFeature = intent.getParcelableExtra("KML_FEATURE");
+				if (selectedFeature == null)
+					break;
+				BoundingBoxE6 bb = selectedFeature.getBoundingBox();
+				setViewOn(bb);
 				break;
-			map.zoomToBoundingBox(bb);
-			break;
-		case KmlStylesActivity.KML_STYLES_REQUEST:
-			updateUIWithKml();
-			break;
-		default: 
-			break;
+			case KmlStylesActivity.KML_STYLES_REQUEST:
+				updateUIWithKml();
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -507,12 +506,14 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			bestProvider = LocationManager.NETWORK_PROVIDER;
 		return bestProvider;
 	} */
-	
+
 	boolean startLocationUpdates(){
 		boolean result = false;
 		for (final String provider : mLocationManager.getProviders(true)) {
-			mLocationManager.requestLocationUpdates(provider, 2*1000, 0.0f, this);
-			result = true;
+			if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+				mLocationManager.requestLocationUpdates(provider, 2 * 1000, 0.0f, this);
+				result = true;
+			}
 		}
 		return result;
 	}
@@ -524,15 +525,16 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		//TODO: not used currently
 		//mSensorManager.registerListener(this, mOrientation, SensorManager.SENSOR_DELAY_NORMAL);
 			//sensor listener is causing a high CPU consumption...
-		if (mIsSharing)
-			startSharingTimer();
+		mFriendsManager.onResume();
 	}
 
 	@Override protected void onPause() {
 		super.onPause();
-		mLocationManager.removeUpdates(this);
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+			mLocationManager.removeUpdates(this);
+		}
 		//TODO: mSensorManager.unregisterListener(this);
-		stopSharingTimer();
+		mFriendsManager.onPause();
 		savePrefs();
 	}
 
@@ -552,9 +554,9 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
     }
 
     //------------- Geocoding and Reverse Geocoding
-    
-    /** 
-     * Reverse Geocoding
+
+	/**
+	 * Reverse Geocoding
      */
     public String getAddress(GeoPoint p){
 		GeocoderNominatim geocoder = new GeocoderNominatim(this, userAgent);
@@ -644,20 +646,20 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		//Hide the soft keyboard:
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(locationEdit.getWindowToken(), 0);
-		
+
 		String locationAddress = locationEdit.getText().toString();
-		
+
 		if (locationAddress.equals("")){
 			removePoint(index);
 			map.invalidate();
 			return;
 		}
-		
+
 		Toast.makeText(this, "Searching:\n"+locationAddress, Toast.LENGTH_LONG).show();
 		AutoCompleteOnPreferences.storePreference(this, locationAddress, SHARED_PREFS_APPKEY, PREF_LOCATIONS_KEY);
 		new GeocodingTask().execute(locationAddress, index);
 	}
-	
+
 	//add or replace the polygon overlay
 	public void updateUIWithPolygon(ArrayList<GeoPoint> polygon, String name){
 		List<Overlay> mapOverlays = map.getOverlays();
@@ -694,8 +696,8 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			marker.showInfoWindow();
 		}
 	}
-	
-    //------------ Itinerary markers
+
+	//------------ Itinerary markers
 
 	class OnItineraryMarkerDragListener implements OnMarkerDragListener {
 		@Override public void onMarkerDrag(Marker marker) {}
@@ -705,18 +707,21 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 				startPoint = marker.getPosition();
 			else if (index == DEST_INDEX)
 				destinationPoint = marker.getPosition();
-			else 
+			else
 				viaPoints.set(index, marker.getPosition());
 			//update location:
 			new ReverseGeocodingTask().execute(marker);
 			//update route:
 			getRoadAsync();
 		}
-		@Override public void onMarkerDragStart(Marker marker) {}		
+
+		@Override
+		public void onMarkerDragStart(Marker marker) {
+		}
 	}
-	
+
 	final OnItineraryMarkerDragListener mItineraryListener = new OnItineraryMarkerDragListener();
-	
+
 	/** Update (or create if null) a marker in itineraryMarkers. */
     public Marker updateItineraryMarker(Marker marker, GeoPoint p, int index,
     		int titleResId, int markerResId, int imageResId, String address) {
@@ -750,7 +755,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		updateItineraryMarker(null, p, viaPoints.size() - 1,
 				R.string.viapoint, R.drawable.marker_via, -1, null);
 	}
-    
+
 	public void removePoint(int index){
 		if (index == START_INDEX){
 			startPoint = null;
@@ -772,18 +777,18 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		}
 		getRoadAsync();
 	}
-	
+
 	public void updateUIWithItineraryMarkers(){
 		mItineraryMarkers.closeAllInfoWindows();
 		mItineraryMarkers.getItems().clear();
 		//Start marker:
 		if (startPoint != null){
-			markerStart = updateItineraryMarker(null, startPoint, START_INDEX, 
+			markerStart = updateItineraryMarker(null, startPoint, START_INDEX,
 				R.string.departure, R.drawable.marker_departure, -1, null);
 		}
 		//Via-points markers if any:
 		for (int index=0; index<viaPoints.size(); index++){
-			updateItineraryMarker(null, viaPoints.get(index), index, 
+			updateItineraryMarker(null, viaPoints.get(index), index,
 				R.string.viapoint, R.drawable.marker_via, -1, null);
 		}
 		//Destination marker if any:
@@ -792,10 +797,10 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 				R.string.destination, R.drawable.marker_destination, -1, null);
 		}
 	}
-	
-    //------------ Route and Directions
-    
-    private void putRoadNodes(Road road){
+
+	//------------ Route and Directions
+
+	private void putRoadNodes(Road road){
 		mRoadNodeMarkers.getItems().clear();
 		Drawable icon = getResources().getDrawable(R.drawable.marker_node);
 		int n = road.mNodes.size();
@@ -810,8 +815,8 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			nodeMarker.setSubDescription(Road.getLengthDurationText(this, node.mLength, node.mDuration));
 			nodeMarker.setPosition(node.mLocation);
     		nodeMarker.setIcon(icon);
-    		nodeMarker.setInfoWindow(infoWindow); //use a shared infowindow. 
-    		int iconId = iconIds.getResourceId(node.mManeuverType, R.drawable.ic_empty);
+			nodeMarker.setInfoWindow(infoWindow); //use a shared infowindow.
+			int iconId = iconIds.getResourceId(node.mManeuverType, R.drawable.ic_empty);
     		if (iconId != R.drawable.ic_empty){
 	    		Drawable image = getResources().getDrawable(iconId);
 	    		nodeMarker.setImage(image);
@@ -881,9 +886,9 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		}
 		selectRoad(0);
     }
-    
+
 	/**
-	 * Async task to get the road in a separate thread. 
+	 * Async task to get the road in a separate thread.
 	 */
 	private class UpdateRoadTask extends AsyncTask<Object, Void, Road[]> {
 
@@ -935,7 +940,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			getPOIAsync(poiTagText.getText().toString());
 		}
 	}
-	
+
 	public void getRoadAsync(){
 		mRoads = null;
 		GeoPoint roadStartPoint = null;
@@ -953,14 +958,14 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		waypoints.add(roadStartPoint);
 		//add intermediate via points:
 		for (GeoPoint p:viaPoints){
-			waypoints.add(p); 
+			waypoints.add(p);
 		}
 		waypoints.add(destinationPoint);
 		new UpdateRoadTask(this).execute(waypoints);
 	}
 
 	//----------------- POIs
-	
+
 	void updateUIWithPOI(ArrayList<POI> pois, String featureTag){
 		if (pois != null){
 			POIInfoWindow poiInfoWindow = new POIInfoWindow(map);
@@ -995,7 +1000,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		mPoiMarkers.invalidate();
 		map.invalidate();
 	}
-	
+
 	void setMarkerIconAsPhoto(Marker marker, Bitmap thumbnail){
 		int borderSize = 2;
 		thumbnail = Bitmap.createScaledBitmap(thumbnail, 48, 48, true);
@@ -1006,9 +1011,9 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		BitmapDrawable icon = new BitmapDrawable(getResources(), withBorder);
 		marker.setIcon(icon);
 	}
-	
+
 	ExecutorService mThreadPool = Executors.newFixedThreadPool(3);
-	
+
 	class ThumbnailLoaderTask implements Runnable {
 		POI mPoi; Marker mMarker;
 		ThumbnailLoaderTask(POI poi, Marker marker){
@@ -1021,7 +1026,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			}
 		}
 	}
-	
+
 	/** Loads all thumbnails in background */
 	void startAsyncThumbnailsLoading(ArrayList<POI> pois){
 		if (pois == null)
@@ -1035,9 +1040,9 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			mThreadPool.submit(new ThumbnailLoaderTask(poi, marker));
 		}
 	}
-	
+
 	/**
-	 * Convert human readable feature to an OSM tag. 
+	 * Convert human readable feature to an OSM tag.
 	 * @param humanReadableFeature
 	 * @return OSM tag string: "k=v"
 	 */
@@ -1045,29 +1050,26 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		HashMap<String,String> map = BonusPackHelper.parseStringMapResource(getApplicationContext(), R.array.osm_poi_tags);
 		return map.get(humanReadableFeature.toLowerCase(Locale.getDefault()));
 	}
-	
+
 	private class POILoadingTask extends AsyncTask<Object, Void, ArrayList<POI>> {
 		String mFeatureTag;
 		String message;
 		protected ArrayList<POI> doInBackground(Object... params) {
 			mFeatureTag = (String)params[0];
-			
+			BoundingBoxE6 bb = map.getBoundingBox();
 			if (mFeatureTag == null || mFeatureTag.equals("")){
 				return null;
 			} else if (mFeatureTag.equals("wikipedia")){
 				GeoNamesPOIProvider poiProvider = new GeoNamesPOIProvider(geonamesAccount);
 				//Get POI inside the bounding box of the current map view:
-				BoundingBoxE6 bb = map.getBoundingBox();
 				ArrayList<POI> pois = poiProvider.getPOIInside(bb, 30);
 				return pois;
 			} else if (mFeatureTag.equals("flickr")){
 				FlickrPOIProvider poiProvider = new FlickrPOIProvider(flickrApiKey);
-				BoundingBoxE6 bb = map.getBoundingBox();
 				ArrayList<POI> pois = poiProvider.getPOIInside(bb, 30);
 				return pois;
 			} else if (mFeatureTag.startsWith("picasa")){
 				PicasaPOIProvider poiProvider = new PicasaPOIProvider(null);
-				BoundingBoxE6 bb = map.getBoundingBox();
 				//allow to search for keywords among picasa photos:
 				String q = mFeatureTag.substring("picasa".length());
 				ArrayList<POI> pois = poiProvider.getPOIInside(bb, 50, q);
@@ -1088,7 +1090,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 					message = mFeatureTag + " is not a valid feature.";
 					return null;
 				}
-				String oUrl = overpassProvider.urlForPOISearch(osmTag, map.getBoundingBox(), 100, 10);
+				String oUrl = overpassProvider.urlForPOISearch(osmTag, bb, 100, 10);
 				ArrayList<POI> pois = overpassProvider.getPOIsFromUrl(oUrl);
 				return pois;
 			}
@@ -1100,7 +1102,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			} else if (mPOIs == null){
 				if (message != null)
 					Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-				else 
+				else
 					Toast.makeText(getApplicationContext(), "Technical issue when getting "+mFeatureTag+ " POI.", Toast.LENGTH_LONG).show();
 			} else {
 				Toast.makeText(getApplicationContext(), mFeatureTag+ " found:"+mPOIs.size(), Toast.LENGTH_LONG).show();
@@ -1110,16 +1112,16 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 				startAsyncThumbnailsLoading(mPOIs);
 		}
 	}
-	
+
 	void getPOIAsync(String tag){
 		mPoiMarkers.getItems().clear();
 		new POILoadingTask().execute(tag);
 	}
-	
+
 	//------------ KML handling
 
 	boolean mDialogForOpen;
-	
+
 	void openLocalFileDialog(boolean open){
 		mDialogForOpen = open;
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1139,7 +1141,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 				if (mDialogForOpen){
 					File file = mKmlDocument.getDefaultPathForAndroid(localFileName);
 					openFile("file:/"+file.toString(), false, false);
-				} else 
+				} else
 					saveFile(localFileName);
 			}
 		});
@@ -1150,7 +1152,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		});
 		builder.show();
 	}
-	
+
 	void openUrlDialog(){
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(getString(R.string.url_kml_open));
@@ -1160,7 +1162,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		String uri = getSharedPreferences("OSMNAVIGATOR", MODE_PRIVATE).getString("KML_URI", defaultUri);
 		input.setText(uri);
 		builder.setView(input);
-		builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() { 
+		builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
 			@Override public void onClick(DialogInterface dialog, int which) {
 				String uri = input.getText().toString();
 				SharedPreferences prefs = getSharedPreferences("OSMNAVIGATOR", MODE_PRIVATE);
@@ -1218,7 +1220,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		pd.setIndeterminate(true);
 		return pd;
 	}
-	
+
 	class KmlLoadingTask extends AsyncTask<Object, Void, Boolean>{
 		String mUri;
 		boolean mOnCreate;
@@ -1272,12 +1274,12 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			}
 		}
 	}
-	
+
 	void openFile(String uri, boolean onCreate, boolean isOverpassRequest){
 		//Toast.makeText(this, "Loading "+uri, Toast.LENGTH_SHORT).show();
 		new KmlLoadingTask(getString(R.string.loading)+" "+uri).execute(uri, onCreate, isOverpassRequest);
 	}
-	
+
 	/** save fileName locally, as KML or GeoJSON depending on the extension */
 	void saveFile(String fileName){
 		boolean result;
@@ -1288,17 +1290,17 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			result = mKmlDocument.saveAsKML(file);
 		if (result)
 			Toast.makeText(this, fileName + " saved", Toast.LENGTH_SHORT).show();
-		else 
+		else
 			Toast.makeText(this, "Unable to save "+fileName, Toast.LENGTH_SHORT).show();
 	}
-	
+
 	Style buildDefaultStyle(){
 		Drawable defaultKmlMarker = getResources().getDrawable(R.drawable.marker_kml_point);
 		Bitmap bitmap = ((BitmapDrawable)defaultKmlMarker).getBitmap();
 		Style defaultStyle = new Style(bitmap, 0x901010AA, 3.0f, 0x20AA1010);
 		return defaultStyle;
 	}
-	
+
 	void updateUIWithKml(){
 		if (mKmlOverlay != null){
 			mKmlOverlay.closeAllInfoWindows();
@@ -1308,7 +1310,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		map.getOverlays().add(mKmlOverlay);
 		map.invalidate();
 	}
-	
+
 	void insertOverlaysInKml(){
 		KmlFolder root = mKmlDocument.mKmlRoot;
 		//Insert relevant overlays inside:
@@ -1346,16 +1348,16 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		new KMLGeocodingTask().execute(kmlPoint);
 		updateUIWithKml();
 	}
-	
+
 	//------------ MapEventsReceiver implementation
 
 	GeoPoint mClickedGeoPoint; //any other way to pass the position to the menu ???
-	
+
 	@Override public boolean longPressHelper(GeoPoint p) {
 		mClickedGeoPoint = p;
 		Button searchButton = (Button)findViewById(R.id.buttonSearchDest);
-		openContextMenu(searchButton); 
-			//menu is hooked on the "Search Destination" button, as it must be hooked somewhere. 
+		openContextMenu(searchButton);
+		//menu is hooked on the "Search Destination" button, as it must be hooked somewhere.
 		return true;
 	}
 
@@ -1399,15 +1401,15 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			return super.onContextItemSelected(item);
 		}
 	}
-	
+
 	//------------ Option Menu implementation
-	
+
 	@Override public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.option_menu, menu);
 
 		switch (mWhichRouteProvider){
-		case OSRM: 
+			case OSRM:
 			menu.findItem(R.id.menu_route_osrm).setChecked(true);
 			break;
 		case GRAPHHOPPER_FASTEST:
@@ -1423,22 +1425,19 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			menu.findItem(R.id.menu_route_google).setChecked(true);
 			break;
 		}
-		
+
 		if (map.getTileProvider().getTileSource() == TileSourceFactory.MAPNIK)
 			menu.findItem(R.id.menu_tile_mapnik).setChecked(true);
 		else if (map.getTileProvider().getTileSource() == TileSourceFactory.MAPQUESTOSM)
 			menu.findItem(R.id.menu_tile_mapnik_by_night).setChecked(true);
 		else if (map.getTileProvider().getTileSource() == MAPBOXSATELLITELABELLED)
 			menu.findItem(R.id.menu_tile_mapbox_satellite).setChecked(true);
-		
+
 		return true;
 	}
-	
+
 	@Override public boolean onPrepareOptionsMenu(Menu menu) {
-		if (mIsSharing)
-			menu.findItem(R.id.menu_sharing).setTitle(R.string.menu_stop_sharing);
-		else
-			menu.findItem(R.id.menu_sharing).setTitle(R.string.menu_start_sharing);
+		mFriendsManager.onPrepareOptionsMenu(menu);
 
 		if (mRoads != null && mRoads[mSelectedRoad].mNodes.size()>0)
 			menu.findItem(R.id.menu_itinerary).setEnabled(true);
@@ -1447,13 +1446,13 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 
 		if (mPOIs != null && mPOIs.size()>0)
 			menu.findItem(R.id.menu_pois).setEnabled(true);
-		else 
+		else
 			menu.findItem(R.id.menu_pois).setEnabled(false);
 		return true;
 	}
 
 	/** return the index of the first Marker having its bubble opened, -1 if none */
-	int getIndexOfBubbledMarker(List<? extends Overlay> list){
+	static int getIndexOfBubbledMarker(List<? extends Overlay> list) {
 		for (int i=0; i<list.size(); i++){
 			Overlay item = list.get(i);
 			if (item instanceof Marker){
@@ -1464,14 +1463,14 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		}
 		return -1;
 	}
-	
+
 	void setStdTileProvider(){
 		if (!(map.getTileProvider() instanceof MapTileProviderBasic)){
 			MapTileProviderBasic bitmapProvider = new MapTileProviderBasic(this);
 			map.setTileProvider(bitmapProvider);
 		}
 	}
-	
+
 	boolean setMapsForgeTileProvider(){
 		String path = Environment.getExternalStorageDirectory().getPath()+"/mapsforge/";
 		File folder = new File(path);
@@ -1487,6 +1486,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		}
 		if (mapFile == null)
 			return false;
+		//TODO: build a list with only .map files; get rendering config file if any.
 		*/
 		if (AndroidGraphicFactory.INSTANCE == null)
 			AndroidGraphicFactory.createInstance(this.getApplication());
@@ -1495,18 +1495,12 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		map.setTileProvider(mfProvider);
 		return true;
 	}
-	
+
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		Intent myIntent;
 		switch (item.getItemId()) {
 			case R.id.menu_sharing:
-				if (!mIsSharing) {
-					myIntent = new Intent(this, StartSharingActivity.class);
-					startActivityForResult(myIntent, START_SHARING_REQUEST);
-				} else {
-					new StopSharingTask().execute();
-				}
-				return true;
+				return mFriendsManager.onOptionsItemSelected(item);
 		case R.id.menu_itinerary:
 			myIntent = new Intent(this, RouteActivity.class);
 			int currentNodeId = getIndexOfBubbledMarker(mRoadNodeMarkers.getItems());
@@ -1596,7 +1590,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			boolean result = setMapsForgeTileProvider();
 			if (result)
 				item.setChecked(true);
-			else 
+			else
 				Toast.makeText(this, "No MapsForge map found", Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.menu_download_view_area:{
@@ -1626,7 +1620,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	//------------ LocationListener implementation
 	private final NetworkLocationIgnorer mIgnorer = new NetworkLocationIgnorer();
 	long mLastTime = 0; // milliseconds
@@ -1641,37 +1635,31 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			return;
 		}
 		mLastTime = currentTime;
-		
+
 		GeoPoint newLocation = new GeoPoint(pLoc);
 		if (!myLocationOverlay.isEnabled()){
 			//we get the location for the first time:
 			myLocationOverlay.setEnabled(true);
 			map.getController().animateTo(newLocation);
 		}
-		
+
 		GeoPoint prevLocation = myLocationOverlay.getLocation();
 		myLocationOverlay.setLocation(newLocation);
 		myLocationOverlay.setAccuracy((int)pLoc.getAccuracy());
 
 		if (prevLocation != null && pLoc.getProvider().equals(LocationManager.GPS_PROVIDER)){
-			/*
-			double d = prevLocation.distanceTo(newLocation);
-			mSpeed = d/dT*1000.0; // m/s
-			mSpeed = mSpeed * 3.6; //km/h
-			*/
 			mSpeed = pLoc.getSpeed() * 3.6;
 			long speedInt = Math.round(mSpeed);
 			TextView speedTxt = (TextView)findViewById(R.id.speed);
 			speedTxt.setText(speedInt + " km/h");
-			
+
 			//TODO: check if speed is not too small
 			if (mSpeed >= 0.1){
-				//mAzimuthAngleSpeed = (float)prevLocation.bearingTo(newLocation);
 				mAzimuthAngleSpeed = (float)pLoc.getBearing();
 				myLocationOverlay.setBearing(mAzimuthAngleSpeed);
 			}
 		}
-		
+
 		if (mTrackingMode){
 			//keep the map view centered on current location:
 			map.getController().animateTo(newLocation);
@@ -1697,7 +1685,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	//static float mAzimuthOrientation = 0.0f;
 	@Override public void onSensorChanged(SensorEvent event) {
 		switch (event.sensor.getType()){
-			case Sensor.TYPE_ORIENTATION: 
+			case Sensor.TYPE_ORIENTATION:
 				if (mSpeed < 0.1){
 					/* TODO Filter to implement...
 					float azimuth = event.values[0];
@@ -1718,225 +1706,4 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		}
 	}
 
-	//----------------------- Sharing
-
-	static final String NAV_SERVER_URL = "http://comob.free.fr/sharing/";
-
-	public String getUniqueId() {
-		return Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-	}
-
-	String callStartSharing(String nickname, String group, String message) {
-		//List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-		String url = NAV_SERVER_URL + "jstart.php?"
-				+ "nickname=" + URLEncoder.encode(nickname)
-				+ "&group_id=" + URLEncoder.encode(group)
-				+ "&user_id=" + URLEncoder.encode(getUniqueId())
-				+ "&message=" + URLEncoder.encode(message);
-		/*
-		nameValuePairs.add(new BasicNameValuePair("nickname", nickname));
-		nameValuePairs.add(new BasicNameValuePair("group_id", group));
-		nameValuePairs.add(new BasicNameValuePair("user_id", getUniqueId()));
-		nameValuePairs.add(new BasicNameValuePair("message", message));
-		String result = BonusPackHelper.requestStringFromPost(url, nameValuePairs);
-		*/
-		String result = BonusPackHelper.requestStringFromUrl(url);
-		if (result == null) {
-			return "Technical error with the server";
-		}
-		try {
-			JsonParser parser = new JsonParser();
-			JsonElement json = parser.parse(result);
-			JsonObject jResult = json.getAsJsonObject();
-			String answer = jResult.get("answer").getAsString();
-			if (!"ok".equals(answer)) {
-				String error = jResult.get("error").getAsString();
-				return error;
-			}
-		} catch (JsonSyntaxException e) {
-			return "Technical error with the server";
-		}
-		return null;
-	}
-
-	private class StartSharingTask extends AsyncTask<String, Void, String> {
-		@Override
-		protected String doInBackground(String... params) {
-			return callStartSharing(params[0], params[1], params[2]);
-		}
-
-		@Override
-		protected void onPostExecute(String error) {
-			if (error == null) {
-				startSharingTimer();
-				mIsSharing = true;
-				mFriendsButton.setVisibility(mIsSharing ? View.VISIBLE : View.GONE);
-			} else
-				Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
-		}
-	}
-
-	static final int SHARING_INTERVAL = 20 * 1000; //every 20 sec
-	protected Handler mSharingHandler;
-	private Runnable mSharingRunnable = new Runnable() {
-		@Override
-		public void run() {
-			new UpdateSharingTask().execute();
-			mSharingHandler.postDelayed(this, SHARING_INTERVAL);
-		}
-	};
-
-	void startSharingTimer() {
-		mSharingHandler = new Handler();
-		mSharingHandler.postDelayed(mSharingRunnable, 0);
-	}
-
-	void stopSharingTimer() {
-		if (mSharingHandler != null) {
-			mSharingHandler.removeCallbacks(mSharingRunnable);
-		}
-	}
-
-	String callUpdateSharing() {
-		mFriends = null;
-		GeoPoint myPosition = myLocationOverlay.getLocation();
-		int hasLocation = (myPosition != null ? 1 : 0);
-		if (myPosition == null)
-			myPosition = new GeoPoint(0.0, 0.0);
-		String url = NAV_SERVER_URL + "jupdate.php?"
-				+ "user_id=" + URLEncoder.encode(getUniqueId())
-				+ "&has_location=" + hasLocation
-				+ "&lat=" + myPosition.getLatitude()
-				+ "&lon=" + myPosition.getLongitude()
-				+ "&bearing=" + mAzimuthAngleSpeed;
-		Log.d(BonusPackHelper.LOG_TAG, "callUpdateSharing:" + url);
-		String result = BonusPackHelper.requestStringFromUrl(url);
-		if (result == null) {
-			return "Technical error with the server";
-		}
-		try {
-			JsonParser parser = new JsonParser();
-			JsonElement json = parser.parse(result);
-			JsonObject jResult = json.getAsJsonObject();
-			String answer = jResult.get("answer").getAsString();
-			if (!"ok".equals(answer)) {
-				String error = jResult.get("error").getAsString();
-				return error;
-			}
-			JsonArray jFriends = jResult.get("people").getAsJsonArray();
-			mFriends = new ArrayList<Friend>(jFriends.size());
-			for (JsonElement jFriend : jFriends) {
-				JsonObject joFriend = (JsonObject) jFriend;
-				Friend friend = new Friend(joFriend);
-				mFriends.add(friend);
-			}
-		} catch (JsonSyntaxException e) {
-			return "Technical error with the server";
-		}
-		return null;
-	}
-
-	int getOpenedInfoWindow(FolderOverlay folder) {
-		List<Overlay> items = mFriendsMarkers.getItems();
-		for (int i = 0; i < items.size(); i++) {
-			Overlay overlay = items.get(i);
-			if (overlay instanceof Marker) {
-				Marker m = (Marker) overlay;
-				if (m.isInfoWindowShown())
-					return i;
-			}
-		}
-		return -1;
-	}
-
-	void updateUIWithFriendsMarkers() {
-		int opened = getOpenedInfoWindow(mFriendsMarkers);
-		mFriendsMarkers.closeAllInfoWindows();
-		mFriendsMarkers.getItems().clear();
-		if (mFriends == null) {
-			map.invalidate();
-			return;
-		}
-		Drawable iconOnline = getResources().getDrawable(R.drawable.marker_car_on);
-		Drawable iconOffline = getResources().getDrawable(R.drawable.marker_friend_off);
-		for (Friend friend : mFriends) {
-			//MarkerLabeled marker = new MarkerLabeled(map);
-			Marker marker = new Marker(map);
-			marker.setPosition(friend.mPosition);
-			marker.setTitle(friend.mNickName);
-			marker.setSnippet(friend.mMessage);
-			if (friend.mOnline) {
-				marker.setIcon(iconOnline); //((BitmapDrawable) iconOnline).getBitmap());
-				marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
-				marker.setRotation(friend.mBearing);
-			} else {
-				marker.setIcon(iconOffline); //((BitmapDrawable)iconOffline).getBitmap());
-			}
-			if (!friend.mHasLocation)
-				marker.setEnabled(false);
-			mFriendsMarkers.add(marker);
-		}
-		map.invalidate();
-		if (opened != -1 && opened < mFriends.size()) {
-			//TODO - completely insufficient, as index may have changed.
-			Marker markerToOpen = (Marker) mFriendsMarkers.getItems().get(opened);
-			markerToOpen.showInfoWindow();
-		}
-	}
-
-	private class UpdateSharingTask extends AsyncTask<Void, Void, String> {
-		@Override
-		protected String doInBackground(Void... params) {
-			return callUpdateSharing();
-		}
-
-		@Override
-		protected void onPostExecute(String error) {
-			if (error == null) {
-				updateUIWithFriendsMarkers();
-			} else
-				Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
-		}
-	}
-
-	String callStopSharing() {
-		mFriends = null;
-		String url = NAV_SERVER_URL + "jstop.php?"
-				+ "user_id=" + URLEncoder.encode(getUniqueId());
-		String result = BonusPackHelper.requestStringFromUrl(url);
-		if (result == null) {
-			return "Technical error with the server";
-		}
-		try {
-			JsonParser parser = new JsonParser();
-			JsonElement json = parser.parse(result);
-			JsonObject jResult = json.getAsJsonObject();
-			String answer = jResult.get("answer").getAsString();
-			if (!"ok".equals(answer)) {
-				String error = jResult.get("error").getAsString();
-				return error;
-			}
-		} catch (JsonSyntaxException e) {
-			return "Technical error with the server";
-		}
-		return null;
-	}
-
-	private class StopSharingTask extends AsyncTask<Void, Void, String> {
-		@Override
-		protected String doInBackground(Void... params) {
-			return callStopSharing();
-		}
-
-		@Override
-		protected void onPostExecute(String error) {
-			if (error == null) {
-				updateUIWithFriendsMarkers();
-				stopSharingTimer();
-				mIsSharing = false;
-				mFriendsButton.setVisibility(mIsSharing ? View.VISIBLE : View.GONE);
-			} else
-				Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
-		}
-	}
 }
