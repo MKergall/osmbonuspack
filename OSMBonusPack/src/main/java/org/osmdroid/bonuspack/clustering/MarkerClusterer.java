@@ -11,6 +11,8 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 /** 
  * An overlay allowing to perform markers clustering. 
@@ -107,8 +109,33 @@ public abstract class MarkerClusterer extends Overlay {
         }
 	}
 
+	public Iterable<StaticCluster> reversedClusters() {
+		return new Iterable<StaticCluster>() {
+			@Override
+			public Iterator<StaticCluster> iterator() {
+				final ListIterator<StaticCluster> i = mClusters.listIterator(mClusters.size());
+				return new Iterator<StaticCluster>() {
+					@Override
+					public boolean hasNext() {
+						return i.hasPrevious();
+					}
+
+					@Override
+					public StaticCluster next() {
+						return i.previous();
+					}
+
+					@Override
+					public void remove() {
+						i.remove();
+					}
+				};
+			}
+		};
+	}
+
 	@Override public boolean onSingleTapConfirmed(final MotionEvent event, final MapView mapView){
-		for (StaticCluster cluster:mClusters){
+		for (final StaticCluster cluster : reversedClusters()) {
 			if (cluster.getMarker().onSingleTapConfirmed(event, mapView))
 				return true;
 		}
@@ -116,7 +143,7 @@ public abstract class MarkerClusterer extends Overlay {
 	}
 	
 	@Override public boolean onLongPress(final MotionEvent event, final MapView mapView) {
-		for (StaticCluster cluster:mClusters){
+		for (final StaticCluster cluster : reversedClusters()) {
 			if (cluster.getMarker().onLongPress(event, mapView))
 				return true;
 		}
@@ -124,7 +151,7 @@ public abstract class MarkerClusterer extends Overlay {
 	}
 
 	@Override public boolean onTouchEvent(final MotionEvent event, final MapView mapView) {
-		for (StaticCluster cluster:mClusters){
+		for (StaticCluster cluster : reversedClusters()) {
 			if (cluster.getMarker().onTouchEvent(event, mapView))
 				return true;
 		}
