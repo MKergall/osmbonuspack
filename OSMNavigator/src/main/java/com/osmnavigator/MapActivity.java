@@ -46,7 +46,6 @@ import android.widget.Toast;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.cachemanager.CacheManager;
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
 import org.osmdroid.bonuspack.kml.KmlDocument;
 import org.osmdroid.bonuspack.kml.KmlFeature;
@@ -72,6 +71,7 @@ import org.osmdroid.mapsforge.MapsForgeTileProvider;
 import org.osmdroid.mapsforge.MapsForgeTileSource;
 import org.osmdroid.tileprovider.MapTileProviderBase;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
+import org.osmdroid.tileprovider.cachemanager.CacheManager;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.MapBoxTileSource;
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
@@ -345,7 +345,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		mPoiMarkers.mAnchorV = Marker.ANCHOR_BOTTOM;
 		mPoiMarkers.mTextAnchorU = 0.70f;
 		mPoiMarkers.mTextAnchorV = 0.27f;
-		mPoiMarkers.getTextPaint().setTextSize(12.0f);
+		mPoiMarkers.getTextPaint().setTextSize(12 * getResources().getDisplayMetrics().density);
 		map.getOverlays().add(mPoiMarkers);
 		if (savedInstanceState != null){
 			//STATIC - mPOIs = savedInstanceState.getParcelableArrayList("poi");

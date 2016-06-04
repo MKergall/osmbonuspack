@@ -156,17 +156,16 @@ public class MainActivity extends Activity implements MapEventsReceiver {
 		//FolderOverlay poiMarkers = new FolderOverlay(this);
 		//10. Marker Clustering
 		RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(this);
-		//Drawable clusterIconD = getResources().getDrawable(R.drawable.marker_cluster);
+		//end of 10.
+		//11.1 Customizing the clusters design
 		Drawable clusterIconD = getResources().getDrawable(R.drawable.marker_poi_cluster);
 		Bitmap clusterIcon = ((BitmapDrawable) clusterIconD).getBitmap();
 		poiMarkers.setIcon(clusterIcon);
-		//end of 10.
-		//11. Customizing the clusters design
-		poiMarkers.getTextPaint().setTextSize(12.0f);
+		poiMarkers.getTextPaint().setTextSize(12 * getResources().getDisplayMetrics().density);
 		poiMarkers.mAnchorV = Marker.ANCHOR_BOTTOM;
 		poiMarkers.mTextAnchorU = 0.70f;
 		poiMarkers.mTextAnchorV = 0.27f;
-		//end of 11.
+		//end of 11.1
 		map.getOverlays().add(poiMarkers);
 		Drawable poiIcon = getResources().getDrawable(R.drawable.marker_poi_default);
 		if (pois != null) {
@@ -295,7 +294,7 @@ public class MainActivity extends Activity implements MapEventsReceiver {
 		}
 	}
 
-	//11. Customizing the clusters design - and beyond
+	//11.2 Customizing the clusters design - and beyond
 	class CirclesGridMarkerClusterer extends RadiusMarkerClusterer {
 
 		public CirclesGridMarkerClusterer(Context ctx) {

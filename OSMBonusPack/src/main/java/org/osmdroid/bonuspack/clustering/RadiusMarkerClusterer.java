@@ -7,7 +7,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 
+import org.osmdroid.bonuspack.R;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -47,10 +49,13 @@ public class RadiusMarkerClusterer extends MarkerClusterer {
 
         mTextPaint = new Paint();
         mTextPaint.setColor(Color.WHITE);
-        mTextPaint.setTextSize(15.0f);
+        mTextPaint.setTextSize(15 * ctx.getResources().getDisplayMetrics().density);
         mTextPaint.setFakeBoldText(true);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
         mTextPaint.setAntiAlias(true);
+        Drawable clusterIconD = ctx.getResources().getDrawable(R.drawable.marker_cluster);
+        Bitmap clusterIcon = ((BitmapDrawable) clusterIconD).getBitmap();
+        setIcon(clusterIcon);
     }
 
     /** If you want to change the default text paint (color, size, font) */
