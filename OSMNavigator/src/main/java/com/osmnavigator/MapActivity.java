@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -339,7 +340,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		});
 		//POI markers:
 		mPoiMarkers = new RadiusMarkerClusterer(this);
-		Drawable clusterIconD = getResources().getDrawable(R.drawable.marker_poi_cluster);
+		Drawable clusterIconD = ResourcesCompat.getDrawable(getResources(), R.drawable.marker_poi_cluster, null);
 		Bitmap clusterIcon = ((BitmapDrawable)clusterIconD).getBitmap();
 		mPoiMarkers.setIcon(clusterIcon);
 		mPoiMarkers.mAnchorV = Marker.ANCHOR_BOTTOM;
@@ -725,7 +726,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	/** Update (or create if null) a marker in itineraryMarkers. */
     public Marker updateItineraryMarker(Marker marker, GeoPoint p, int index,
     		int titleResId, int markerResId, int imageResId, String address) {
-		Drawable icon = getResources().getDrawable(markerResId);
+		Drawable icon = ResourcesCompat.getDrawable(getResources(), markerResId, null);
 		String title = getResources().getString(titleResId);
 		if (marker == null){
 			marker = new Marker(map);
@@ -739,7 +740,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		marker.setPosition(p);
 		marker.setIcon(icon);
 		if (imageResId != -1)
-			marker.setImage(getResources().getDrawable(imageResId));
+			marker.setImage(ResourcesCompat.getDrawable(getResources(), imageResId, null));
 		marker.setRelatedObject(index);
 		map.invalidate();
 		if (address != null)
@@ -802,7 +803,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 
 	private void putRoadNodes(Road road){
 		mRoadNodeMarkers.getItems().clear();
-		Drawable icon = getResources().getDrawable(R.drawable.marker_node);
+		Drawable icon = ResourcesCompat.getDrawable(getResources(), R.drawable.marker_node, null);
 		int n = road.mNodes.size();
 		MarkerInfoWindow infoWindow = new MarkerInfoWindow(org.osmdroid.bonuspack.R.layout.bonuspack_bubble, map);
 		TypedArray iconIds = getResources().obtainTypedArray(R.array.direction_icons);
@@ -818,8 +819,8 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			nodeMarker.setInfoWindow(infoWindow); //use a shared infowindow.
 			int iconId = iconIds.getResourceId(node.mManeuverType, R.drawable.ic_empty);
     		if (iconId != R.drawable.ic_empty){
-	    		Drawable image = getResources().getDrawable(iconId);
-	    		nodeMarker.setImage(image);
+				Drawable image = ResourcesCompat.getDrawable(getResources(), iconId, null);
+				nodeMarker.setImage(image);
     		}
     		mRoadNodeMarkers.add(nodeMarker);
     	}
@@ -976,17 +977,17 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 				poiMarker.setPosition(poi.mLocation);
 				Drawable icon = null;
 				if (poi.mServiceId == POI.POI_SERVICE_NOMINATIM || poi.mServiceId == POI.POI_SERVICE_OVERPASS_API){
-					icon = getResources().getDrawable(R.drawable.marker_poi);
+					icon = ResourcesCompat.getDrawable(getResources(), R.drawable.marker_poi, null);
 					poiMarker.setAnchor(Marker.ANCHOR_CENTER, 1.0f);
 				} else if (poi.mServiceId == POI.POI_SERVICE_GEONAMES_WIKIPEDIA){
 					if (poi.mRank < 90)
-						icon = getResources().getDrawable(R.drawable.marker_poi_wikipedia_16);
+						icon = ResourcesCompat.getDrawable(getResources(), R.drawable.marker_poi_wikipedia_16, null);
 					else
-						icon = getResources().getDrawable(R.drawable.marker_poi_wikipedia_32);
+						icon = ResourcesCompat.getDrawable(getResources(), R.drawable.marker_poi_wikipedia_32, null);
 				} else if (poi.mServiceId == POI.POI_SERVICE_FLICKR){
-					icon = getResources().getDrawable(R.drawable.marker_poi_flickr);
+					icon = ResourcesCompat.getDrawable(getResources(), R.drawable.marker_poi_flickr, null);
 				} else if (poi.mServiceId == POI.POI_SERVICE_PICASA){
-					icon = getResources().getDrawable(R.drawable.marker_poi_picasa_24);
+					icon = ResourcesCompat.getDrawable(getResources(), R.drawable.marker_poi_picasa_24, null);
 					poiMarker.setSubDescription(poi.mCategory);
 				}
 				poiMarker.setIcon(icon);
@@ -1295,7 +1296,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	}
 
 	Style buildDefaultStyle(){
-		Drawable defaultKmlMarker = getResources().getDrawable(R.drawable.marker_kml_point);
+		Drawable defaultKmlMarker = ResourcesCompat.getDrawable(getResources(), R.drawable.marker_kml_point, null);
 		Bitmap bitmap = ((BitmapDrawable)defaultKmlMarker).getBitmap();
 		Style defaultStyle = new Style(bitmap, 0x901010AA, 3.0f, 0x20AA1010);
 		return defaultStyle;

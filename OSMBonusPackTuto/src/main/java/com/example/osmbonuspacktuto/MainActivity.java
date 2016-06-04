@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -114,7 +115,7 @@ public class MainActivity extends Activity implements MapEventsReceiver {
 		//3. Showing the Route steps on the map
 		FolderOverlay roadMarkers = new FolderOverlay(this);
 		map.getOverlays().add(roadMarkers);
-		Drawable nodeIcon = getResources().getDrawable(R.drawable.marker_node);
+		Drawable nodeIcon = ResourcesCompat.getDrawable(getResources(), R.drawable.marker_node, null);
 		for (int i = 0; i < road.mNodes.size(); i++) {
 			RoadNode node = road.mNodes.get(i);
 			Marker nodeMarker = new Marker(map);
@@ -125,7 +126,7 @@ public class MainActivity extends Activity implements MapEventsReceiver {
 			nodeMarker.setTitle("Step " + i);
 			nodeMarker.setSnippet(node.mInstructions);
 			nodeMarker.setSubDescription(Road.getLengthDurationText(this, node.mLength, node.mDuration));
-			Drawable iconContinue = getResources().getDrawable(R.drawable.ic_continue);
+			Drawable iconContinue = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_continue, null);
 			nodeMarker.setImage(iconContinue);
 			//4. end
 
@@ -158,7 +159,7 @@ public class MainActivity extends Activity implements MapEventsReceiver {
 		RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(this);
 		//end of 10.
 		//11.1 Customizing the clusters design
-		Drawable clusterIconD = getResources().getDrawable(R.drawable.marker_poi_cluster);
+		Drawable clusterIconD = ResourcesCompat.getDrawable(getResources(), R.drawable.marker_poi_cluster, null);
 		Bitmap clusterIcon = ((BitmapDrawable) clusterIconD).getBitmap();
 		poiMarkers.setIcon(clusterIcon);
 		poiMarkers.getTextPaint().setTextSize(12 * getResources().getDisplayMetrics().density);
@@ -167,7 +168,7 @@ public class MainActivity extends Activity implements MapEventsReceiver {
 		poiMarkers.mTextAnchorV = 0.27f;
 		//end of 11.1
 		map.getOverlays().add(poiMarkers);
-		Drawable poiIcon = getResources().getDrawable(R.drawable.marker_poi_default);
+		Drawable poiIcon = ResourcesCompat.getDrawable(getResources(), R.drawable.marker_poi_default, null);
 		if (pois != null) {
 			for (POI poi : pois) {
 				Marker poiMarker = new Marker(map);
@@ -176,7 +177,7 @@ public class MainActivity extends Activity implements MapEventsReceiver {
 				poiMarker.setPosition(poi.mLocation);
 				poiMarker.setIcon(poiIcon);
 				if (poi.mThumbnail != null) {
-					poiMarker.setImage(new BitmapDrawable(poi.mThumbnail));
+					poiMarker.setImage(new BitmapDrawable(getResources(), poi.mThumbnail));
 				}
 				// 7.
 				poiMarker.setInfoWindow(new CustomInfoWindow(map));
@@ -199,7 +200,7 @@ public class MainActivity extends Activity implements MapEventsReceiver {
 
 		if (ok) {
 			//13.1 Simple styling
-			Drawable defaultMarker = getResources().getDrawable(R.drawable.marker_kml_point);
+			Drawable defaultMarker = ResourcesCompat.getDrawable(getResources(), R.drawable.marker_kml_point, null);
 			Bitmap defaultBitmap = ((BitmapDrawable) defaultMarker).getBitmap();
 			Style defaultStyle = new Style(defaultBitmap, 0x901010AA, 3.0f, 0x20AA1010);
 			//13.2 Advanced styling with Styler
@@ -391,7 +392,8 @@ public class MainActivity extends Activity implements MapEventsReceiver {
 		//18. Using GroundOverlay
 		GroundOverlay myGroundOverlay = new GroundOverlay(this);
 		myGroundOverlay.setPosition(p);
-		myGroundOverlay.setImage(getResources().getDrawable(R.drawable.ic_launcher).mutate());
+		Drawable d = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_launcher, null);
+		myGroundOverlay.setImage(d.mutate());
 		myGroundOverlay.setDimensions(2000.0f);
 		//myGroundOverlay.setTransparency(0.25f);
 		myGroundOverlay.setBearing(mGroundOverlayBearing);
