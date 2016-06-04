@@ -108,13 +108,21 @@
 			android:id="@+id/map"
 	        android:layout_width="fill_parent" 
 	        android:layout_height="fill_parent" />
+
         <Button
-            android:id="@+id/buttonTrackingMode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/btn_tracking_off" />
+			android:id="@+id/buttonTrackingMode"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentTop="true"
+			android:background="@drawable/btn_tracking_off" />
+		<Button
+			android:id="@+id/buttonMenu"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentBottom="true"
+			android:background="@drawable/btn_menu"/>
 
 		<Button
 			android:id="@+id/buttonFriends"

@@ -375,6 +375,14 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		mFriendsManager.onCreate(savedInstanceState);
 
 		checkPermissions();
+
+		Button menuButton = (Button) findViewById(R.id.buttonMenu);
+		menuButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				openOptionsMenu();
+			}
+		});
 	}
 
 	final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
