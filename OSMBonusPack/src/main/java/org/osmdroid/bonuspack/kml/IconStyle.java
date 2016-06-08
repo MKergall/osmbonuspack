@@ -50,9 +50,9 @@ public class IconStyle extends ColorStyle implements Parcelable {
 	 */
 	public void setIcon(String href, File containerFile, ZipFile kmzContainer){
 		mHref = href;
-		if (mHref == null)
+		if (mHref == null) {
 			mIcon = null;
-		if (mHref.startsWith("http://") || mHref.startsWith("https://")){
+		} else if (mHref.startsWith("http://") || mHref.startsWith("https://")) {
 			mIcon = mIconCache.get(mHref);
 		} else if (kmzContainer == null){
 			if (containerFile != null){
@@ -94,9 +94,10 @@ public class IconStyle extends ColorStyle implements Parcelable {
 	public void styleMarker(Marker marker, Context context){
 		BitmapDrawable icon = getFinalIcon(context);
 		marker.setIcon(icon);
-		marker.setAnchor(mHotSpot.getX(icon.getIntrinsicWidth()/mScale),
-				1.0f-mHotSpot.getY(icon.getIntrinsicHeight()/mScale));
-				//Y coords are top->bottom for Marker Anchor, and bottom->up for KML hotSpot
+		if (icon != null)
+			marker.setAnchor(mHotSpot.getX(icon.getIntrinsicWidth() / mScale),
+					1.0f - mHotSpot.getY(icon.getIntrinsicHeight() / mScale));
+		//Y coords are top->bottom for Marker Anchor, and bottom->up for KML hotSpot
 		marker.setRotation(mHeading);
 	}
 	
