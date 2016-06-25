@@ -30,7 +30,8 @@ public class GraphHopperRoadManager extends RoadManager {
 	protected String mServiceUrl;
 	protected String mKey;
 	protected boolean mWithElevation;
-	
+	protected boolean mAlternateAvailable;
+
 	/** mapping from GraphHopper directions to MapQuest maneuver IDs: */
 	static final HashMap<Integer, Integer> MANEUVERS;
 	static {
@@ -50,11 +51,12 @@ public class GraphHopperRoadManager extends RoadManager {
 	 * @param apiKey GraphHopper API key, mandatory to use the public GraphHopper service.
 	 * @see <a href="http://graphhopper.com/#enterprise">GraphHopper</a> to obtain an API key.
 	 */
-	public GraphHopperRoadManager(String apiKey) {
+	public GraphHopperRoadManager(String apiKey, boolean alternateAvailable) {
 		super();
 		mServiceUrl = SERVICE;
 		mKey = apiKey;
 		mWithElevation = false;
+		mAlternateAvailable = alternateAvailable;
 	}
 	
 	/** allows to request on an other site than GraphHopper demo site */
@@ -66,8 +68,8 @@ public class GraphHopperRoadManager extends RoadManager {
 	public void setElevation(boolean withElevation){
 		mWithElevation = withElevation;
 	}
-	
-	protected String getUrl(ArrayList<GeoPoint> waypoints){
+
+	protected String getUrl(ArrayList<GeoPoint> waypoints, boolean getAlternate) {
 		StringBuffer urlString = new StringBuffer(mServiceUrl);
 		urlString.append("key="+mKey);
 		for (int i=0; i<waypoints.size(); i++){
@@ -76,71 +78,82 @@ public class GraphHopperRoadManager extends RoadManager {
 		}
 		//urlString.append("&instructions=true"); already set by default
 		urlString.append("&elevation="+(mWithElevation?"true":"false"));
+		if (getAlternate && mAlternateAvailable)
+			urlString.append("&ch.disable=true&algorithm=alternative_route");
 		urlString.append(mOptions);
 		return urlString.toString();
 	}
 
-	@Override public Road getRoad(ArrayList<GeoPoint> waypoints) {
-		String url = getUrl(waypoints);
-		Log.d(BonusPackHelper.LOG_TAG, "GraphHopper.getRoad:"+url);
+	protected Road[] defaultRoad(ArrayList<GeoPoint> waypoints) {
+		Road[] roads = new Road[1];
+		roads[0] = new Road(waypoints);
+		return roads;
+	}
+
+	public Road[] getRoads(ArrayList<GeoPoint> waypoints, boolean getAlternate) {
+		String url = getUrl(waypoints, getAlternate);
+		Log.d(BonusPackHelper.LOG_TAG, "GraphHopper.getRoads:" + url);
 		String jString = BonusPackHelper.requestStringFromUrl(url);
 		if (jString == null) {
-			return new Road(waypoints);
+			return defaultRoad(waypoints);
 		}
-		Road road = new Road();
 		try {
 			JSONObject jRoot = new JSONObject(jString);
 			JSONArray jPaths = jRoot.optJSONArray("paths");
 			if (jPaths == null || jPaths.length() == 0){
+				return defaultRoad(waypoints);
+				/*
 				road = new Road(waypoints);
 				road.mStatus = STATUS_NO_ROUTE;
 				return road;
+				*/
 			}
-			JSONObject jFirstPath = jPaths.getJSONObject(0);
-			String route_geometry = jFirstPath.getString("points");
-			road.mRouteHigh = PolylineEncoder.decode(route_geometry, 10, mWithElevation);
-			JSONArray jInstructions = jFirstPath.getJSONArray("instructions");
-			int n = jInstructions.length();
-			for (int i=0; i<n; i++){
-				JSONObject jInstruction = jInstructions.getJSONObject(i);
-				RoadNode node = new RoadNode();
-				JSONArray jInterval = jInstruction.getJSONArray("interval");
-				int positionIndex = jInterval.getInt(0);
-				node.mLocation = road.mRouteHigh.get(positionIndex);
-				node.mLength = jInstruction.getDouble("distance")/1000.0;
-				node.mDuration = jInstruction.getInt("time")/1000.0; //Segment duration in seconds.
-				int direction = jInstruction.getInt("sign");
-				node.mManeuverType = getManeuverCode(direction);
-				node.mInstructions = jInstruction.getString("text");
-				road.mNodes.add(node);
+			Road[] roads = new Road[jPaths.length()];
+			for (int r = 0; r < jPaths.length(); r++) {
+				JSONObject jPath = jPaths.getJSONObject(r);
+				String route_geometry = jPath.getString("points");
+				Road road = new Road();
+				roads[r] = road;
+				road.mRouteHigh = PolylineEncoder.decode(route_geometry, 10, mWithElevation);
+				JSONArray jInstructions = jPath.getJSONArray("instructions");
+				int n = jInstructions.length();
+				for (int i = 0; i < n; i++) {
+					JSONObject jInstruction = jInstructions.getJSONObject(i);
+					RoadNode node = new RoadNode();
+					JSONArray jInterval = jInstruction.getJSONArray("interval");
+					int positionIndex = jInterval.getInt(0);
+					node.mLocation = road.mRouteHigh.get(positionIndex);
+					node.mLength = jInstruction.getDouble("distance") / 1000.0;
+					node.mDuration = jInstruction.getInt("time") / 1000.0; //Segment duration in seconds.
+					int direction = jInstruction.getInt("sign");
+					node.mManeuverType = getManeuverCode(direction);
+					node.mInstructions = jInstruction.getString("text");
+					road.mNodes.add(node);
+				}
+				road.mLength = jPath.getDouble("distance") / 1000.0;
+				road.mDuration = jPath.getInt("time") / 1000.0;
+				JSONArray jBBox = jPath.getJSONArray("bbox");
+				road.mBoundingBox = new BoundingBoxE6(jBBox.getDouble(3), jBBox.getDouble(2),
+						jBBox.getDouble(1), jBBox.getDouble(0));
+				road.mStatus = Road.STATUS_OK;
+				road.buildLegs(waypoints);
+				Log.d(BonusPackHelper.LOG_TAG, "GraphHopper.getRoads - finished");
 			}
-			road.mLength = jFirstPath.getDouble("distance")/1000.0;
-			road.mDuration = jFirstPath.getInt("time")/1000.0;
-			JSONArray jBBox = jFirstPath.getJSONArray("bbox");
-			road.mBoundingBox = new BoundingBoxE6(jBBox.getDouble(3), jBBox.getDouble(2), 
-					jBBox.getDouble(1), jBBox.getDouble(0));
-			road.mStatus = Road.STATUS_OK;
+			return roads;
 		} catch (JSONException e) {
-			road.mStatus = Road.STATUS_TECHNICAL_ISSUE;
 			e.printStackTrace();
+			return defaultRoad(waypoints);
 		}
-		if (road.mStatus != Road.STATUS_OK){
-			//Create default road:
-			int status = road.mStatus;
-			road = new Road(waypoints);
-			road.mStatus = status;
-		} else {
-			road.buildLegs(waypoints);
-		}
-		Log.d(BonusPackHelper.LOG_TAG, "GraphHopper.getRoad - finished");
-		return road;
 	}
 
 	@Override public Road[] getRoads(ArrayList<GeoPoint> waypoints) {
-		Road road = getRoad(waypoints);
-		Road[] roads = new Road[1];
-		roads[0] = road;
-		return roads;
+		return getRoads(waypoints, true);
+	}
+
+	@Override
+	public Road getRoad(ArrayList<GeoPoint> waypoints) {
+		Road[] roads = getRoads(waypoints, false);
+		return roads[0];
 	}
 
 	protected int getManeuverCode(int direction){

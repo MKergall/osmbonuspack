@@ -281,7 +281,7 @@ public class OSRMRoadManager extends RoadManager {
 	}
 
 	@Override public Road getRoad(ArrayList<GeoPoint> waypoints) {
-			Road[] roads = getRoads(waypoints, false);
+		Road[] roads = getRoads(waypoints, false);
 		return roads[0];
 	}
 

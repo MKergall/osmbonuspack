@@ -115,7 +115,7 @@ import java.util.concurrent.Executors;
  * @author M.Kergall
  *
  */
-public class MapActivity extends Activity implements MapEventsReceiver, LocationListener, SensorEventListener {
+public class MapActivity extends Activity implements MapEventsReceiver, LocationListener, SensorEventListener, MapView.OnFirstLayoutListener {
 	protected MapView map;
 
 	protected GeoPoint startPoint, destinationPoint;
@@ -430,6 +430,21 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			map.zoomToBoundingBox(bb, true);
 		}
 	}
+
+	//--- Stuff for setting the mapview on a box at startup:
+	BoundingBoxE6 mInitialBoundingBox = null;
+
+	void setInitialViewOn(BoundingBoxE6 bb) {
+		mInitialBoundingBox = bb;
+		map.addOnFirstLayoutListener(this);
+	}
+
+	@Override
+	public void onFirstLayout(View v, int left, int top, int right, int bottom) {
+		if (mInitialBoundingBox != null)
+			map.zoomToBoundingBox(mInitialBoundingBox, false);
+	}
+	//---
 
 	void savePrefs(){
 		SharedPreferences prefs = getSharedPreferences("OSMNAVIGATOR", MODE_PRIVATE);
@@ -917,19 +932,19 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 				roadManager = new OSRMRoadManager(mContext);
 				break;
 			case GRAPHHOPPER_FASTEST:
-				roadManager = new GraphHopperRoadManager(graphHopperApiKey);
+				roadManager = new GraphHopperRoadManager(graphHopperApiKey, false);
 				roadManager.addRequestOption("locale="+locale.getLanguage());
 				//roadManager = new MapQuestRoadManager(mapQuestApiKey);
 				//roadManager.addRequestOption("locale="+locale.getLanguage()+"_"+locale.getCountry());
 				break;
 			case GRAPHHOPPER_BICYCLE:
-				roadManager = new GraphHopperRoadManager(graphHopperApiKey);
+				roadManager = new GraphHopperRoadManager(graphHopperApiKey, false);
 				roadManager.addRequestOption("locale="+locale.getLanguage());
 				roadManager.addRequestOption("vehicle=bike");
 				//((GraphHopperRoadManager)roadManager).setElevation(true);
 				break;
 			case GRAPHHOPPER_PEDESTRIAN:
-				roadManager = new GraphHopperRoadManager(graphHopperApiKey);
+				roadManager = new GraphHopperRoadManager(graphHopperApiKey, false);
 				roadManager.addRequestOption("locale="+locale.getLanguage());
 				roadManager.addRequestOption("vehicle=foot");
 				//((GraphHopperRoadManager)roadManager).setElevation(true);
@@ -1278,7 +1293,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 					if (!mOnCreate)
 						setViewOn(bb);
 					else  //KO in onCreate (osmdroid bug) - Workaround:
-						map.getController().setCenter(bb.getCenter());
+						setInitialViewOn(bb);
 				}
 			}
 		}
