@@ -61,7 +61,7 @@ import java.util.ArrayList;
  * @author M.Kergall
  * @see <a href="https://github.com/MKergall/osmbonuspack">OSMBonusPack on GitHub</a>
  */
-public class MainActivity extends Activity implements MapEventsReceiver {
+public class MainActivity extends Activity implements MapEventsReceiver, MapView.OnFirstLayoutListener {
 
 	MapView map;
 	KmlDocument mKmlDocument;
@@ -210,9 +210,9 @@ public class MainActivity extends Activity implements MapEventsReceiver {
 			map.getOverlays().add(kmlOverlay);
 			BoundingBoxE6 bb = mKmlDocument.mKmlRoot.getBoundingBox();
 			if (bb != null) {
-				//map.zoomToBoundingBox(bb); => not working in onCreate - this is a well-known osmdroid bug. 
+				//map.zoomToBoundingBox(bb); => not working in onCreate - this is a well-known osmdroid issue.
 				//Workaround:
-				map.getController().setCenter(bb.getCenter());
+				setInitialViewOn(bb);
 			}
 		} else
 			Toast.makeText(this, "Error when loading KML", Toast.LENGTH_SHORT).show();
@@ -231,6 +231,21 @@ public class MainActivity extends Activity implements MapEventsReceiver {
 		MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(this, this);
 		map.getOverlays().add(0, mapEventsOverlay); //inserted at the "bottom" of all overlays
 	}
+
+	//--- Stuff for setting the mapview on a box at startup:
+	BoundingBoxE6 mInitialBoundingBox = null;
+
+	void setInitialViewOn(BoundingBoxE6 bb) {
+		mInitialBoundingBox = bb;
+		map.addOnFirstLayoutListener(this);
+	}
+
+	@Override
+	public void onFirstLayout(View v, int left, int top, int right, int bottom) {
+		if (mInitialBoundingBox != null)
+			map.zoomToBoundingBox(mInitialBoundingBox, false);
+	}
+	//---
 
 	//0. Using the Marker and Polyline overlays - advanced options
 	class OnMarkerDragListenerDrawer implements OnMarkerDragListener {
