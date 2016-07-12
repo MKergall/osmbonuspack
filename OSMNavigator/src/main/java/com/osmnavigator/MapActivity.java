@@ -46,6 +46,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
+import org.mapsforge.map.rendertheme.ExternalRenderTheme;
+import org.mapsforge.map.rendertheme.XmlRenderTheme;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
 import org.osmdroid.bonuspack.kml.KmlDocument;
@@ -98,6 +100,7 @@ import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 import org.osmdroid.views.overlay.mylocation.DirectedLocationOverlay;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -161,6 +164,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	static String PREF_LOCATIONS_KEY = "PREF_LOCATIONS";
 
 	OnlineTileSourceBase MAPBOXSATELLITELABELLED;
+	boolean mNightMode;
 
 	static final String userAgent = "OsmNavigator/1.0";
 
@@ -188,15 +192,15 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		map = (MapView) findViewById(R.id.map);
 
 		String tileProviderName = prefs.getString("TILE_PROVIDER", "Mapnik");
+		mNightMode = prefs.getBoolean("NIGHT_MODE", false);
 		try {
 			ITileSource tileSource = TileSourceFactory.getTileSource(tileProviderName);
 			map.setTileSource(tileSource);
-			if (map.getTileProvider().getTileSource() == TileSourceFactory.MAPQUESTOSM)
-				//restore night mode (as MapQuestOSM is used for night mode. Simple but really ugly solution...)
-				map.getOverlayManager().getTilesOverlay().setColorFilter(TilesOverlay.INVERT_COLORS);
 		} catch (IllegalArgumentException e) {
 			map.setTileSource(TileSourceFactory.MAPNIK);
 		}
+		if (mNightMode)
+			map.getOverlayManager().getTilesOverlay().setColorFilter(TilesOverlay.INVERT_COLORS);
 
 		map.setBuiltInZoomControls(true);
 		map.setMultiTouchControls(true);
@@ -435,8 +439,11 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	BoundingBoxE6 mInitialBoundingBox = null;
 
 	void setInitialViewOn(BoundingBoxE6 bb) {
-		mInitialBoundingBox = bb;
-		map.addOnFirstLayoutListener(this);
+		if (map.getScreenRect(null).height() == 0) {
+			mInitialBoundingBox = bb;
+			map.addOnFirstLayoutListener(this);
+		} else
+			map.zoomToBoundingBox(bb, false);
 	}
 
 	@Override
@@ -458,6 +465,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		MapTileProviderBase tileProvider = map.getTileProvider();
 		String tileProviderName = tileProvider.getTileSource().name();
 		ed.putString("TILE_PROVIDER", tileProviderName);
+		ed.putBoolean("NIGHT_MODE", mNightMode);
 		ed.putInt("ROUTE_PROVIDER", mWhichRouteProvider);
 		ed.commit();
 	}
@@ -1450,10 +1458,12 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			break;
 		}
 
-		if (map.getTileProvider().getTileSource() == TileSourceFactory.MAPNIK)
-			menu.findItem(R.id.menu_tile_mapnik).setChecked(true);
-		else if (map.getTileProvider().getTileSource() == TileSourceFactory.MAPQUESTOSM)
-			menu.findItem(R.id.menu_tile_mapnik_by_night).setChecked(true);
+		if (map.getTileProvider().getTileSource() == TileSourceFactory.MAPNIK) {
+			if (!mNightMode)
+				menu.findItem(R.id.menu_tile_mapnik).setChecked(true);
+			else
+				menu.findItem(R.id.menu_tile_mapnik_by_night).setChecked(true);
+		}
 		else if (map.getTileProvider().getTileSource() == MAPBOXSATELLITELABELLED)
 			menu.findItem(R.id.menu_tile_mapbox_satellite).setChecked(true);
 
@@ -1497,25 +1507,37 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 
 	boolean setMapsForgeTileProvider(){
 		String path = Environment.getExternalStorageDirectory().getPath()+"/mapsforge/";
+		Toast.makeText(this, "Loading MapsForge .map files and rendering theme from " + path, Toast.LENGTH_SHORT).show();
 		File folder = new File(path);
 		File[] listOfFiles = folder.listFiles();
 		if (listOfFiles == null)
 			return false;
-		/*
-		File mapFile = null;
+
+		//Build a list with only .map files; get rendering config file if any:
+		File renderingFile = null;
+		ArrayList<File> listOfMapFiles = new ArrayList<>(listOfFiles.length);
 		for (File file:listOfFiles){
 			if (file.isFile() && file.getName().endsWith(".map")){
-				mapFile = file;
+				listOfMapFiles.add(file);
+			} else if (file.isFile() && file.getName().endsWith(".xml")) {
+				renderingFile = file;
 			}
 		}
-		if (mapFile == null)
-			return false;
-		//TODO: build a list with only .map files; get rendering config file if any.
-		*/
+		listOfFiles = listOfMapFiles.toArray(listOfFiles);
+
+		//Use rendering file if any
+		XmlRenderTheme theme = null;
+		try {
+			if (renderingFile != null)
+				theme = new ExternalRenderTheme(renderingFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
 		if (AndroidGraphicFactory.INSTANCE == null)
 			AndroidGraphicFactory.createInstance(this.getApplication());
 		MapsForgeTileProvider mfProvider = new MapsForgeTileProvider(new SimpleRegisterReceiver(this),
-				MapsForgeTileSource.createFromFiles(listOfFiles));
+				MapsForgeTileSource.createFromFiles(listOfFiles, theme, "rendertheme-v4"));
 		map.setTileProvider(mfProvider);
 		return true;
 	}
@@ -1596,12 +1618,14 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			setStdTileProvider();
 			map.setTileSource(TileSourceFactory.MAPNIK);
 			map.getOverlayManager().getTilesOverlay().setColorFilter(null);
+			mNightMode = false;
 			item.setChecked(true);
 			return true;
 			case R.id.menu_tile_mapnik_by_night:
 			setStdTileProvider();
-			map.setTileSource(TileSourceFactory.MAPQUESTOSM);
+				map.setTileSource(TileSourceFactory.MAPNIK);
 				map.getOverlayManager().getTilesOverlay().setColorFilter(TilesOverlay.INVERT_COLORS);
+				mNightMode = true;
 			item.setChecked(true);
 			return true;
 		case R.id.menu_tile_mapbox_satellite:
