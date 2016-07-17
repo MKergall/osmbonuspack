@@ -1507,7 +1507,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 
 	boolean setMapsForgeTileProvider(){
 		String path = Environment.getExternalStorageDirectory().getPath()+"/mapsforge/";
-		Toast.makeText(this, "Loading MapsForge .map files and rendering theme from " + path, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Loading MapsForge .map files and rendering theme from " + path, Toast.LENGTH_LONG).show();
 		File folder = new File(path);
 		File[] listOfFiles = folder.listFiles();
 		if (listOfFiles == null)
@@ -1523,6 +1523,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 				renderingFile = file;
 			}
 		}
+		listOfFiles = new File[listOfMapFiles.size()];
 		listOfFiles = listOfMapFiles.toArray(listOfFiles);
 
 		//Use rendering file if any
@@ -1536,8 +1537,8 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 
 		if (AndroidGraphicFactory.INSTANCE == null)
 			AndroidGraphicFactory.createInstance(this.getApplication());
-		MapsForgeTileProvider mfProvider = new MapsForgeTileProvider(new SimpleRegisterReceiver(this),
-				MapsForgeTileSource.createFromFiles(listOfFiles, theme, "rendertheme-v4"));
+		MapsForgeTileSource source = MapsForgeTileSource.createFromFiles(listOfFiles, theme, "rendertheme-v4");
+		MapsForgeTileProvider mfProvider = new MapsForgeTileProvider(new SimpleRegisterReceiver(this), source);
 		map.setTileProvider(mfProvider);
 		return true;
 	}
