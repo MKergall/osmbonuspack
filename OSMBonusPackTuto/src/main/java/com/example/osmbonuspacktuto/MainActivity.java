@@ -210,7 +210,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 			map.getOverlays().add(kmlOverlay);
 			BoundingBoxE6 bb = mKmlDocument.mKmlRoot.getBoundingBox();
 			if (bb != null) {
-				//map.zoomToBoundingBox(bb); => not working in onCreate - this is a well-known osmdroid issue.
+				//map.zoomToBoundingBox(bb, false); //=> not working in onCreate - this is a well-known osmdroid issue.
 				//Workaround:
 				setInitialViewOn(bb);
 			}
@@ -236,8 +236,11 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 	BoundingBoxE6 mInitialBoundingBox = null;
 
 	void setInitialViewOn(BoundingBoxE6 bb) {
-		mInitialBoundingBox = bb;
-		map.addOnFirstLayoutListener(this);
+		if (map.getScreenRect(null).height() == 0) {
+			mInitialBoundingBox = bb;
+			map.addOnFirstLayoutListener(this);
+		} else
+			map.zoomToBoundingBox(bb, false);
 	}
 
 	@Override

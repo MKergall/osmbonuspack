@@ -2,13 +2,14 @@ package org.osmdroid.bonuspack.utils;
 
 import android.util.Log;
 
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+import okhttp3.OkHttpClient.Builder;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * A "very very simple to use" class for performing http get and post requests. 
@@ -35,9 +36,14 @@ public class HttpConnection {
 
     private static OkHttpClient getOkHttpClient() {
         if (client == null) {
-            client = new OkHttpClient();
+            Builder b = new Builder();
+            b.connectTimeout(TIMEOUT_CONNECTION, TimeUnit.MILLISECONDS);
+            b.readTimeout(TIMEOUT_SOCKET, TimeUnit.MILLISECONDS);
+            client = b.build();
+            /*
             client.setConnectTimeout(TIMEOUT_CONNECTION, TimeUnit.MILLISECONDS);
             client.setReadTimeout(TIMEOUT_SOCKET, TimeUnit.MILLISECONDS);
+            */
         }
         return client;
     }
@@ -73,15 +79,10 @@ public class HttpConnection {
 	 * @return the opened InputStream, or null if creation failed for any reason.
 	 */
 	public InputStream getStream() {
-        try {
-            if (response == null)
-                return null;
-            stream = response.body().byteStream();
-            return stream;
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (response == null)
             return null;
-        }
+        stream = response.body().byteStream();
+        return stream;
     }
 
 	/**
