@@ -27,6 +27,7 @@ import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -144,11 +145,15 @@ public class FriendsManager {
 
     String callStartSharing(String nickname, String group, String message) {
         //List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-        String url = NAV_SERVER_URL + "jstart.php?"
-                + "nickname=" + URLEncoder.encode(nickname)
-                + "&group_id=" + URLEncoder.encode(group)
-                + "&user_id=" + URLEncoder.encode(getUniqueId())
-                + "&message=" + URLEncoder.encode(message);
+        String url = null;
+        try {
+            url = NAV_SERVER_URL + "jstart.php?"
+                    + "nickname=" + URLEncoder.encode(nickname, "UTF-8")
+                    + "&group_id=" + URLEncoder.encode(group, "UTF-8")
+                    + "&user_id=" + URLEncoder.encode(getUniqueId(), "UTF-8")
+                    + "&message=" + URLEncoder.encode(message, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+        }
         /*
 		nameValuePairs.add(new BasicNameValuePair("nickname", nickname));
 		nameValuePairs.add(new BasicNameValuePair("group_id", group));
@@ -219,12 +224,16 @@ public class FriendsManager {
         int hasLocation = (myPosition != null ? 1 : 0);
         if (myPosition == null)
             myPosition = new GeoPoint(0.0, 0.0);
-        String url = NAV_SERVER_URL + "jupdate.php?"
-                + "user_id=" + URLEncoder.encode(getUniqueId())
-                + "&has_location=" + hasLocation
-                + "&lat=" + myPosition.getLatitude()
-                + "&lon=" + myPosition.getLongitude()
-                + "&bearing=" + mActivity.mAzimuthAngleSpeed;
+        String url = null;
+        try {
+            url = NAV_SERVER_URL + "jupdate.php?"
+                    + "user_id=" + URLEncoder.encode(getUniqueId(), "UTF-8")
+                    + "&has_location=" + hasLocation
+                    + "&lat=" + myPosition.getLatitude()
+                    + "&lon=" + myPosition.getLongitude()
+                    + "&bearing=" + mActivity.mAzimuthAngleSpeed;
+        } catch (UnsupportedEncodingException e) {
+        }
         Log.d(BonusPackHelper.LOG_TAG, "callUpdateSharing:" + url);
         String result = BonusPackHelper.requestStringFromUrl(url);
         if (result == null) {
@@ -317,8 +326,12 @@ public class FriendsManager {
 
     String callStopSharing() {
         mFriends = null;
-        String url = NAV_SERVER_URL + "jstop.php?"
-                + "user_id=" + URLEncoder.encode(getUniqueId());
+        String url = null;
+        try {
+            url = NAV_SERVER_URL + "jstop.php?"
+                    + "user_id=" + URLEncoder.encode(getUniqueId(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+        }
         String result = BonusPackHelper.requestStringFromUrl(url);
         if (result == null) {
             return "Technical error with the server";
