@@ -36,7 +36,7 @@ public class GeocoderNominatim {
 	public static final String MAPQUEST_SERVICE_URL = "http://open.mapquestapi.com/nominatim/v1/";
 	
 	protected Locale mLocale;
-	protected String mServiceUrl;
+	protected String mServiceUrl, mKey;
 	protected String mUserAgent;
 	protected boolean mPolygon;
 	
@@ -63,7 +63,14 @@ public class GeocoderNominatim {
 	public void setService(String serviceUrl){
 		mServiceUrl = serviceUrl;
 	}
-	
+
+	/**
+	 * Set AppKey for MapQuest open service
+	 */
+	public void setKey(String appKey) {
+		mKey = appKey;
+	}
+
 	/**
 	 * @param polygon true to get the polygon enclosing the location. 
 	 */
@@ -177,9 +184,10 @@ public class GeocoderNominatim {
 	 */
 	public List<Address> getFromLocation(double latitude, double longitude, int maxResults) 
 	throws IOException {
-		String url = mServiceUrl
-			+ "reverse?"
-			+ "format=json"
+		String url = mServiceUrl + "reverse?";
+		if (mKey != null)
+			url += "key=" + mKey + "&";
+		url += "format=json"
 			+ "&accept-language=" + mLocale.getLanguage()
 			//+ "&addressdetails=1"
 			+ "&lat=" + latitude 
@@ -212,9 +220,10 @@ public class GeocoderNominatim {
 			double upperRightLatitude, double upperRightLongitude,
 			boolean bounded)
 	throws IOException {
-		String url = mServiceUrl
-				+ "search?"
-				+ "format=json"
+		String url = mServiceUrl + "search?";
+		if (mKey != null)
+			url += "key=" + mKey + "&";
+		url += "format=json"
 				+ "&accept-language=" + mLocale.getLanguage()
 				+ "&addressdetails=1"
 				+ "&limit=" + maxResults
