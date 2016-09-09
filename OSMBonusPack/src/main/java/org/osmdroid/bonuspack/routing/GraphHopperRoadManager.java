@@ -1,15 +1,13 @@
 package org.osmdroid.bonuspack.routing;
 
 import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.bonuspack.utils.PolylineEncoder;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -70,7 +68,7 @@ public class GraphHopperRoadManager extends RoadManager {
 	}
 
 	protected String getUrl(ArrayList<GeoPoint> waypoints, boolean getAlternate) {
-		StringBuffer urlString = new StringBuffer(mServiceUrl);
+		StringBuilder urlString = new StringBuilder(mServiceUrl);
 		urlString.append("key="+mKey);
 		for (int i=0; i<waypoints.size(); i++){
 			GeoPoint p = waypoints.get(i);
@@ -133,7 +131,7 @@ public class GraphHopperRoadManager extends RoadManager {
 				road.mLength = jPath.getDouble("distance") / 1000.0;
 				road.mDuration = jPath.getInt("time") / 1000.0;
 				JSONArray jBBox = jPath.getJSONArray("bbox");
-				road.mBoundingBox = new BoundingBoxE6(jBBox.getDouble(3), jBBox.getDouble(2),
+				road.mBoundingBox = new BoundingBox(jBBox.getDouble(3), jBBox.getDouble(2),
 						jBBox.getDouble(1), jBBox.getDouble(0));
 				road.mStatus = Road.STATUS_OK;
 				road.buildLegs(waypoints);

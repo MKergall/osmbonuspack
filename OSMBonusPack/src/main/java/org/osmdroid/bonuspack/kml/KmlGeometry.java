@@ -5,7 +5,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.osmdroid.bonuspack.kml.KmlFeature.Styler;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Overlay;
@@ -33,7 +33,7 @@ public abstract class KmlGeometry implements Cloneable, Parcelable {
 	public abstract void saveAsKML(Writer writer);
 	public abstract JsonObject asGeoJSON();
 	public abstract Overlay buildOverlay(MapView map, Style defaultStyle, Styler styler, KmlPlacemark kmlPlacemark, KmlDocument kmlDocument);
-	public abstract BoundingBoxE6 getBoundingBox();
+	public abstract BoundingBox getBoundingBox();
 
 	//-----------------------------------------------------
 	
@@ -92,7 +92,7 @@ public abstract class KmlGeometry implements Cloneable, Parcelable {
 	public static ArrayList<GeoPoint> cloneArrayOfGeoPoint(ArrayList<GeoPoint> coords){
 		ArrayList<GeoPoint> result = new ArrayList<GeoPoint>(coords.size());
 		for (GeoPoint p:coords)
-			result.add((GeoPoint)p.clone());
+			result.add(p.clone());
 		return result;
 	}
 	
@@ -141,7 +141,7 @@ public abstract class KmlGeometry implements Cloneable, Parcelable {
 	//Cloneable implementation ------------------------------------
 	
 	@Override public KmlGeometry clone(){
-		KmlGeometry kmlGeometry = null;
+		KmlGeometry kmlGeometry;
 		try {
 			kmlGeometry = (KmlGeometry)super.clone();
 		} catch (CloneNotSupportedException e){

@@ -1,21 +1,17 @@
 package org.osmdroid.bonuspack.kml;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import org.osmdroid.bonuspack.kml.KmlFeature.Styler;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.Overlay;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -63,8 +59,7 @@ public class KmlMultiGeometry extends KmlGeometry implements Cloneable, Parcelab
 	/** Build a FolderOverlay containing all overlays from this MultiGeometry items */
 	@Override public Overlay buildOverlay(MapView map, Style defaultStyle, Styler styler, KmlPlacemark kmlPlacemark, 
 			KmlDocument kmlDocument){
-		Context context = map.getContext();
-		FolderOverlay folderOverlay = new FolderOverlay(context);
+		FolderOverlay folderOverlay = new FolderOverlay();
 		for (KmlGeometry k:mItems){
 			Overlay overlay = k.buildOverlay(map, defaultStyle, styler, kmlPlacemark, kmlDocument);
 			folderOverlay.add(overlay);
@@ -93,15 +88,15 @@ public class KmlMultiGeometry extends KmlGeometry implements Cloneable, Parcelab
 		return json;
 	}
 
-	@Override public BoundingBoxE6 getBoundingBox(){
-		BoundingBoxE6 finalBB = null;
+	@Override public BoundingBox getBoundingBox(){
+		BoundingBox finalBB = null;
 		for (KmlGeometry item:mItems){
-			BoundingBoxE6 itemBB = item.getBoundingBox();
+			BoundingBox itemBB = item.getBoundingBox();
 			if (itemBB != null){
 				if (finalBB == null){
-					finalBB = BonusPackHelper.cloneBoundingBoxE6(itemBB);
+					finalBB = BonusPackHelper.cloneBoundingBox(itemBB);
 				} else {
-					finalBB = BonusPackHelper.concatBoundingBoxE6(itemBB, finalBB);
+					finalBB = BonusPackHelper.concatBoundingBox(itemBB, finalBB);
 				}
 			}
 		}

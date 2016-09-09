@@ -12,7 +12,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.IOException;
@@ -157,7 +157,7 @@ public class GeocoderNominatim {
 		}
 		if (jResult.has("boundingbox")){
 			JsonArray jBoundingBox = jResult.get("boundingbox").getAsJsonArray();
-			BoundingBoxE6 bb = new BoundingBoxE6(
+			BoundingBox bb = new BoundingBox(
 					jBoundingBox.get(1).getAsDouble(), jBoundingBox.get(2).getAsDouble(), 
 					jBoundingBox.get(0).getAsDouble(), jBoundingBox.get(3).getAsDouble());
 			extras.putParcelable("boundingbox", bb);
@@ -282,7 +282,7 @@ public class GeocoderNominatim {
 	 * Equivalent to Geocoder::getFromLocation(String locationName, int maxResults). <br>
 	 * 
 	 * Some useful information, returned by Nominatim, that doesn't fit naturally within Android Address, are added in the bundle Address.getExtras():<br>
-	 * "boundingbox": the enclosing bounding box, as a BoundingBoxE6<br>
+	 * "boundingbox": the enclosing bounding box, as a BoundingBox<br>
 	 * "osm_id": the OSM id, as a long<br>
 	 * "osm_type": one of the 3 OSM types, as a string (node, way, or relation). <br>
 	 * "display_name": the address, as a single String<br>

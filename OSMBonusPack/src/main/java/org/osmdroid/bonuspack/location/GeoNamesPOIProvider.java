@@ -7,7 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.bonuspack.utils.HttpConnection;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -41,7 +41,7 @@ public class GeoNamesPOIProvider {
 	}
 	
 	private String getUrlCloseTo(GeoPoint p, int maxResults, double maxDistance){
-		StringBuffer url = new StringBuffer("http://api.geonames.org/findNearbyWikipediaJSON?");
+		StringBuilder url = new StringBuilder("http://api.geonames.org/findNearbyWikipediaJSON?");
 		url.append("lat="+p.getLatitude());
 		url.append("&lng="+p.getLongitude());
 		url.append("&maxRows="+maxResults);
@@ -51,12 +51,12 @@ public class GeoNamesPOIProvider {
 		return url.toString();
 	}
 	
-	private String getUrlInside(BoundingBoxE6 boundingBox, int maxResults){
-		StringBuffer url = new StringBuffer("http://api.geonames.org/wikipediaBoundingBoxJSON?");
-		url.append("south="+boundingBox.getLatSouthE6()*1E-6);
-		url.append("&north="+boundingBox.getLatNorthE6()*1E-6);
-		url.append("&east="+boundingBox.getLonEastE6()*1E-6);
-		url.append("&west="+boundingBox.getLonWestE6()*1E-6);
+	private String getUrlInside(BoundingBox boundingBox, int maxResults){
+		StringBuilder url = new StringBuilder("http://api.geonames.org/wikipediaBoundingBoxJSON?");
+		url.append("south="+boundingBox.getLatSouth());
+		url.append("&north="+boundingBox.getLatNorth());
+		url.append("&east="+boundingBox.getLonEast());
+		url.append("&west="+boundingBox.getLonWest());
 		url.append("&maxRows="+maxResults);
 		url.append("&lang="+Locale.getDefault().getLanguage());
 		url.append("&username="+mUserName);
@@ -151,7 +151,7 @@ public class GeoNamesPOIProvider {
 	 * @param maxResults
 	 * @return list of POI, Wikipedia entries inside the bounding box. Null if technical issue. 
 	 */
-	public ArrayList<POI> getPOIInside(BoundingBoxE6 boundingBox, int maxResults){
+	public ArrayList<POI> getPOIInside(BoundingBox boundingBox, int maxResults){
 		String url = getUrlInside(boundingBox, maxResults);
 		return getThem(url);
 	}
@@ -205,7 +205,7 @@ class GeoNamesXMLHandler extends DefaultHandler {
 		} else if (localName.equals("entry")) {
 			mPOI.mLocation = new GeoPoint(mLat, mLng);
 			mPOIs.add(mPOI);
-		};
+		}
 	}
 
 }

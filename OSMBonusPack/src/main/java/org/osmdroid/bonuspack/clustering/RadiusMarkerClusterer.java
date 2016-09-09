@@ -8,16 +8,13 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-
 import org.osmdroid.bonuspack.R;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
-
 import java.util.ArrayList;
 import java.util.Iterator;
-
 
 /**
  * Radius-based Clustering algorithm:
@@ -45,8 +42,7 @@ public class RadiusMarkerClusterer extends MarkerClusterer {
     public float mTextAnchorU = Marker.ANCHOR_CENTER, mTextAnchorV = Marker.ANCHOR_CENTER;
 
     public RadiusMarkerClusterer(Context ctx) {
-        super(ctx);
-
+        super();
         mTextPaint = new Paint();
         mTextPaint.setColor(Color.WHITE);
         mTextPaint.setTextSize(15 * ctx.getResources().getDisplayMetrics().density);
@@ -155,7 +151,7 @@ public class RadiusMarkerClusterer extends MarkerClusterer {
         int screenWidth = mScreenRect.right - mScreenRect.left;
         int screenHeight = mScreenRect.bottom - mScreenRect.top;
 
-        BoundingBoxE6 bb = mapView.getBoundingBox();
+        BoundingBox bb = mapView.getBoundingBox();
 
         double diagonalInMeters = bb.getDiagonalLengthInMeters();
         double diagonalInPixels = Math.sqrt(screenWidth * screenWidth + screenHeight * screenHeight);

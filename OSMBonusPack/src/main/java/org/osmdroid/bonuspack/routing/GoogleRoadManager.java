@@ -5,7 +5,7 @@ import android.util.Log;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.bonuspack.utils.HttpConnection;
 import org.osmdroid.bonuspack.utils.PolylineEncoder;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -37,7 +37,7 @@ public class GoogleRoadManager extends RoadManager {
 	 * Build the URL to Google Directions service returning a route in XML format
 	 */
 	protected String getUrl(ArrayList<GeoPoint> waypoints, boolean getAlternates) {
-		StringBuffer urlString = new StringBuffer(GOOGLE_DIRECTIONS_SERVICE);
+		StringBuilder urlString = new StringBuilder(GOOGLE_DIRECTIONS_SERVICE);
 		urlString.append("origin=");
 		GeoPoint p = waypoints.get(0);
 		urlString.append(geoPointAsString(p));
@@ -96,8 +96,7 @@ public class GoogleRoadManager extends RoadManager {
 	}
 
 	@Override public Road[] getRoads(ArrayList<GeoPoint> waypoints) {
-		Road[] roads = getRoads(waypoints, true);
-		return roads;
+		return getRoads(waypoints, true);
 	}
 
 	@Override public Road getRoad(ArrayList<GeoPoint> waypoints) {
@@ -235,7 +234,7 @@ class GoogleDirectionsHandler extends DefaultHandler {
 				mWest = mLng;
 			}
 		} else if (localName.equals("bounds")){
-			mCurrentRoad.mBoundingBox = new BoundingBoxE6(mNorth, mEast, mSouth, mWest);
+			mCurrentRoad.mBoundingBox = new BoundingBox(mNorth, mEast, mSouth, mWest);
 			isBB = false;
 		}
 	}

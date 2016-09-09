@@ -55,11 +55,12 @@ public abstract class RoadManager {
 	 * @return the GeoPoint as a string, properly formatted: lat,lon
 	 */
 	protected String geoPointAsString(GeoPoint p){
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		double d = p.getLatitude();
 		result.append(Double.toString(d));
 		d = p.getLongitude();
-		result.append("," + Double.toString(d));
+		result.append(",");
+		result.append(Double.toString(d));
 		return result.toString();
 	}
 	
@@ -68,10 +69,9 @@ public abstract class RoadManager {
 	 * @param road
 	 * @param color
 	 * @param width
-	 * @param context
 	 */
-	public static Polyline buildRoadOverlay(Road road, int color, float width, Context context){
-		Polyline roadOverlay = new Polyline(context);
+	public static Polyline buildRoadOverlay(Road road, int color, float width){
+		Polyline roadOverlay = new Polyline();
 		roadOverlay.setColor(color);
 		roadOverlay.setWidth(width);
 		if (road != null) {
@@ -85,8 +85,8 @@ public abstract class RoadManager {
 	 * Builds an overlay for the road shape with a default (and nice!) style. 
 	 * @return route shape overlay
 	 */
-	public static Polyline buildRoadOverlay(Road road, Context context){
-		return buildRoadOverlay(road, 0x800000FF, 5.0f, context);
+	public static Polyline buildRoadOverlay(Road road){
+		return buildRoadOverlay(road, 0x800000FF, 5.0f);
 	}
 
 }

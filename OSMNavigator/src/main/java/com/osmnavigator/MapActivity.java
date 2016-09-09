@@ -81,6 +81,7 @@ import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.util.ManifestUtil;
 import org.osmdroid.tileprovider.util.SimpleRegisterReceiver;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.NetworkLocationIgnorer;
@@ -207,7 +208,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		IMapController mapController = map.getController();
 
 		//To use MapEventsReceiver methods, we add a MapEventsOverlay:
-		MapEventsOverlay overlay = new MapEventsOverlay(this, this);
+		MapEventsOverlay overlay = new MapEventsOverlay(this);
 		map.getOverlays().add(overlay);
 
 		mLocationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
@@ -252,7 +253,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		map.getOverlays().add(scaleBarOverlay);
 
 		// Itinerary markers:
-		mItineraryMarkers = new FolderOverlay(this);
+		mItineraryMarkers = new FolderOverlay();
 		mItineraryMarkers.setName(getString(R.string.itinerary_markers_title));
 		map.getOverlays().add(mItineraryMarkers);
 		mViaPointInfoWindow = new ViaPointInfoWindow(R.layout.itinerary_bubble, map);
@@ -292,10 +293,10 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			}
 		});
 
-		View expander = (View)findViewById(R.id.expander);
+		View expander = findViewById(R.id.expander);
 		expander.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				View searchPanel = (View)findViewById(R.id.search_panel);
+				View searchPanel = findViewById(R.id.search_panel);
 				if (searchPanel.getVisibility() == View.VISIBLE){
 					searchPanel.setVisibility(View.GONE);
 				} else {
@@ -303,7 +304,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 				}
 			}
 		});
-		View searchPanel = (View)findViewById(R.id.search_panel);
+		View searchPanel = findViewById(R.id.search_panel);
 		searchPanel.setVisibility(prefs.getInt("PANEL_VISIBILITY", View.VISIBLE));
 
 		registerForContextMenu(searchDestButton);
@@ -313,7 +314,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		//Route and Directions
 		mWhichRouteProvider = prefs.getInt("ROUTE_PROVIDER", OSRM);
 
-		mRoadNodeMarkers = new FolderOverlay(this);
+		mRoadNodeMarkers = new FolderOverlay();
 		mRoadNodeMarkers.setName("Route Steps");
 		map.getOverlays().add(mRoadNodeMarkers);
 
@@ -429,16 +430,16 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		}
 	}
 
-	void setViewOn(BoundingBoxE6 bb){
+	void setViewOn(BoundingBox bb){
 		if (bb != null){
 			map.zoomToBoundingBox(bb, true);
 		}
 	}
 
 	//--- Stuff for setting the mapview on a box at startup:
-	BoundingBoxE6 mInitialBoundingBox = null;
+	BoundingBox mInitialBoundingBox = null;
 
-	void setInitialViewOn(BoundingBoxE6 bb) {
+	void setInitialViewOn(BoundingBox bb) {
 		if (map.getScreenRect(null).height() == 0) {
 			mInitialBoundingBox = bb;
 			map.addOnFirstLayoutListener(this);
@@ -460,14 +461,14 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		GeoPoint c = (GeoPoint) map.getMapCenter();
 		ed.putFloat("MAP_CENTER_LAT", (float)c.getLatitude());
 		ed.putFloat("MAP_CENTER_LON", (float)c.getLongitude());
-		View searchPanel = (View)findViewById(R.id.search_panel);
+		View searchPanel = findViewById(R.id.search_panel);
 		ed.putInt("PANEL_VISIBILITY", searchPanel.getVisibility());
 		MapTileProviderBase tileProvider = map.getTileProvider();
 		String tileProviderName = tileProvider.getTileSource().name();
 		ed.putString("TILE_PROVIDER", tileProviderName);
 		ed.putBoolean("NIGHT_MODE", mNightMode);
 		ed.putInt("ROUTE_PROVIDER", mWhichRouteProvider);
-		ed.commit();
+		ed.apply();
 	}
 
 	/**
@@ -518,7 +519,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 				KmlFeature selectedFeature = intent.getParcelableExtra("KML_FEATURE");
 				if (selectedFeature == null)
 					break;
-				BoundingBoxE6 bb = selectedFeature.getBoundingBox();
+				BoundingBox bb = selectedFeature.getBoundingBox();
 				setViewOn(bb);
 				break;
 			case KmlStylesActivity.KML_STYLES_REQUEST:
@@ -628,10 +629,10 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			GeocoderNominatim geocoder = new GeocoderNominatim(getApplicationContext(), userAgent);
 			geocoder.setOptions(true); //ask for enclosing polygon (if any)
 			try {
-				BoundingBoxE6 viewbox = map.getBoundingBox();
+				BoundingBox viewbox = map.getBoundingBox();
 				List<Address> foundAdresses = geocoder.getFromLocationName(locationAddress, 1,
-						viewbox.getLatSouthE6()*1E-6, viewbox.getLonEastE6()*1E-6,
-						viewbox.getLatNorthE6()*1E-6, viewbox.getLonWestE6()*1E-6, false);
+						viewbox.getLatSouth(), viewbox.getLonEast(),
+						viewbox.getLatNorth(), viewbox.getLonWest(), false);
 				return foundAdresses;
 			} catch (Exception e) {
 				return null;
@@ -698,15 +699,15 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		int location = -1;
 		if (mDestinationPolygon != null)
 			location = mapOverlays.indexOf(mDestinationPolygon);
-		mDestinationPolygon = new Polygon(this);
+		mDestinationPolygon = new Polygon();
 		mDestinationPolygon.setFillColor(0x15FF0080);
 		mDestinationPolygon.setStrokeColor(0x800000FF);
 		mDestinationPolygon.setStrokeWidth(5.0f);
 		mDestinationPolygon.setTitle(name);
-		BoundingBoxE6 bb = null;
+		BoundingBox bb = null;
 		if (polygon != null){
 			mDestinationPolygon.setPoints(polygon);
-			bb = BoundingBoxE6.fromGeoPoints(polygon);
+			bb = BoundingBox.fromGeoPoints(polygon);
 		}
 		if (location != -1)
 			mapOverlays.set(location, mDestinationPolygon);
@@ -881,7 +882,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			polyline.showInfoWindow(eventPos);
 			return true;
 		}
-	};
+	}
 
 	void updateUIWithRoads(Road[] roads){
 		mRoadNodeMarkers.getItems().clear();
@@ -901,7 +902,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			Toast.makeText(map.getContext(), "No possible route here", Toast.LENGTH_SHORT).show();
 		mRoadOverlays = new Polyline[roads.length];
 		for (int i=0; i<roads.length; i++) {
-			Polyline roadPolyline = RoadManager.buildRoadOverlay(roads[i], this);
+			Polyline roadPolyline = RoadManager.buildRoadOverlay(roads[i]);
 			mRoadOverlays[i] = roadPolyline;
 			if (mWhichRouteProvider == GRAPHHOPPER_BICYCLE || mWhichRouteProvider == GRAPHHOPPER_PEDESTRIAN) {
 				Paint p = roadPolyline.getPaint();
@@ -1088,7 +1089,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		String message;
 		protected ArrayList<POI> doInBackground(Object... params) {
 			mFeatureTag = (String)params[0];
-			BoundingBoxE6 bb = map.getBoundingBox();
+			BoundingBox bb = map.getBoundingBox();
 			if (mFeatureTag == null || mFeatureTag.equals("")){
 				return null;
 			} else if (mFeatureTag.equals("wikipedia")){
@@ -1168,7 +1169,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			@Override public void onClick(DialogInterface dialog, int which) {
 				String localFileName = input.getText().toString();
 				SharedPreferences prefs = getSharedPreferences("OSMNAVIGATOR", MODE_PRIVATE);
-				prefs.edit().putString("KML_LOCAL_FILE", localFileName).commit();
+				prefs.edit().putString("KML_LOCAL_FILE", localFileName).apply();
 				dialog.cancel();
 				if (mDialogForOpen){
 					File file = mKmlDocument.getDefaultPathForAndroid(localFileName);
@@ -1198,7 +1199,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			@Override public void onClick(DialogInterface dialog, int which) {
 				String uri = input.getText().toString();
 				SharedPreferences prefs = getSharedPreferences("OSMNAVIGATOR", MODE_PRIVATE);
-				prefs.edit().putString("KML_URI", uri).commit();
+				prefs.edit().putString("KML_URI", uri).apply();
 				dialog.cancel();
 				openFile(uri, false, false);
 			}
@@ -1224,7 +1225,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			public void onClick(DialogInterface dialog, int which) {
 				String query = input.getText().toString();
 				SharedPreferences prefs = getSharedPreferences("OSMNAVIGATOR", MODE_PRIVATE);
-				prefs.edit().putString("OVERPASS_QUERY", query).commit();
+				prefs.edit().putString("OVERPASS_QUERY", query).apply();
 				dialog.cancel();
 				openFile(query, false, true);
 			}
@@ -1296,7 +1297,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 				Toast.makeText(getApplicationContext(), "Sorry, unable to read "+mUri, Toast.LENGTH_SHORT).show();
 			updateUIWithKml();
 			if (ok){
-				BoundingBoxE6 bb = mKmlDocument.mKmlRoot.getBoundingBox();
+				BoundingBox bb = mKmlDocument.mKmlRoot.getBoundingBox();
 				if (bb != null){
 					if (!mOnCreate)
 						setViewOn(bb);
@@ -1329,8 +1330,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	Style buildDefaultStyle(){
 		Drawable defaultKmlMarker = ResourcesCompat.getDrawable(getResources(), R.drawable.marker_kml_point, null);
 		Bitmap bitmap = ((BitmapDrawable)defaultKmlMarker).getBitmap();
-		Style defaultStyle = new Style(bitmap, 0x901010AA, 3.0f, 0x20AA1010);
-		return defaultStyle;
+		return new Style(bitmap, 0x901010AA, 3.0f, 0x20AA1010);
 	}
 
 	void updateUIWithKml(){
@@ -1646,14 +1646,14 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			CacheManager cacheManager = new CacheManager(map);
 			int zoomMin = map.getZoomLevel();
 			int zoomMax = map.getZoomLevel()+4;
-			cacheManager.downloadAreaAsync(this, map.getBoundingBox(), zoomMin, zoomMax);
+			cacheManager.downloadAreaAsync(this, map.getBoundingBoxE6(), zoomMin, zoomMax);
 			return true;
 			}
 		case R.id.menu_clear_view_area:{
 			CacheManager cacheManager = new CacheManager(map);
 			int zoomMin = map.getZoomLevel();
 			int zoomMax = map.getZoomLevel()+7;
-			cacheManager.cleanAreaAsync(this, map.getBoundingBox(), zoomMin, zoomMax);
+			cacheManager.cleanAreaAsync(this, map.getBoundingBoxE6(), zoomMin, zoomMax);
 			return true;
 			}
 		case R.id.menu_cache_usage:{
@@ -1704,7 +1704,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 
 			//TODO: check if speed is not too small
 			if (mSpeed >= 0.1){
-				mAzimuthAngleSpeed = (float)pLoc.getBearing();
+				mAzimuthAngleSpeed = pLoc.getBearing();
 				myLocationOverlay.setBearing(mAzimuthAngleSpeed);
 			}
 		}

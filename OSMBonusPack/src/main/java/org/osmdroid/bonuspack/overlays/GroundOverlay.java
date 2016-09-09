@@ -4,8 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.Projection;
@@ -31,8 +30,8 @@ public class GroundOverlay extends Overlay {
 	public final static float NO_DIMENSION = -1.0f;
 	protected Point mPositionPixels, mSouthEastPixels;
 
-	public GroundOverlay(final Context resourceProxy) {
-		super(resourceProxy);
+	public GroundOverlay() {
+		super();
 		mWidth = 10.0f;
 		mHeight = NO_DIMENSION;
 		mBearing = 0.0f;
@@ -93,15 +92,15 @@ public class GroundOverlay extends Overlay {
 	
 	/** @return the bounding box, 
 	 * not taking into account the bearing => TODO... */
-	public BoundingBoxE6 getBoundingBox(){
+	public BoundingBox getBoundingBox(){
 		if (mHeight == NO_DIMENSION && mImage != null){
 			mHeight = mWidth * mImage.getIntrinsicHeight() / mImage.getIntrinsicWidth();
 		}
 		GeoPoint pEast = mPosition.destinationPoint(mWidth, 90.0f);
 		GeoPoint pSouthEast = pEast.destinationPoint(mHeight, -180.0f);
-		int north = mPosition.getLatitudeE6()*2 - pSouthEast.getLatitudeE6();
-		int west = mPosition.getLongitudeE6()*2 - pEast.getLongitudeE6();
-		return new BoundingBoxE6(north, pEast.getLongitudeE6(), pSouthEast.getLatitudeE6(), west);
+		double north = mPosition.getLatitude()*2 - pSouthEast.getLatitude();
+		double west = mPosition.getLongitude()*2 - pEast.getLongitude();
+		return new BoundingBox(north, pEast.getLongitude(), pSouthEast.getLatitude(), west);
 	}
 	
 	@Override protected void draw(Canvas canvas, MapView mapView, boolean shadow) {

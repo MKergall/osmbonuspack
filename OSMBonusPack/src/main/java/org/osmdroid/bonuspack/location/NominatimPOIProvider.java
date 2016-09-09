@@ -6,7 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -44,8 +44,8 @@ public class NominatimPOIProvider {
 		mService = serviceUrl;
 	}
 	
-	private StringBuffer getCommonUrl(String facility, int maxResults){
-		StringBuffer urlString = new StringBuffer(mService);
+	private StringBuilder getCommonUrl(String facility, int maxResults){
+		StringBuilder urlString = new StringBuilder(mService);
 		urlString.append("search?");
 		urlString.append("format=json");
 		urlString.append("&q=["+URLEncoder.encode(facility)+"]");
@@ -54,22 +54,21 @@ public class NominatimPOIProvider {
 		return urlString;
 	}
 	
-	private String getUrlInside(BoundingBoxE6 bb, String type, int maxResults){
-		StringBuffer urlString = getCommonUrl(type, maxResults);
-		urlString.append("&viewbox="+bb.getLonWestE6()*1E-6+","
-				+bb.getLatNorthE6()*1E-6+","
-				+bb.getLonEastE6()*1E-6+","
-				+bb.getLatSouthE6()*1E-6);
+	private String getUrlInside(BoundingBox bb, String type, int maxResults){
+		StringBuilder urlString = getCommonUrl(type, maxResults);
+		urlString.append("&viewbox="+bb.getLonWest()+","
+				+bb.getLatNorth()+","
+				+bb.getLonEast()+","
+				+bb.getLatSouth());
 		return urlString.toString();
 	}
 	
 	private String getUrlCloseTo(GeoPoint p, String type, 
 			int maxResults, double maxDistance){
-		int maxD = (int)(maxDistance*1E6);
-		BoundingBoxE6 bb = new BoundingBoxE6(p.getLatitudeE6()+maxD,
-				p.getLongitudeE6()+maxD,
-				p.getLatitudeE6()-maxD,
-				p.getLongitudeE6()-maxD);
+		BoundingBox bb = new BoundingBox(p.getLatitude()+maxDistance,
+				p.getLongitude()+maxDistance,
+				p.getLatitude()-maxDistance,
+				p.getLongitude()-maxDistance);
 		return getUrlInside(bb, type, maxResults);
 	}
 	
@@ -138,7 +137,7 @@ public class NominatimPOIProvider {
 	 * @param maxResults
 	 * @return list of POIs inside the bounding box, null if technical issue.
 	 */
-	public ArrayList<POI> getPOIInside(BoundingBoxE6 boundingBox, String facility, int maxResults){
+	public ArrayList<POI> getPOIInside(BoundingBox boundingBox, String facility, int maxResults){
 		String url = getUrlInside(boundingBox, facility, maxResults);
 		return getThem(url);
 	}
@@ -155,7 +154,7 @@ public class NominatimPOIProvider {
 	 */
 	public ArrayList<POI> getPOIAlong(ArrayList<GeoPoint> path, String facility, 
 		int maxResults, double maxWidth){
-		StringBuffer url = getCommonUrl(facility, maxResults);
+		StringBuilder url = getCommonUrl(facility, maxResults);
 		url.append("&routewidth="+maxWidth);
 		url.append("&route=");
 		boolean isFirst = true;

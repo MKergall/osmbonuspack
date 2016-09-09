@@ -1,19 +1,16 @@
 package org.osmdroid.bonuspack.routing;
 
 import android.util.Log;
-
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.bonuspack.utils.HttpConnection;
 import org.osmdroid.bonuspack.utils.PolylineEncoder;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
 import java.io.InputStream;
 import java.util.ArrayList;
-
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
@@ -44,7 +41,7 @@ public class MapQuestRoadManager extends RoadManager {
 	 * @param waypoints: array of waypoints, as [lat, lng], from start point to end point. 
 	 */
 	protected String getUrl(ArrayList<GeoPoint> waypoints) {
-		StringBuffer urlString = new StringBuffer(MAPQUEST_GUIDANCE_SERVICE);
+		StringBuilder urlString = new StringBuilder(MAPQUEST_GUIDANCE_SERVICE);
 		urlString.append("key="+mApiKey);
 		urlString.append("&from=");
 		GeoPoint p = waypoints.get(0);
@@ -285,7 +282,7 @@ class MapQuestGuidanceHandler extends DefaultHandler {
 				mEast = mLng;
 			}
 		} else if (localName.equals("boundingBox")){
-			mRoad.mBoundingBox = new BoundingBoxE6(mNorth, mEast, mSouth, mWest);
+			mRoad.mBoundingBox = new BoundingBox(mNorth, mEast, mSouth, mWest);
 			isBB = false;
 		} else if (localName.equals("statusCode")){
 			mRoad.mStatus = Integer.parseInt(mStringBuilder.toString());

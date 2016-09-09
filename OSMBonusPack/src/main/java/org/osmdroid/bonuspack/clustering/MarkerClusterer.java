@@ -1,15 +1,12 @@
 package org.osmdroid.bonuspack.clustering;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.view.MotionEvent;
-
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ListIterator;
@@ -32,7 +29,7 @@ public abstract class MarkerClusterer extends Overlay {
 	
 	protected ArrayList<Marker> mItems = new ArrayList<Marker>();
 	protected Point mPoint = new Point();
-	protected ArrayList<StaticCluster> mClusters = new ArrayList<StaticCluster>();;
+	protected ArrayList<StaticCluster> mClusters = new ArrayList<StaticCluster>();
 	protected int mLastZoomLevel;
 	protected Bitmap mClusterIcon;
 	protected String mName, mDescription;
@@ -46,8 +43,8 @@ public abstract class MarkerClusterer extends Overlay {
 	/** build clusters markers to be used at next draw */
 	public abstract void renderer(ArrayList<StaticCluster> clusters, Canvas canvas, MapView mapView);
 	
-	public MarkerClusterer(Context ctx) {
-		super(ctx);
+	public MarkerClusterer() {
+		super();
 		mLastZoomLevel = FORCE_CLUSTERING;
 	}
 

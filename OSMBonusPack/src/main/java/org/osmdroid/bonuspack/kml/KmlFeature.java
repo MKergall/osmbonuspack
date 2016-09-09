@@ -2,17 +2,14 @@ package org.osmdroid.bonuspack.kml;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.JsonObject;
-
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polygon;
 import org.osmdroid.views.overlay.Polyline;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
@@ -56,7 +53,7 @@ public abstract class KmlFeature implements Parcelable, Cloneable {
 	//abstract methods
 	
 	/** @return the bounding box of all contained geometries - null if no geometry */
-	public abstract BoundingBoxE6 getBoundingBox();
+	public abstract BoundingBox getBoundingBox();
 	
 	/**
 	 * Build the Overlay related to this KML object. If this is a Folder, recursively build overlays from Folder items. 
@@ -241,7 +238,7 @@ public abstract class KmlFeature implements Parcelable, Cloneable {
 
 	/** the mandatory tribute to this monument of Java stupidity */
 	public KmlFeature clone(){
-		KmlFeature kmlFeature = null;
+		KmlFeature kmlFeature;
 		try {
 			kmlFeature = (KmlFeature)super.clone();
 		} catch (CloneNotSupportedException e){

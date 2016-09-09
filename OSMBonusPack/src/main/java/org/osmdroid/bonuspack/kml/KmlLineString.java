@@ -2,18 +2,15 @@ package org.osmdroid.bonuspack.kml;
 
 import android.content.Context;
 import android.os.Parcel;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
 import org.osmdroid.bonuspack.kml.KmlFeature.Styler;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.infowindow.BasicInfoWindow;
-
 import java.io.IOException;
 import java.io.Writer;
 
@@ -61,8 +58,7 @@ public class KmlLineString extends KmlGeometry {
 	/** Build the corresponding Polyline overlay */	
 	@Override public Overlay buildOverlay(MapView map, Style defaultStyle, Styler styler, KmlPlacemark kmlPlacemark, 
 			KmlDocument kmlDocument){
-		Context context = map.getContext();
-		Polyline lineStringOverlay = new Polyline(context);
+		Polyline lineStringOverlay = new Polyline();
 		lineStringOverlay.setGeodesic(true);
 		lineStringOverlay.setPoints(mCoordinates);
 		lineStringOverlay.setTitle(kmlPlacemark.mName);
@@ -93,9 +89,9 @@ public class KmlLineString extends KmlGeometry {
 		return json;
 	}
 	
-	@Override public BoundingBoxE6 getBoundingBox(){
+	@Override public BoundingBox getBoundingBox(){
 		if (mCoordinates!=null)
-			return BoundingBoxE6.fromGeoPoints(mCoordinates);
+			return BoundingBox.fromGeoPoints(mCoordinates);
 		else 
 			return null;
 	}
@@ -103,8 +99,7 @@ public class KmlLineString extends KmlGeometry {
 	//Cloneable implementation ------------------------------------
 	
 	@Override public KmlLineString clone(){
-		KmlLineString kmlLineString = (KmlLineString)super.clone();
-		return kmlLineString;
+		return (KmlLineString)super.clone();
 	}
 	
 	//Parcelable implementation ------------

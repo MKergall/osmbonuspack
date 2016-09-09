@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
 import org.osmdroid.bonuspack.clustering.StaticCluster;
@@ -38,7 +37,7 @@ import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.bonuspack.routing.RoadNode;
 import org.osmdroid.events.MapEventsReceiver;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.FolderOverlay;
@@ -51,7 +50,6 @@ import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.infowindow.BasicInfoWindow;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
-
 import java.util.ArrayList;
 
 /**
@@ -109,11 +107,11 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		if (road.mStatus != Road.STATUS_OK)
 			Toast.makeText(this, "Error when loading the road - status=" + road.mStatus, Toast.LENGTH_SHORT).show();
 
-		Polyline roadOverlay = RoadManager.buildRoadOverlay(road, this);
+		Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
 		map.getOverlays().add(roadOverlay);
 
 		//3. Showing the Route steps on the map
-		FolderOverlay roadMarkers = new FolderOverlay(this);
+		FolderOverlay roadMarkers = new FolderOverlay();
 		map.getOverlays().add(roadMarkers);
 		Drawable nodeIcon = ResourcesCompat.getDrawable(getResources(), R.drawable.marker_node, null);
 		for (int i = 0; i < road.mNodes.size(); i++) {
@@ -141,7 +139,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		//6. Wikipedia POIs with GeoNames 
 		/*
 		GeoNamesPOIProvider poiProvider = new GeoNamesPOIProvider("mkergall");
-		//BoundingBoxE6 bb = map.getBoundingBox();
+		//BoundingBox bb = map.getBoundingBox();
 		//ArrayList<POI> pois = poiProvider.getPOIInside(bb, 30);
 		//=> not possible in onCreate, as map bounding box is not correct until a draw occurs (osmdroid issue). 
 		ArrayList<POI> pois = poiProvider.getPOICloseTo(startPoint, 30, 20.0);
@@ -150,7 +148,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		//8. Quick overview of the Flickr and Picasa POIs */
 		/*
 		PicasaPOIProvider poiProvider = new PicasaPOIProvider(null);
-		BoundingBoxE6 bb = BoundingBoxE6.fromGeoPoints(waypoints);
+		BoundingBox bb = BoundingBox.fromGeoPoints(waypoints);
 		ArrayList<POI> pois = poiProvider.getPOIInside(bb, 20, null);
 		*/
 
@@ -193,7 +191,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 
 		//Get OpenStreetMap content as KML with Overpass API:
 		OverpassAPIProvider overpassProvider = new OverpassAPIProvider();
-		BoundingBoxE6 oBB = new BoundingBoxE6(startPoint.getLatitude() + 0.25, startPoint.getLongitude() + 0.25,
+		BoundingBox oBB = new BoundingBox(startPoint.getLatitude() + 0.25, startPoint.getLongitude() + 0.25,
 				startPoint.getLatitude() - 0.25, startPoint.getLongitude() - 0.25);
 		String oUrl = overpassProvider.urlForTagSearchKml("highway=speed_camera", oBB, 500, 30);
 		boolean ok = overpassProvider.addInKmlFolder(mKmlDocument.mKmlRoot, oUrl);
@@ -208,7 +206,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 
 			FolderOverlay kmlOverlay = (FolderOverlay) mKmlDocument.mKmlRoot.buildOverlay(map, defaultStyle, styler, mKmlDocument);
 			map.getOverlays().add(kmlOverlay);
-			BoundingBoxE6 bb = mKmlDocument.mKmlRoot.getBoundingBox();
+			BoundingBox bb = mKmlDocument.mKmlRoot.getBoundingBox();
 			if (bb != null) {
 				//map.zoomToBoundingBox(bb, false); //=> not working in onCreate - this is a well-known osmdroid issue.
 				//Workaround:
@@ -219,7 +217,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 
 		//14. Grab overlays in KML structure, save KML document locally
 		if (mKmlDocument.mKmlRoot != null) {
-			KmlFolder root = (KmlFolder) mKmlDocument.mKmlRoot;
+			KmlFolder root = mKmlDocument.mKmlRoot;
 			root.addOverlay(roadOverlay, mKmlDocument);
 			root.addOverlay(roadMarkers, mKmlDocument);
 			mKmlDocument.saveAsKML(mKmlDocument.getDefaultPathForAndroid("my_route.kml"));
@@ -228,14 +226,14 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		}
 
 		//16. Handling Map events
-		MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(this, this);
+		MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(this);
 		map.getOverlays().add(0, mapEventsOverlay); //inserted at the "bottom" of all overlays
 	}
 
 	//--- Stuff for setting the mapview on a box at startup:
-	BoundingBoxE6 mInitialBoundingBox = null;
+	BoundingBox mInitialBoundingBox = null;
 
-	void setInitialViewOn(BoundingBoxE6 bb) {
+	void setInitialViewOn(BoundingBox bb) {
 		if (map.getScreenRect(null).height() == 0) {
 			mInitialBoundingBox = bb;
 			map.addOnFirstLayoutListener(this);
@@ -257,7 +255,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 
 		OnMarkerDragListenerDrawer() {
 			mTrace = new ArrayList<GeoPoint>(100);
-			mPolyline = new Polyline(map.getContext());
+			mPolyline = new Polyline();
 			mPolyline.setColor(0xAA0000FF);
 			mPolyline.setWidth(2.0f);
 			mPolyline.setGeodesic(true);
@@ -394,11 +392,10 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 
 	float mGroundOverlayBearing = 0.0f;
 
-	@Override
-	public boolean longPressHelper(GeoPoint p) {
+	@Override public boolean longPressHelper(GeoPoint p) {
 		//Toast.makeText(this, "Long press", Toast.LENGTH_SHORT).show();
 		//17. Using Polygon, defined as a circle:
-		Polygon circle = new Polygon(this);
+		Polygon circle = new Polygon();
 		circle.setPoints(Polygon.pointsAsCircle(p, 2000.0));
 		circle.setFillColor(0x12121212);
 		circle.setStrokeColor(Color.RED);
@@ -408,7 +405,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		circle.setTitle("Centered on " + p.getLatitude() + "," + p.getLongitude());
 
 		//18. Using GroundOverlay
-		GroundOverlay myGroundOverlay = new GroundOverlay(this);
+		GroundOverlay myGroundOverlay = new GroundOverlay();
 		myGroundOverlay.setPosition(p);
 		Drawable d = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_launcher, null);
 		myGroundOverlay.setImage(d.mutate());

@@ -2,18 +2,15 @@ package org.osmdroid.bonuspack.kml;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polygon;
 import org.osmdroid.views.overlay.Polyline;
-
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Map;
@@ -114,7 +111,7 @@ public class KmlPlacemark extends KmlFeature implements Cloneable, Parcelable {
 		}
 	}
 	
-	@Override public BoundingBoxE6 getBoundingBox(){
+	@Override public BoundingBox getBoundingBox(){
 		if (mGeometry != null)
 			return mGeometry.getBoundingBox();
 		else

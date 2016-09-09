@@ -3,18 +3,15 @@ package org.osmdroid.bonuspack.kml;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import org.osmdroid.bonuspack.kml.KmlFeature.Styler;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Marker.OnMarkerDragListener;
 import org.osmdroid.views.overlay.Overlay;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -117,15 +114,14 @@ public class KmlPoint extends KmlGeometry implements Parcelable, Cloneable {
 		return json;
 	}
 
-	@Override public BoundingBoxE6 getBoundingBox(){
-		return BoundingBoxE6.fromGeoPoints(mCoordinates);
+	@Override public BoundingBox getBoundingBox(){
+		return BoundingBox.fromGeoPoints(mCoordinates);
 	}
 	
 	//Cloneable implementation ------------------------------------
 	
 	@Override public KmlPoint clone(){
-		KmlPoint kmlPoint = (KmlPoint)super.clone();
-		return kmlPoint;
+		return (KmlPoint)super.clone();
 	}
 	
 	//Parcelable implementation ------------

@@ -4,7 +4,7 @@ import android.util.Log;
 
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.bonuspack.utils.HttpConnection;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -36,12 +36,12 @@ public class PicasaPOIProvider {
 		mAccessToken = accessToken;
 	}
 
-	private String getUrlInside(BoundingBoxE6 boundingBox, int maxResults, String query){
-		StringBuffer url = new StringBuffer("http://picasaweb.google.com/data/feed/api/all?");
-		url.append("bbox="+boundingBox.getLonWestE6()*1E-6);
-		url.append(","+boundingBox.getLatSouthE6()*1E-6);
-		url.append(","+boundingBox.getLonEastE6()*1E-6);
-		url.append(","+boundingBox.getLatNorthE6()*1E-6);
+	private String getUrlInside(BoundingBox boundingBox, int maxResults, String query){
+		StringBuilder url = new StringBuilder("http://picasaweb.google.com/data/feed/api/all?");
+		url.append("bbox="+boundingBox.getLonWest());
+		url.append(","+boundingBox.getLatSouth());
+		url.append(","+boundingBox.getLonEast());
+		url.append(","+boundingBox.getLatNorth());
 		url.append("&max-results="+maxResults);
 		url.append("&thumbsize=64c"); //thumbnail size: 64, cropped. 
 		url.append("&fields=openSearch:totalResults,entry(summary,media:group/media:thumbnail,media:group/media:title,gphoto:*,georss:where,link)");
@@ -87,7 +87,7 @@ public class PicasaPOIProvider {
 	 * @param query - optional - full-text query string. Searches the title, caption and tags for the specified string value.
 	 * @return list of POI, Picasa photos inside the bounding box. Null if technical issue. 
 	 */
-	public ArrayList<POI> getPOIInside(BoundingBoxE6 boundingBox, int maxResults, String query){
+	public ArrayList<POI> getPOIInside(BoundingBox boundingBox, int maxResults, String query){
 		String url = getUrlInside(boundingBox, maxResults, query);
 		return getThem(url);
 	}

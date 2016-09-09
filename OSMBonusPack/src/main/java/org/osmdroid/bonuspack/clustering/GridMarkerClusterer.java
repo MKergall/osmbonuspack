@@ -8,11 +8,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.util.LongSparseArray;
-
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
-
 import java.util.ArrayList;
 
 /** 
@@ -41,7 +39,7 @@ import java.util.ArrayList;
 	public float mTextAnchorU = Marker.ANCHOR_CENTER, mTextAnchorV = Marker.ANCHOR_CENTER;
 
 	public GridMarkerClusterer(Context ctx) {
-		super(ctx);
+		super();
 		mTextPaint = new Paint();
 		mTextPaint.setColor(Color.WHITE);
 		mTextPaint.setTextSize(15.0f);
@@ -64,9 +62,9 @@ import java.util.ArrayList;
 	@Override public ArrayList<StaticCluster> clusterer(MapView mapView){
 		Rect mScreenRect = mapView.getIntrinsicScreenRect(null);
 		
-		BoundingBoxE6 bb = mapView.getBoundingBox();
-		double latSpan = bb.getLatitudeSpanE6()*1E-6;
-		double lonSpan = bb.getLongitudeSpanE6()*1E-6;
+		BoundingBox bb = mapView.getBoundingBox();
+		double latSpan = bb.getLatitudeSpan();
+		double lonSpan = bb.getLongitudeSpan();
 		//Log.d("ZOOM", "latSpan="+latSpan+"  lonSpan="+lonSpan);
 		
 		//convert grid size from pixels to degrees:

@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 
 import java.io.BufferedReader;
 import java.io.FilterInputStream;
@@ -37,29 +37,28 @@ public class BonusPackHelper {
 		return ("google_sdk".equals(Build.PRODUCT) || "sdk".equals(Build.PRODUCT));
 	}
 	
-	public static BoundingBoxE6 cloneBoundingBoxE6(BoundingBoxE6 bb){
-		return new BoundingBoxE6(
-				bb.getLatNorthE6(), 
-				bb.getLonEastE6(), 
-				bb.getLatSouthE6(), 
-				bb.getLonWestE6());
+	public static BoundingBox cloneBoundingBox(BoundingBox bb){
+		return new BoundingBox(
+				bb.getLatNorth(),
+				bb.getLonEast(),
+				bb.getLatSouth(),
+				bb.getLonWest());
 	}
 	
 	/** @return the BoundingBox enclosing bb1 and bb2 BoundingBoxes */
-	public static BoundingBoxE6 concatBoundingBoxE6(BoundingBoxE6 bb1, BoundingBoxE6 bb2){
-		return new BoundingBoxE6(
-				Math.max(bb1.getLatNorthE6(), bb2.getLatNorthE6()), 
-				Math.max(bb1.getLonEastE6(), bb2.getLonEastE6()),
-				Math.min(bb1.getLatSouthE6(), bb2.getLatSouthE6()),
-				Math.min(bb1.getLonWestE6(), bb2.getLonWestE6()));
+	public static BoundingBox concatBoundingBox(BoundingBox bb1, BoundingBox bb2){
+		return new BoundingBox(
+				Math.max(bb1.getLatNorth(), bb2.getLatNorth()),
+				Math.max(bb1.getLonEast(), bb2.getLonEast()),
+				Math.min(bb1.getLatSouth(), bb2.getLatSouth()),
+				Math.min(bb1.getLonWest(), bb2.getLonWest()));
 	}
 
 	/**
 	 * @return the whole content of the http request, as a string
 	 */
 	private static String readStream(HttpConnection connection){
-		String result = connection.getContentAsString();
-		return result;
+		return connection.getContentAsString();
 	}
 
 	/** sends an http request, and returns the whole content result in a String
@@ -91,7 +90,7 @@ public class BonusPackHelper {
 	 * @return the bitmap, or null if any issue. 
 	 */
 	public static Bitmap loadBitmap(String url) {
-		Bitmap bitmap = null;
+		Bitmap bitmap;
 		try {
 			InputStream is = (InputStream) new URL(url).getContent();
 			if (is == null)

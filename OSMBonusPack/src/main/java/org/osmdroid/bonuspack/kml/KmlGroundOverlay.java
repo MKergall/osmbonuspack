@@ -10,7 +10,7 @@ import java.util.zip.ZipFile;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.osmdroid.bonuspack.overlays.GroundOverlay;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Overlay;
@@ -56,8 +56,8 @@ public class KmlGroundOverlay extends KmlFeature implements Cloneable, Parcelabl
 		GeoPoint pE = p.destinationPoint(overlay.getWidth()/2, 90.0f);
 		GeoPoint pW = p.destinationPoint(overlay.getWidth()/2, -90.0f);
 		mCoordinates = new ArrayList<GeoPoint>(2);
-		mCoordinates.add(new GeoPoint(pN.getLatitudeE6(), pW.getLongitudeE6())); //NW
-		mCoordinates.add(new GeoPoint(pS.getLatitudeE6(), pE.getLongitudeE6())); //SE
+		mCoordinates.add(new GeoPoint(pN.getLatitude(), pW.getLongitude())); //NW
+		mCoordinates.add(new GeoPoint(pS.getLatitude(), pE.getLongitude())); //SE
 		//mIconHref = ???
 		mIcon = ((BitmapDrawable)overlay.getImage()).getBitmap();
 		mRotation = -overlay.getBearing();
@@ -65,8 +65,8 @@ public class KmlGroundOverlay extends KmlFeature implements Cloneable, Parcelabl
 		mVisibility = overlay.isEnabled();
 	}
 	
-	@Override public BoundingBoxE6 getBoundingBox(){
-		return BoundingBoxE6.fromGeoPoints(mCoordinates);
+	@Override public BoundingBox getBoundingBox(){
+		return BoundingBox.fromGeoPoints(mCoordinates);
 	}
 	
 	/** load the icon from its href. 
@@ -103,8 +103,7 @@ public class KmlGroundOverlay extends KmlFeature implements Cloneable, Parcelabl
 
 	/** @return the corresponding GroundOverlay ready to display on the map */
 	@Override public Overlay buildOverlay(MapView map, Style defaultStyle, Styler styler, KmlDocument kmlDocument){
-		Context context = map.getContext();
-		GroundOverlay overlay = new GroundOverlay(context);
+		GroundOverlay overlay = new GroundOverlay();
 		if (mCoordinates.size()==2){
 			GeoPoint pNW = mCoordinates.get(0);
 			GeoPoint pSE = mCoordinates.get(1);

@@ -12,7 +12,7 @@ import org.osmdroid.bonuspack.kml.KmlPlacemark;
 import org.osmdroid.bonuspack.kml.KmlPoint;
 import org.osmdroid.bonuspack.kml.KmlPolygon;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -64,10 +64,10 @@ public class OverpassAPIProvider {
 	 * @return the url for this request. 
 	 * @see <a href="http://wiki.openstreetmap.org/wiki/Tags">OSM Tags</a>
 	 */
-	public String urlForPOISearch(String tag, BoundingBoxE6 bb, int limit, int timeout){
-		StringBuffer s = new StringBuffer();
+	public String urlForPOISearch(String tag, BoundingBox bb, int limit, int timeout){
+		StringBuilder s = new StringBuilder();
 		s.append(mService+"?data=");
-		String sBB = "("+bb.getLatSouthE6()*1E-6+","+bb.getLonWestE6()*1E-6+","+bb.getLatNorthE6()*1E-6+","+bb.getLonEastE6()*1E-6+")";
+		String sBB = "("+bb.getLatSouth()+","+bb.getLonWest()+","+bb.getLatNorth()+","+bb.getLonEast()+")";
 		String data = 
 			"[out:json][timeout:"+timeout+"];("
 			+ "node["+tag+"]"+sBB+";"
@@ -82,8 +82,7 @@ public class OverpassAPIProvider {
 	protected GeoPoint geoPointFromJson(JsonObject jLatLon){
 		double lat = jLatLon.get("lat").getAsDouble();
 		double lon = jLatLon.get("lon").getAsDouble();
-		GeoPoint p = new GeoPoint(lat, lon);
-		return p;
+		return new GeoPoint(lat, lon);
 	}
 	
 	protected String tagValueFromJson(String key, JsonObject jTags){
@@ -182,10 +181,10 @@ public class OverpassAPIProvider {
 	 * @param timeout in seconds
 	 * @return the url for this request. 
 	 */
-	public String urlForTagSearchKml(String tag, BoundingBoxE6 bb, int limit, int timeout){
-		StringBuffer s = new StringBuffer();
+	public String urlForTagSearchKml(String tag, BoundingBox bb, int limit, int timeout){
+		StringBuilder s = new StringBuilder();
 		s.append(mService+"?data=");
-		String sBB = "("+bb.getLatSouthE6()*1E-6+","+bb.getLonWestE6()*1E-6+","+bb.getLatNorthE6()*1E-6+","+bb.getLonEastE6()*1E-6+")";
+		String sBB = "("+bb.getLatSouth()+","+bb.getLonWest()+","+bb.getLatNorth()+","+bb.getLonEast()+")";
 		String data = 
 			"[out:json][timeout:"+timeout+"];"
 			+ "(node["+tag+"]"+sBB+";"
@@ -229,7 +228,7 @@ public class OverpassAPIProvider {
 	}
 	
 	protected KmlGeometry buildGeometry(JsonObject jo){
-		KmlGeometry geometry = null;
+		KmlGeometry geometry;
 		String type = jo.get("type").getAsString();
 		if ("node".equals(type)){
 			geometry = new KmlPoint(geoPointFromJson(jo));

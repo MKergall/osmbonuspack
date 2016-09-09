@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import org.osmdroid.bonuspack.R;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.bonuspack.utils.PolylineEncoder;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
@@ -215,7 +215,7 @@ public class OSRMRoadManager extends RoadManager {
 					JSONObject jRoute = jRoutes.getJSONObject(i);
 					String route_geometry = jRoute.getString("geometry");
 					road.mRouteHigh = PolylineEncoder.decode(route_geometry, 10, false);
-					road.mBoundingBox = BoundingBoxE6.fromGeoPoints(road.mRouteHigh);
+					road.mBoundingBox = BoundingBox.fromGeoPoints(road.mRouteHigh);
 					road.mLength = jRoute.getDouble("distance") / 1000.0;
 					road.mDuration = jRoute.getDouble("duration");
 					//legs:

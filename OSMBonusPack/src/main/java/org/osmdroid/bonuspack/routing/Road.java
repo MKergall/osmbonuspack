@@ -8,7 +8,7 @@ import android.util.Log;
 import org.osmdroid.bonuspack.R;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.bonuspack.utils.DouglasPeuckerReducer;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class Road  implements Parcelable {
 	/** the same, in low resolution (less points) */
 	private ArrayList<GeoPoint> mRouteLow; 
 	/** road bounding box */
-	public BoundingBoxE6 mBoundingBox; 
+	public BoundingBox mBoundingBox;
 	
 	public static final int STATUS_INVALID=-1;
 	public static final int STATUS_OK=0;
@@ -80,7 +80,7 @@ public class Road  implements Parcelable {
 			RoadLeg leg = new RoadLeg(/*i, i+1, mLinks*/);
 			mLegs.add(leg);
 		}
-		mBoundingBox = BoundingBoxE6.fromGeoPoints(mRouteHigh);
+		mBoundingBox = BoundingBox.fromGeoPoints(mRouteHigh);
 		mStatus = STATUS_TECHNICAL_ISSUE;
 	}
 	
@@ -143,8 +143,8 @@ public class Road  implements Parcelable {
 	}
 	
 	protected double distanceLLSquared(GeoPoint p1, GeoPoint p2){
-		double deltaLat = p2.getLatitudeE6()-p1.getLatitudeE6();
-		double deltaLon = p2.getLongitudeE6()-p1.getLongitudeE6();
+		double deltaLat = p2.getLatitude()-p1.getLatitude();
+		double deltaLon = p2.getLongitude()-p1.getLongitude();
 		return (deltaLat*deltaLat + deltaLon*deltaLon);
 	}
 	
@@ -214,6 +214,6 @@ public class Road  implements Parcelable {
 		mNodes = in.readArrayList(RoadNode.class.getClassLoader());
 		mLegs = in.readArrayList(RoadLeg.class.getClassLoader());
 		mRouteHigh = in.readArrayList(GeoPoint.class.getClassLoader());
-		mBoundingBox = in.readParcelable(BoundingBoxE6.class.getClassLoader());
+		mBoundingBox = in.readParcelable(BoundingBox.class.getClassLoader());
 	}
 }

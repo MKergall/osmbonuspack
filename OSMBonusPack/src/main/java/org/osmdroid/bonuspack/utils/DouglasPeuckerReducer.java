@@ -119,18 +119,18 @@ public class DouglasPeuckerReducer {
     {
         double area = Math.abs(
             (
-                1.0 * lineStart.getLatitudeE6() * lineEnd.getLongitudeE6()
-              + 1.0 * lineEnd.getLatitudeE6() * point.getLongitudeE6()
-              + 1.0 * point.getLatitudeE6() * lineStart.getLongitudeE6()
-              - 1.0 * lineEnd.getLatitudeE6() * lineStart.getLongitudeE6()
-              - 1.0 * point.getLatitudeE6() * lineEnd.getLongitudeE6()
-              - 1.0 * lineStart.getLatitudeE6() * point.getLongitudeE6()
+                lineStart.getLatitude() * lineEnd.getLongitude()
+              + lineEnd.getLatitude() * point.getLongitude()
+              + point.getLatitude() * lineStart.getLongitude()
+              - lineEnd.getLatitude() * lineStart.getLongitude()
+              - point.getLatitude() * lineEnd.getLongitude()
+              - lineStart.getLatitude() * point.getLongitude()
             ) / 2.0
         );
 
 		double bottom = Math.hypot(
-				lineStart.getLatitudeE6() - lineEnd.getLatitudeE6(), 
-				lineStart.getLongitudeE6() - lineEnd.getLongitudeE6()
+				lineStart.getLatitude() - lineEnd.getLatitude(),
+				lineStart.getLongitude() - lineEnd.getLongitude()
 				);
 		
         return(area / bottom * 2.0);

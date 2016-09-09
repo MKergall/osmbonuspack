@@ -198,7 +198,7 @@ public class KmlDocument implements Parcelable {
 	 * @return true if OK, false if any error. 
 	 */
 	public boolean parseKMLUrl(String url){
-		Log.d(BonusPackHelper.LOG_TAG, "KmlProvider.parseUrl:"+url);
+		Log.d(BonusPackHelper.LOG_TAG, "KmlProvider.parseKMLUrl:"+url);
 		HttpConnection connection = new HttpConnection();
 		connection.doGet(url);
 		InputStream stream = connection.getStream();
@@ -209,7 +209,7 @@ public class KmlDocument implements Parcelable {
 			ok = parseKMLStream(stream, null);
 		}
 		connection.close();
-		//Log.d(BonusPackHelper.LOG_TAG, "KmlProvider.parseUrl - end");
+		//Log.d(BonusPackHelper.LOG_TAG, "KmlProvider.parseKMLUrl - end");
 		return ok;
 	}
 
@@ -223,8 +223,7 @@ public class KmlDocument implements Parcelable {
 		try {
 			File path = new File(Environment.getExternalStorageDirectory(), "kml");
 			path.mkdir();
-			File file = new File(path.getAbsolutePath(), fileName);
-			return file;
+			return new File(path.getAbsolutePath(), fileName);
 		} catch (NullPointerException e){
 			e.printStackTrace();
 			return null;
@@ -235,12 +234,12 @@ public class KmlDocument implements Parcelable {
 	 * Parse a KML document from a file, to build the KML structure. 
 	 * @param file full file path
 	 * @return true if OK, false if any error. 
-	 * @see #parseUrl
+	 * @see #parseKMLUrl
 	 */
 	public boolean parseKMLFile(File file){
 		mLocalFile = file;
 		Log.d(BonusPackHelper.LOG_TAG, "KmlProvider.parseKMLFile:"+mLocalFile.getAbsolutePath());
-		InputStream stream = null;
+		InputStream stream;
 		boolean ok;
 		try {
 			stream = new BufferedInputStream(new FileInputStream(mLocalFile));
@@ -495,7 +494,7 @@ public class KmlDocument implements Parcelable {
 				if (mKmlCurrentFeature instanceof KmlPlacemark){
 					if (!mIsInnerBoundary){
 						mKmlCurrentGeometry.mCoordinates = parseKmlCoordinates(mStringBuilder.toString());
-						//mKmlCurrentFeature.mBB = BoundingBoxE6.fromGeoPoints(mKmlCurrentGeometry.mCoordinates);
+						//mKmlCurrentFeature.mBB = BoundingBox.fromGeoPoints(mKmlCurrentGeometry.mCoordinates);
 					} else { //inside a Polygon innerBoundaryIs element: new hole
 						KmlPolygon polygon = (KmlPolygon)mKmlCurrentGeometry;
 						if (polygon.mHoles == null)

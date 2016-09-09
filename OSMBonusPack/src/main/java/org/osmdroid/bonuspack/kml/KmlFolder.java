@@ -1,24 +1,20 @@
 package org.osmdroid.bonuspack.kml;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import org.osmdroid.bonuspack.clustering.MarkerClusterer;
 import org.osmdroid.bonuspack.overlays.GroundOverlay;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polygon;
 import org.osmdroid.views.overlay.Polyline;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -66,15 +62,15 @@ public class KmlFolder extends KmlFeature implements Cloneable, Parcelable {
 		}
 	}
 	
-	@Override public BoundingBoxE6 getBoundingBox(){
-		BoundingBoxE6 BB = null;
+	@Override public BoundingBox getBoundingBox(){
+		BoundingBox BB = null;
 		for (KmlFeature item:mItems) {
-			BoundingBoxE6 itemBB = item.getBoundingBox();
+			BoundingBox itemBB = item.getBoundingBox();
 			if (itemBB != null){
 				if (BB == null){
-					BB = BonusPackHelper.cloneBoundingBoxE6(itemBB);
+					BB = BonusPackHelper.cloneBoundingBox(itemBB);
 				} else {
-					BB = BonusPackHelper.concatBoundingBoxE6(itemBB, BB);
+					BB = BonusPackHelper.concatBoundingBox(itemBB, BB);
 				}
 			}
 		}
@@ -144,8 +140,7 @@ public class KmlFolder extends KmlFeature implements Cloneable, Parcelable {
 	 * @return item removed
 	 */
 	public KmlFeature removeItem(int itemPosition){
-		KmlFeature removed = mItems.remove(itemPosition);
-		return removed;
+		return mItems.remove(itemPosition);
 	}
 	
 	/**
@@ -157,8 +152,7 @@ public class KmlFolder extends KmlFeature implements Cloneable, Parcelable {
 	 * @return the FolderOverlay built
 	 */
 	@Override public Overlay buildOverlay(MapView map, Style defaultStyle, Styler styler, KmlDocument kmlDocument){
-		Context context = map.getContext();
-		FolderOverlay folderOverlay = new FolderOverlay(context);
+		FolderOverlay folderOverlay = new FolderOverlay();
 		for (KmlFeature k:mItems){
 			Overlay overlay = k.buildOverlay(map, defaultStyle, styler, kmlDocument);
 			folderOverlay.add(overlay);

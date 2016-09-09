@@ -5,7 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import android.util.Log;
 
@@ -26,13 +26,13 @@ public class FlickrPOIProvider {
 		mApiKey = apiKey;
 	}
 	
-	private String getUrlInside(BoundingBoxE6 boundingBox, int maxResults){
-		StringBuffer url = new StringBuffer("https://api.flickr.com/services/rest/?method=flickr.photos.search");
+	private String getUrlInside(BoundingBox boundingBox, int maxResults){
+		StringBuilder url = new StringBuilder("https://api.flickr.com/services/rest/?method=flickr.photos.search");
 		url.append("&api_key="+mApiKey);
-		url.append("&bbox="+boundingBox.getLonWestE6()*1E-6);
-		url.append(","+boundingBox.getLatSouthE6()*1E-6);
-		url.append(","+boundingBox.getLonEastE6()*1E-6);
-		url.append(","+boundingBox.getLatNorthE6()*1E-6);
+		url.append("&bbox="+boundingBox.getLonWest());
+		url.append(","+boundingBox.getLatSouth());
+		url.append(","+boundingBox.getLonEast());
+		url.append(","+boundingBox.getLatNorth());
 		url.append("&has_geo=1");
 		url.append("&format=json&nojsoncallback=1");
 		url.append("&per_page="+maxResults);
@@ -136,7 +136,7 @@ public class FlickrPOIProvider {
 	 * @param maxResults
 	 * @return list of POI, Flickr photos inside the bounding box. Null if technical issue. 
 	 */
-	public ArrayList<POI> getPOIInside(BoundingBoxE6 boundingBox, int maxResults){
+	public ArrayList<POI> getPOIInside(BoundingBox boundingBox, int maxResults){
 		String url = getUrlInside(boundingBox, maxResults);
 		return getThem(url);
 	}
