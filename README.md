@@ -1,5 +1,5 @@
-# WARNING on 6/09/2016
-Following changes in OSRM routing service API, applications using this service MUST URGENTLY upgrade to OSMBonusPack 5.8.1. The old OSRM service will be stopped within a couple of days. 
+# WARNING on 7/09/2016
+Following changes in OSRM routing service API, applications using this service MUST URGENTLY upgrade to OSMBonusPack 5.8.1. The old OSRM service (V4) has just been stopped. 
 
 # About OSMBonusPack
 osmdroid is a library to interact with OpenStreetMap data inside an Android application. It offers an almost full/free replacement to Android map objects: MapView, MapController, Overlays (Marker, Polyline, Polygon), etc.
