@@ -19,7 +19,7 @@
             android:name="MAPBOX_MAPID"
             android:value="mapbox.streets-satellite"/>
         <meta-data
-            android:name="ACCESS_TOKEN"
+            android:name="MAPBOX_ACCESS_TOKEN"
             android:value="pk.eyJ1IjoibWtlciIsImEiOiJjaWh0bGtyZDIwMDM4dzFrcDlmOTFlbm8zIn0.gHt6BSiGpb19TqUEjD8bxw"/>
         <meta-data
             android:name="GRAPHHOPPER_API_KEY"
