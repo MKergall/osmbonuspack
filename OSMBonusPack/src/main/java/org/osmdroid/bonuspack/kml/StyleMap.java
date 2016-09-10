@@ -1,12 +1,12 @@
 package org.osmdroid.bonuspack.kml;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
-
-import android.os.Parcel;
-import android.os.Parcelable;
 
 /**
  * Handling of a KML StyleMap. 

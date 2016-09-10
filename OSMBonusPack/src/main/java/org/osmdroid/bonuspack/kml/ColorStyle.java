@@ -1,11 +1,11 @@
 package org.osmdroid.bonuspack.kml;
 
-import java.io.IOException;
-import java.io.Writer;
-
 import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.io.IOException;
+import java.io.Writer;
 
 /**
  * Handling of KML ColorStyle

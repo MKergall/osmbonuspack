@@ -1,7 +1,8 @@
 package org.osmdroid.bonuspack.kml;
 
-import java.io.Writer;
 import android.os.Parcelable;
+
+import java.io.Writer;
 
 /**
  * Handling of a KML StyleSelector (abstract class). 

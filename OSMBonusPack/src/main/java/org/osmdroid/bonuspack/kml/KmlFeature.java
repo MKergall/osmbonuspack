@@ -2,7 +2,9 @@ package org.osmdroid.bonuspack.kml;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import com.google.gson.JsonObject;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.views.MapView;
@@ -10,6 +12,7 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polygon;
 import org.osmdroid.views.overlay.Polyline;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;

@@ -1,7 +1,8 @@
 package org.osmdroid.bonuspack.utils;
 
-import java.util.ArrayList;
 import org.osmdroid.util.GeoPoint;
+
+import java.util.ArrayList;
 
 /**
  * Methods to encode and decode a polyline with Google polyline encoding/decoding scheme. 

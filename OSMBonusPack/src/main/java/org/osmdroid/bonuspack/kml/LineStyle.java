@@ -1,10 +1,11 @@
 package org.osmdroid.bonuspack.kml;
 
-import java.io.IOException;
-import java.io.Writer;
 import android.graphics.Paint;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.io.IOException;
+import java.io.Writer;
 
 /** Handling of KML LineStyle */
 public class LineStyle extends ColorStyle implements Parcelable {

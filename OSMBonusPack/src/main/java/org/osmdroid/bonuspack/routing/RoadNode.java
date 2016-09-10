@@ -1,9 +1,9 @@
 package org.osmdroid.bonuspack.routing;
 
-import org.osmdroid.util.GeoPoint;
-
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import org.osmdroid.util.GeoPoint;
 
 /** Road intersection, with instructions about what to do at this intersection. 
  * 

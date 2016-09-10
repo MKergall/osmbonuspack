@@ -1,8 +1,9 @@
 package org.osmdroid.bonuspack.utils;
 
-import java.util.LinkedHashMap;
 import android.graphics.Bitmap;
 import android.util.Log;
+
+import java.util.LinkedHashMap;
 
 /**
  * Simple memory cache for handling images loaded from the web. 

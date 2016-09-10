@@ -1,12 +1,12 @@
 package org.osmdroid.bonuspack.routing;
 
-import java.util.ArrayList;
-
-import org.osmdroid.bonuspack.utils.BonusPackHelper;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+
+import org.osmdroid.bonuspack.utils.BonusPackHelper;
+
+import java.util.ArrayList;
 
 /** Road Leg is the portion of the road between 2 waypoints (intermediate points requested) 
  * 

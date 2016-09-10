@@ -2,9 +2,11 @@ package org.osmdroid.bonuspack.kml;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import org.osmdroid.bonuspack.clustering.MarkerClusterer;
 import org.osmdroid.bonuspack.overlays.GroundOverlay;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
@@ -15,6 +17,7 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polygon;
 import org.osmdroid.views.overlay.Polyline;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;

@@ -1,9 +1,13 @@
 package org.osmdroid.bonuspack.location;
 
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
+import android.util.Log;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+
 import org.osmdroid.bonuspack.kml.KmlFolder;
 import org.osmdroid.bonuspack.kml.KmlGeometry;
 import org.osmdroid.bonuspack.kml.KmlLineString;
@@ -14,12 +18,11 @@ import org.osmdroid.bonuspack.kml.KmlPolygon;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-import android.util.Log;
+
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Access to Overpass API, a super-powerful search API on OpenStreetMap data. <br>

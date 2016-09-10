@@ -1,13 +1,14 @@
 package org.osmdroid.bonuspack.location;
 
-import org.osmdroid.bonuspack.utils.WebImageCache;
-import org.osmdroid.util.GeoPoint;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.view.View;
 import android.widget.ImageView;
+
+import org.osmdroid.bonuspack.utils.WebImageCache;
+import org.osmdroid.util.GeoPoint;
 
 /**
  * Point of Interest. Exact content may depend of the POI provider used. 

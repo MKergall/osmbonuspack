@@ -1,7 +1,8 @@
 package org.osmdroid.bonuspack.utils;
 
-import java.util.ArrayList;
 import org.osmdroid.util.GeoPoint;
+
+import java.util.ArrayList;
 
 /** Reduces the number of points in a shape using the Douglas-Peucker algorithm. <br>
  * 

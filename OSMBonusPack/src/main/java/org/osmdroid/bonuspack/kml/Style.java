@@ -1,16 +1,16 @@
 package org.osmdroid.bonuspack.kml;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.zip.ZipFile;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.zip.ZipFile;
 
 /**
  * Handling of a KML Style, which may contain one PolyStyle, one LineStyle, and one IconStyle. 
