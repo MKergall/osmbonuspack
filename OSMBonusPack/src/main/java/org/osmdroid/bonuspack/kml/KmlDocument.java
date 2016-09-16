@@ -405,7 +405,7 @@ public class KmlDocument implements Parcelable {
 			} else if (localName.equals("LineString")){
 				mKmlCurrentGeometry = new KmlLineString();
 				mKmlGeometryStack.add(mKmlCurrentGeometry);
-			} else if (localName.equals("gx:Track")){
+			} else if (name.equals("gx:Track")) {
 				mKmlCurrentGeometry = new KmlTrack();
 				mKmlGeometryStack.add(mKmlCurrentGeometry);
 			} else if (localName.equals("Polygon")){
@@ -474,8 +474,8 @@ public class KmlDocument implements Parcelable {
 					mKmlCurrentGroundOverlay = null;
 			} else if (localName.equals("innerBoundaryIs")){
 				mIsInnerBoundary = false;
-			} else if (localName.equals("Point") || localName.equals("LineString") || localName.equals("Polygon")
-					|| localName.equals("MultiGeometry") || localName.equals("gx:Track")){
+			} else if (name.equals("Point") || name.equals("LineString") || name.equals("Polygon")
+					|| name.equals("MultiGeometry") || name.equals("gx:Track")) {
 				//this was a Geometry:
 				if (mKmlGeometryStack.size() == 1){
 					//no MultiGeometry parent: add this Geometry in the current Feature:
@@ -508,7 +508,7 @@ public class KmlDocument implements Parcelable {
 						polygon.mHoles.add(hole);
 					}
 				}
-			} else if (localName.equals("gx:coord")){
+			} else if (name.equals("gx:coord")) {
 				if (mKmlCurrentGeometry != null && mKmlCurrentGeometry instanceof KmlTrack)
 					((KmlTrack) mKmlCurrentGeometry).addGxCoord(mStringBuilder.toString());
 			} else if (localName.equals("when")){

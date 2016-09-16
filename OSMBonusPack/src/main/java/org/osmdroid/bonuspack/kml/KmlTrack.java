@@ -70,9 +70,15 @@ public class KmlTrack extends KmlGeometry {
 		SimpleDateFormat ft;
 		switch (sWhen.length()) {
 			case 4: ft = new SimpleDateFormat("yyyy"); break;
-			case 7: ft = new SimpleDateFormat("yyyy-mm"); break;
-			case 10: ft = new SimpleDateFormat("yyyy-mm-dd"); break;
-			case 20: ft = new SimpleDateFormat("yyyy-mm-dd'T'HH:MM:SS'Z'"); break;
+			case 7:
+				ft = new SimpleDateFormat("yyyy-MM");
+				break;
+			case 10:
+				ft = new SimpleDateFormat("yyyy-MM-dd");
+				break;
+			case 19:
+				ft = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+				break;
 			default:
 				return null;
 		}
@@ -139,20 +145,24 @@ public class KmlTrack extends KmlGeometry {
 		return lineStringOverlay;
 	}
 
-	static final SimpleDateFormat KML_DATE_FORMAT = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:SS'Z'");
+	static final SimpleDateFormat KML_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
 	@Override public void saveAsKML(Writer writer){
 		try {
 			writer.write("<gx:Track>\n");
 			//write when:
 			for (Date when:mWhen){
-				writer.write("<when>"+KML_DATE_FORMAT.format(when)+"</when>\n");
+				writer.write("<when>");
+				if (when != null)
+					writer.write(KML_DATE_FORMAT.format(when));
+				writer.write("</when>\n");
 			}
 			//write coords:
 			for (GeoPoint coord:mCoordinates){
-				writer.write("<gx:coord>"+
-					coord.getLongitude() + " " + coord.getLatitude() + " " + coord.getAltitude()
-					+ "</gx:coord>\n");
+				writer.write("<gx:coord>");
+				if (coord != null)
+					writer.write(coord.getLongitude() + " " + coord.getLatitude() + " " + coord.getAltitude());
+				writer.write("</gx:coord>\n");
 			}
 			writer.write("</gx:Track>\n");
 		} catch (IOException e) {

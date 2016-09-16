@@ -158,7 +158,8 @@ public class KmlFolder extends KmlFeature implements Cloneable, Parcelable {
 		FolderOverlay folderOverlay = new FolderOverlay();
 		for (KmlFeature k:mItems){
 			Overlay overlay = k.buildOverlay(map, defaultStyle, styler, kmlDocument);
-			folderOverlay.add(overlay);
+			if (overlay != null)
+				folderOverlay.add(overlay);
 		}
 		if (styler == null)
 			folderOverlay.setEnabled(mVisibility);
