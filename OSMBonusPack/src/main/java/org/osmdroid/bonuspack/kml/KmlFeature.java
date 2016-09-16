@@ -84,6 +84,8 @@ public abstract class KmlFeature implements Parcelable, Cloneable {
 		abstract void onLineString(Polyline polyline, KmlPlacemark kmlPlacemark, KmlLineString kmlLineString);
 		/** called on each KmlPoint */
 		abstract void onPolygon(Polygon polygon, KmlPlacemark kmlPlacemark, KmlPolygon kmlPolygon);
+		/** called on each KmlTrack */
+		abstract void onTrack(Polyline polyline, KmlPlacemark kmlPlacemark, KmlTrack kmlTrack);
 	}
 	
 	/** write KML content specific to its type */
