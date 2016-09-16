@@ -405,6 +405,9 @@ public class KmlDocument implements Parcelable {
 			} else if (localName.equals("LineString")){
 				mKmlCurrentGeometry = new KmlLineString();
 				mKmlGeometryStack.add(mKmlCurrentGeometry);
+			} else if (localName.equals("gx:Track")){
+				mKmlCurrentGeometry = new KmlTrack();
+				mKmlGeometryStack.add(mKmlCurrentGeometry);
 			} else if (localName.equals("Polygon")){
 				mKmlCurrentGeometry = new KmlPolygon();
 				mKmlGeometryStack.add(mKmlCurrentGeometry);
@@ -472,7 +475,7 @@ public class KmlDocument implements Parcelable {
 			} else if (localName.equals("innerBoundaryIs")){
 				mIsInnerBoundary = false;
 			} else if (localName.equals("Point") || localName.equals("LineString") || localName.equals("Polygon")
-					|| localName.equals("MultiGeometry") ){
+					|| localName.equals("MultiGeometry") || localName.equals("gx:Track")){
 				//this was a Geometry:
 				if (mKmlGeometryStack.size() == 1){
 					//no MultiGeometry parent: add this Geometry in the current Feature:
@@ -493,19 +496,24 @@ public class KmlDocument implements Parcelable {
 				mKmlCurrentFeature.mVisibility = ("1".equals(mStringBuilder.toString()));
 			} else if (localName.equals("open")){
 				mKmlCurrentFeature.mOpen = ("1".equals(mStringBuilder.toString()));
-			} else if (localName.equals("coordinates")){
-				if (mKmlCurrentFeature instanceof KmlPlacemark){
-					if (!mIsInnerBoundary){
+			} else if (localName.equals("coordinates")) {
+				if (mKmlCurrentFeature instanceof KmlPlacemark) {
+					if (!mIsInnerBoundary) {
 						mKmlCurrentGeometry.mCoordinates = parseKmlCoordinates(mStringBuilder.toString());
-						//mKmlCurrentFeature.mBB = BoundingBox.fromGeoPoints(mKmlCurrentGeometry.mCoordinates);
 					} else { //inside a Polygon innerBoundaryIs element: new hole
-						KmlPolygon polygon = (KmlPolygon)mKmlCurrentGeometry;
+						KmlPolygon polygon = (KmlPolygon) mKmlCurrentGeometry;
 						if (polygon.mHoles == null)
 							polygon.mHoles = new ArrayList<ArrayList<GeoPoint>>();
 						ArrayList<GeoPoint> hole = parseKmlCoordinates(mStringBuilder.toString());
 						polygon.mHoles.add(hole);
 					}
 				}
+			} else if (localName.equals("gx:coord")){
+				if (mKmlCurrentGeometry != null && mKmlCurrentGeometry instanceof KmlTrack)
+					((KmlTrack) mKmlCurrentGeometry).addGxCoord(mStringBuilder.toString());
+			} else if (localName.equals("when")){
+				if (mKmlCurrentGeometry != null && mKmlCurrentGeometry instanceof KmlTrack)
+					((KmlTrack) mKmlCurrentGeometry).addWhen(mStringBuilder.toString());
 			} else if (localName.equals("styleUrl")){
 				String styleUrl;
 				if (mStringBuilder.charAt(0) == '#')
