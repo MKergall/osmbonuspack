@@ -1645,14 +1645,14 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			CacheManager cacheManager = new CacheManager(map);
 			int zoomMin = map.getZoomLevel();
 			int zoomMax = map.getZoomLevel()+4;
-			cacheManager.downloadAreaAsync(this, map.getBoundingBoxE6(), zoomMin, zoomMax);
+			cacheManager.downloadAreaAsync(this, map.getBoundingBox(), zoomMin, zoomMax);
 			return true;
 			}
 		case R.id.menu_clear_view_area:{
 			CacheManager cacheManager = new CacheManager(map);
 			int zoomMin = map.getZoomLevel();
 			int zoomMax = map.getZoomLevel()+7;
-			cacheManager.cleanAreaAsync(this, map.getBoundingBoxE6(), zoomMin, zoomMax);
+			cacheManager.cleanAreaAsync(this, map.getBoundingBox(), zoomMin, zoomMax);
 			return true;
 			}
 		case R.id.menu_cache_usage:{
