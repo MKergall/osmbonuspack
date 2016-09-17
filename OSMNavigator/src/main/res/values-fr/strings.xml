@@ -44,7 +44,7 @@
 	<string name="menu_departure">Départ</string>
 	<string name="menu_destination">Destination</string>
 	<string name="menu_viapoint">Ajouter Etape</string>
-	<string name="menu_kmlpoint">Ajouter Point KML</string>
+	<string name="menu_kmlpoint">Poser un Marqueur</string>
 	<string name="menu_none">Annuler</string>
 
 	<!-- option_menu-->
@@ -63,7 +63,7 @@
 	<string name="menu_route_graphhopper_bicycle">GraphHopper - Vélo</string>
 	<string name="menu_route_graphhopper_pedestrian">GraphHopper - Piéton</string>
 	<string name="menu_route_google">Google - Voiture</string>
-	<string name="menu_kml">Boîte à outils KML</string>
+	<string name="menu_kml">Ma Carte</string>
 	<string name="menu_kml_url">Ouvrir url...</string>
 	<string name="menu_open_file">Ouvrir fichier...</string>
 	<string name="menu_overpassapi_wizard">OverpassAPI Wizard...</string>

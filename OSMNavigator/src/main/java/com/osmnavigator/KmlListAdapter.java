@@ -1,5 +1,13 @@
 package com.osmnavigator;
 
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import org.osmdroid.bonuspack.kml.KmlFeature;
 import org.osmdroid.bonuspack.kml.KmlFolder;
 import org.osmdroid.bonuspack.kml.KmlGeometry;
@@ -9,13 +17,7 @@ import org.osmdroid.bonuspack.kml.KmlMultiGeometry;
 import org.osmdroid.bonuspack.kml.KmlPlacemark;
 import org.osmdroid.bonuspack.kml.KmlPoint;
 import org.osmdroid.bonuspack.kml.KmlPolygon;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
+import org.osmdroid.bonuspack.kml.KmlTrack;
 
 public class KmlListAdapter extends BaseAdapter {
 
@@ -78,6 +80,8 @@ public class KmlListAdapter extends BaseAdapter {
 				img.setImageResource(R.drawable.kml_icon_polygon);
 			else if (geometry instanceof KmlMultiGeometry)
 				img.setImageResource(R.drawable.kml_icon_multigeometry);
+			else if (geometry instanceof KmlTrack)
+				img.setImageResource(R.drawable.kml_icon_gxtrack);
 			else
 				img.setImageDrawable(null);
 		} else if (item instanceof KmlGroundOverlay){

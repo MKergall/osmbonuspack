@@ -591,7 +591,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	 * Reverse Geocoding
      */
     public String getAddress(GeoPoint p){
-		GeocoderNominatim geocoder = new GeocoderNominatim(this, userAgent);
+		GeocoderNominatim geocoder = new GeocoderNominatim(userAgent);
 		String theAddress;
 		try {
 			double dLatitude = p.getLatitude();
@@ -625,7 +625,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		protected List<Address> doInBackground(Object... params) {
 			String locationAddress = (String)params[0];
 			mIndex = (Integer)params[1];
-			GeocoderNominatim geocoder = new GeocoderNominatim(getApplicationContext(), userAgent);
+			GeocoderNominatim geocoder = new GeocoderNominatim(userAgent);
 			geocoder.setOptions(true); //ask for enclosing polygon (if any)
 			try {
 				BoundingBox viewbox = map.getBoundingBox();

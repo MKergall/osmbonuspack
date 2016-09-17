@@ -12,11 +12,11 @@ import java.io.Writer;
  */
 public class HotSpot implements Parcelable {
 
-    public static enum Units {
+    public enum Units {
         fraction, pixels, insetPixels;
         private static Units[] allValues = values();
         public static Units fromOrdinal(int n) {return allValues[n];}
-    };
+    }
 
     public float mx, my;
     public Units mXUnits, mYUnits;

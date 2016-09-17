@@ -1,6 +1,5 @@
 package org.osmdroid.bonuspack.location;
 
-import android.content.Context;
 import android.location.Address;
 import android.util.Log;
 
@@ -41,13 +40,13 @@ public class GeocoderGisgraphy {
 	protected Locale mLocale;
 	protected String mServiceUrl;
 
-	public GeocoderGisgraphy(Context context, Locale locale){
+	public GeocoderGisgraphy(Locale locale) {
 		mLocale = locale;
 		setService(GISGRAPHY_SERVICE_URL); //default service
 	}
-	
-	public GeocoderGisgraphy(Context context){
-		this(context, Locale.getDefault());
+
+	public GeocoderGisgraphy() {
+		this(Locale.getDefault());
 	}
 
 	static public boolean isPresent(){

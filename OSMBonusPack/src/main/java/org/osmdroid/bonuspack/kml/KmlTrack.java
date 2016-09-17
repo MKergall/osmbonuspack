@@ -3,7 +3,6 @@ package org.osmdroid.bonuspack.kml;
 import android.content.Context;
 import android.os.Parcel;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import org.osmdroid.bonuspack.kml.KmlFeature.Styler;
@@ -63,7 +62,7 @@ public class KmlTrack extends KmlGeometry {
 	}
 
 	/**
-	 * @param sWhen "when" string, in one of the KML dateTime formats. Local time not supported yet.
+	 * @param sWhen "when" string, in one of the KML dateTime formats. Local time format not supported yet.
 	 * @return java Date if success, or null
      */
 	public Date parseKmlWhen(String sWhen){
@@ -78,6 +77,9 @@ public class KmlTrack extends KmlGeometry {
 				break;
 			case 19:
 				ft = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+				break;
+			case 20:
+				ft = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 				break;
 			default:
 				return null;
@@ -95,12 +97,6 @@ public class KmlTrack extends KmlGeometry {
 		if (mWhen == null)
 			mWhen = new ArrayList<>();
 		mWhen.add(parseKmlWhen(sWhen));
-	}
-
-	public KmlTrack(JsonObject json){
-		this();
-		JsonArray coordinates = json.get("coordinates").getAsJsonArray();
-		mCoordinates = KmlGeometry.parseGeoJSONPositions(coordinates);
 	}
 
 	public void applyDefaultStyling(Polyline lineStringOverlay, Style defaultStyle, KmlPlacemark kmlPlacemark,
@@ -187,8 +183,11 @@ public class KmlTrack extends KmlGeometry {
 	//Cloneable implementation ------------------------------------
 
 	@Override public KmlTrack clone(){
-		return (KmlTrack)super.clone();
-		//TODO aWhen
+		KmlTrack cloned = (KmlTrack) super.clone();
+		cloned.mWhen = new ArrayList<>(mWhen.size());
+		for (Date d : mWhen)
+			cloned.mWhen.add((Date) d.clone());
+		return cloned;
 	}
 
 	//Parcelable implementation ------------
@@ -199,7 +198,7 @@ public class KmlTrack extends KmlGeometry {
 
 	@Override public void writeToParcel(Parcel out, int flags) {
 		super.writeToParcel(out, flags);
-		//TODO aWhen
+		out.writeList(mWhen);
 	}
 
 	public static final Creator<KmlTrack> CREATOR = new Creator<KmlTrack>() {
@@ -213,6 +212,6 @@ public class KmlTrack extends KmlGeometry {
 
 	public KmlTrack(Parcel in){
 		super(in);
-		//TODO aWhen
+		mWhen = in.readArrayList(Date.class.getClassLoader());
 	}
 }

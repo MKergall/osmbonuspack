@@ -1,6 +1,5 @@
 package org.osmdroid.bonuspack.clustering;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -40,7 +39,7 @@ import java.util.ArrayList;
 	/** anchor point to draw the number of markers inside the cluster icon */
 	public float mTextAnchorU = Marker.ANCHOR_CENTER, mTextAnchorV = Marker.ANCHOR_CENTER;
 
-	public GridMarkerClusterer(Context ctx) {
+	public GridMarkerClusterer() {
 		super();
 		mTextPaint = new Paint();
 		mTextPaint.setColor(Color.WHITE);

@@ -111,9 +111,9 @@ public class KmlLineString extends KmlGeometry {
 		return 0;
 	}
 
-	@Override public void writeToParcel(Parcel out, int flags) {
-		super.writeToParcel(out, flags);
-	}
+	//@Override public void writeToParcel(Parcel out, int flags) {
+	//	super.writeToParcel(out, flags);
+	//}
 	
 	public static final Creator<KmlLineString> CREATOR = new Creator<KmlLineString>() {
 		@Override public KmlLineString createFromParcel(Parcel source) {

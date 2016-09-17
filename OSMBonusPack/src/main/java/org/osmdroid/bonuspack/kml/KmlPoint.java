@@ -133,9 +133,9 @@ public class KmlPoint extends KmlGeometry implements Parcelable, Cloneable {
 		return 0;
 	}
 
-	@Override public void writeToParcel(Parcel out, int flags) {
-		super.writeToParcel(out, flags);
-	}
+	//@Override public void writeToParcel(Parcel out, int flags) {
+	//	super.writeToParcel(out, flags);
+	//}
 	
 	public static final Creator<KmlPoint> CREATOR = new Creator<KmlPoint>() {
 		@Override public KmlPoint createFromParcel(Parcel source) {

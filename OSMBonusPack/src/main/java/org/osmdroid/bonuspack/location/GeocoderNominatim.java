@@ -1,6 +1,5 @@
 package org.osmdroid.bonuspack.location;
 
-import android.content.Context;
 import android.location.Address;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,16 +38,16 @@ public class GeocoderNominatim {
 	protected String mServiceUrl, mKey;
 	protected String mUserAgent;
 	protected boolean mPolygon;
-	
-	public GeocoderNominatim(Context context, Locale locale, String userAgent){
+
+	public GeocoderNominatim(Locale locale, String userAgent) {
 		mLocale = locale;
 		setOptions(false);
 		setService(NOMINATIM_SERVICE_URL); //default service
 		mUserAgent = userAgent;
 	}
-	
-	public GeocoderNominatim(Context context, String userAgent){
-		this(context, Locale.getDefault(), userAgent);
+
+	public GeocoderNominatim(String userAgent) {
+		this(Locale.getDefault(), userAgent);
 	}
 
 	static public boolean isPresent(){

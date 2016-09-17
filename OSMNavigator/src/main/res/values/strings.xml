@@ -45,7 +45,7 @@
 	<string name="menu_departure">Set Departure</string>
 	<string name="menu_destination">Set Destination</string>
 	<string name="menu_viapoint">Add Via-Point</string>
-	<string name="menu_kmlpoint">Add KML Point</string>
+	<string name="menu_kmlpoint">Drop a Marker</string>
 	<string name="menu_none">Cancel</string>
 
 	<!-- option_menu-->
@@ -64,7 +64,7 @@
 	<string name="menu_route_graphhopper_bicycle">GraphHopper - Bicycle</string>
 	<string name="menu_route_graphhopper_pedestrian">GraphHopper - Pedestrian</string>
 	<string name="menu_route_google">Google - Car</string>
-	<string name="menu_kml">KML Toolbox</string>
+	<string name="menu_kml">My Map</string>
 	<string name="menu_kml_url">Open url...</string>
 	<string name="menu_open_file">Open file...</string>
 	<string name="menu_overpassapi_wizard">OverpassAPI Wizard...</string>
