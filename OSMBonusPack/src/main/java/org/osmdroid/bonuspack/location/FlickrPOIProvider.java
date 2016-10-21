@@ -6,9 +6,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
+import org.osmdroid.bonuspack.utils.StatusException;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 
 /**
@@ -97,12 +100,12 @@ public class FlickrPOIProvider {
 	 * @param fullUrl
 	 * @return the list of POI
 	 */
-	public ArrayList<POI> getThem(String fullUrl){
+	public ArrayList<POI> getThem(String fullUrl) throws IOException, StatusException {
 		Log.d(BonusPackHelper.LOG_TAG, "FlickrPOIProvider:get:"+fullUrl);
 		String jString = BonusPackHelper.requestStringFromUrl(fullUrl);
 		if (jString == null) {
 			Log.e(BonusPackHelper.LOG_TAG, "FlickrPOIProvider: request failed.");
-			return null;
+			throw new StatusException(HttpURLConnection.HTTP_NO_CONTENT);
 		}
 		try {
 			JSONObject jRoot = new JSONObject(jString);
@@ -138,7 +141,7 @@ public class FlickrPOIProvider {
 	 * @param maxResults
 	 * @return list of POI, Flickr photos inside the bounding box. Null if technical issue. 
 	 */
-	public ArrayList<POI> getPOIInside(BoundingBox boundingBox, int maxResults){
+	public ArrayList<POI> getPOIInside(BoundingBox boundingBox, int maxResults) throws IOException, StatusException {
 		String url = getUrlInside(boundingBox, maxResults);
 		return getThem(url);
 	}

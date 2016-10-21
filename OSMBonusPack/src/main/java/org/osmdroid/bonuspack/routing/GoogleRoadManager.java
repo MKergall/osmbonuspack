@@ -5,6 +5,7 @@ import android.util.Log;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.bonuspack.utils.HttpConnection;
 import org.osmdroid.bonuspack.utils.PolylineEncoder;
+import org.osmdroid.bonuspack.utils.StatusException;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.xml.sax.Attributes;
@@ -65,8 +66,10 @@ public class GoogleRoadManager extends RoadManager {
 	/** 
 	 * @param waypoints list of GeoPoints. Must have at least 2 entries, start and end points. 
 	 * @return the roads
+	 * @throws IOException if there is problem with internet connection
+	 * @throws StatusException if there si some problem other then internet connection. For problem details see {@link StatusException#getHttpStatusCode()}
 	 */
-	protected Road[] getRoads(ArrayList<GeoPoint> waypoints, boolean getAlternate) {
+	protected Road[] getRoads(ArrayList<GeoPoint> waypoints, boolean getAlternate) throws IOException, StatusException {
 		String url = getUrl(waypoints, getAlternate);
 		Log.d(BonusPackHelper.LOG_TAG, "GoogleRoadManager.getRoads:" + url);
 		Road[] roads = null;
@@ -95,11 +98,11 @@ public class GoogleRoadManager extends RoadManager {
 		return roads;
 	}
 
-	@Override public Road[] getRoads(ArrayList<GeoPoint> waypoints) {
+	@Override public Road[] getRoads(ArrayList<GeoPoint> waypoints) throws IOException, StatusException {
 		return getRoads(waypoints, true);
 	}
 
-	@Override public Road getRoad(ArrayList<GeoPoint> waypoints) {
+	@Override public Road getRoad(ArrayList<GeoPoint> waypoints) throws IOException, StatusException {
 		Road[] roads = getRoads(waypoints, false);
 		return roads[0];
 	}

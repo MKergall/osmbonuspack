@@ -57,7 +57,12 @@ public class PicasaPOIProvider {
 	public ArrayList<POI> getThem(String fullUrl){
 		Log.d(BonusPackHelper.LOG_TAG, "PicasaPOIProvider:get:"+fullUrl);
 		HttpConnection connection = new HttpConnection();
-		connection.doGet(fullUrl);
+		try {
+			connection.doGet(fullUrl);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 		InputStream stream = connection.getStream();
 		if (stream == null){
 			return null;

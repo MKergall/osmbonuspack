@@ -7,9 +7,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.bonuspack.utils.PolylineEncoder;
+import org.osmdroid.bonuspack.utils.StatusException;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -90,7 +92,7 @@ public class GraphHopperRoadManager extends RoadManager {
 		return roads;
 	}
 
-	public Road[] getRoads(ArrayList<GeoPoint> waypoints, boolean getAlternate) {
+	public Road[] getRoads(ArrayList<GeoPoint> waypoints, boolean getAlternate) throws IOException, StatusException {
 		String url = getUrl(waypoints, getAlternate);
 		Log.d(BonusPackHelper.LOG_TAG, "GraphHopper.getRoads:" + url);
 		String jString = BonusPackHelper.requestStringFromUrl(url);
@@ -146,12 +148,12 @@ public class GraphHopperRoadManager extends RoadManager {
 		}
 	}
 
-	@Override public Road[] getRoads(ArrayList<GeoPoint> waypoints) {
+	@Override public Road[] getRoads(ArrayList<GeoPoint> waypoints) throws IOException, StatusException {
 		return getRoads(waypoints, true);
 	}
 
 	@Override
-	public Road getRoad(ArrayList<GeoPoint> waypoints) {
+	public Road getRoad(ArrayList<GeoPoint> waypoints) throws IOException, StatusException {
 		Road[] roads = getRoads(waypoints, false);
 		return roads[0];
 	}

@@ -62,8 +62,10 @@ public class BonusPackHelper {
 	 * @param url
 	 * @param userAgent
 	 * @return the whole content, or null if any issue.
+	 * @throws IOException if there is problem with internet connection
+	 * @throws StatusException if there si some problem other then internet connection. For problem details see {@link StatusException#getHttpStatusCode()}
 	 */
-	public static String requestStringFromUrl(String url, String userAgent) {
+	public static String requestStringFromUrl(String url, String userAgent) throws IOException, StatusException {
 		HttpConnection connection = new HttpConnection();
 		if (userAgent != null)
 			connection.setUserAgent(userAgent);
@@ -75,9 +77,11 @@ public class BonusPackHelper {
 
 	/** sends an http request, and returns the whole content result in a String.
 	 * @param url
-	 * @return the whole content, or null if any issue. 
+	 * @return the whole content, or null if any issue.
+	 * @throws IOException if there is problem with internet connection
+	 * @throws StatusException if there si some problem other then internet connection. For problem details see {@link StatusException#getHttpStatusCode()}
 	 */
-	public static String requestStringFromUrl(String url) {
+	public static String requestStringFromUrl(String url) throws IOException, StatusException {
 		return requestStringFromUrl(url, null);
 	}
 

@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.bonuspack.utils.HttpConnection;
+import org.osmdroid.bonuspack.utils.StatusException;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.xml.sax.Attributes;
@@ -15,6 +16,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -67,12 +69,12 @@ public class GeoNamesPOIProvider {
 	 * @param fullUrl
 	 * @return the list of POI
 	 */
-	public ArrayList<POI> getThem(String fullUrl){
+	public ArrayList<POI> getThem(String fullUrl) throws IOException, StatusException {
 		Log.d(BonusPackHelper.LOG_TAG, "GeoNamesPOIProvider:get:"+fullUrl);
 		String jString = BonusPackHelper.requestStringFromUrl(fullUrl);
 		if (jString == null) {
 			Log.e(BonusPackHelper.LOG_TAG, "GeoNamesPOIProvider: request failed.");
-			return null;
+			throw new StatusException(HttpURLConnection.HTTP_NO_CONTENT);
 		}
 		try {
 			JSONObject jRoot = new JSONObject(jString);
@@ -113,7 +115,11 @@ public class GeoNamesPOIProvider {
 	public ArrayList<POI> getThemXML(String fullUrl){
 		Log.d(BonusPackHelper.LOG_TAG, "GeoNamesPOIProvider:get:"+fullUrl);
 		HttpConnection connection = new HttpConnection();
-		connection.doGet(fullUrl);
+		try {
+			connection.doGet(fullUrl);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		InputStream stream = connection.getStream();
 		if (stream == null){
 			return null;
@@ -141,7 +147,7 @@ public class GeoNamesPOIProvider {
 	 * @return list of POI, Wikipedia entries close to the position. Null if technical issue. 
 	 */
 	public ArrayList<POI> getPOICloseTo(GeoPoint position, 
-			int maxResults, double maxDistance){
+			int maxResults, double maxDistance) throws IOException, StatusException {
 		String url = getUrlCloseTo(position, maxResults, maxDistance);
 		return getThem(url);
 	}
@@ -151,7 +157,7 @@ public class GeoNamesPOIProvider {
 	 * @param maxResults
 	 * @return list of POI, Wikipedia entries inside the bounding box. Null if technical issue. 
 	 */
-	public ArrayList<POI> getPOIInside(BoundingBox boundingBox, int maxResults){
+	public ArrayList<POI> getPOIInside(BoundingBox boundingBox, int maxResults) throws IOException, StatusException {
 		String url = getUrlInside(boundingBox, maxResults);
 		return getThem(url);
 	}

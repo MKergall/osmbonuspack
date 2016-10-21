@@ -16,9 +16,12 @@ import org.osmdroid.bonuspack.kml.KmlPlacemark;
 import org.osmdroid.bonuspack.kml.KmlPoint;
 import org.osmdroid.bonuspack.kml.KmlPolygon;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
+import org.osmdroid.bonuspack.utils.StatusException;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
@@ -109,12 +112,12 @@ public class OverpassAPIProvider {
 	 * - ways and relations must contain the "center" element. <br>
 	 * @return elements as a list of POI
 	 */
-	public ArrayList<POI> getPOIsFromUrl(String url){
+	public ArrayList<POI> getPOIsFromUrl(String url) throws IOException, StatusException {
 		Log.d(BonusPackHelper.LOG_TAG, "OverpassAPIProvider:getPOIsFromUrl:"+url);
 		String jString = BonusPackHelper.requestStringFromUrl(url);
 		if (jString == null) {
 			Log.e(BonusPackHelper.LOG_TAG, "OverpassAPIProvider: request failed.");
-			return null;
+			throw new StatusException(HttpURLConnection.HTTP_NO_CONTENT);
 		}
 		try {
 			//parse JSON and build POIs
@@ -260,7 +263,7 @@ public class OverpassAPIProvider {
 	 * - ways and relations must have the "geometry" element<br>
 	 * @return true if ok, false if technical error. 
 	 */
-	public boolean addInKmlFolder(KmlFolder kmlFolder, String url){
+	public boolean addInKmlFolder(KmlFolder kmlFolder, String url) throws IOException, StatusException {
 		Log.d(BonusPackHelper.LOG_TAG, "OverpassAPIProvider:addInKmlFolder:"+url);
 		String jString = BonusPackHelper.requestStringFromUrl(url);
 		if (jString == null) {
