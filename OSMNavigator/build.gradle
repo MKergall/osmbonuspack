@@ -24,7 +24,7 @@ dependencies {
 
     compile project(":OSMBonusPack")
 
-    compile 'org.osmdroid:osmdroid-mapsforge:5.2@aar'
-    compile 'org.mapsforge:mapsforge-map-android:0.6.0'
-    compile 'org.mapsforge:mapsforge-map:0.6.0'
+    compile 'org.osmdroid:osmdroid-mapsforge:5.5:release@aar'
+    compile 'org.mapsforge:mapsforge-map-android:0.6.1'
+    compile 'org.mapsforge:mapsforge-map:0.6.1'
 }
