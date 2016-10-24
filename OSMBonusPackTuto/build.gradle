@@ -33,15 +33,15 @@ dependencies {
     //compile project(":OSMBonusPack")
 
     //including using JitPack:
-    compile 'com.github.MKergall:osmbonuspack:5.9'
+    compile 'com.github.MKergall:osmbonuspack:6.0'
 
     // including as local lib
     /*
-    compile(name: 'osmbonuspack_v5.9', ext: 'aar')
-    compile 'org.osmdroid:osmdroid-android:5.4.1:release@aar'
+    compile(name: 'osmbonuspack_v6.0', ext: 'aar')
+    compile 'org.osmdroid:osmdroid-android:5.5:release@aar'
     compile "com.android.support:support-v4:23.1.1"
     compile 'org.apache.commons:commons-lang3:3.3.2'
-    compile 'com.google.code.gson:gson:2.4'
-    compile 'com.squareup.okhttp:okhttp:2.6.0'
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
     */
 }
