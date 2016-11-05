@@ -315,7 +315,58 @@ public class KmlDocument implements Parcelable {
 	}
 	
 	// KmlSaxHandler -------------
-	
+
+	protected enum KmlKeywords {Document, Folder, NetworkLink, GroundOverlay, Placemark, Point, LineString, gx_Track,
+		Polygon, innerBoundaryIs, MultiGeometry, Style, StyleMap, LineStyle, PolyStyle, IconStyle, hotSpot,
+		Data, SimpleData, name, description, visibility, open, coordinates, gx_coord, when, styleUrl, key, color,
+		colorMode, width, scale, heading, href, north, south, east, west, rotation, LatLonBox, value}
+
+	protected static HashMap<String, KmlKeywords> KEYWORDS_DICTIONARY;
+	static {
+		KEYWORDS_DICTIONARY = new HashMap<String, KmlKeywords>();
+		KEYWORDS_DICTIONARY.put("Document", KmlKeywords.Document);
+		KEYWORDS_DICTIONARY.put("Folder", KmlKeywords.Folder);
+		KEYWORDS_DICTIONARY.put("NetworkLink", KmlKeywords.NetworkLink);
+		KEYWORDS_DICTIONARY.put("GroundOverlay", KmlKeywords.GroundOverlay);
+		KEYWORDS_DICTIONARY.put("Placemark", KmlKeywords.Placemark);
+		KEYWORDS_DICTIONARY.put("Point", KmlKeywords.Point);
+		KEYWORDS_DICTIONARY.put("LineString", KmlKeywords.LineString);
+		KEYWORDS_DICTIONARY.put("gx:Track", KmlKeywords.gx_Track);
+		KEYWORDS_DICTIONARY.put("Polygon", KmlKeywords.Polygon);
+		KEYWORDS_DICTIONARY.put("innerBoundaryIs", KmlKeywords.innerBoundaryIs);
+		KEYWORDS_DICTIONARY.put("MultiGeometry", KmlKeywords.MultiGeometry);
+		KEYWORDS_DICTIONARY.put("Style", KmlKeywords.Style);
+		KEYWORDS_DICTIONARY.put("StyleMap", KmlKeywords.StyleMap);
+		KEYWORDS_DICTIONARY.put("LineStyle", KmlKeywords.LineStyle);
+		KEYWORDS_DICTIONARY.put("PolyStyle", KmlKeywords.PolyStyle);
+		KEYWORDS_DICTIONARY.put("IconStyle", KmlKeywords.IconStyle);
+		KEYWORDS_DICTIONARY.put("hotSpot", KmlKeywords.hotSpot);
+		KEYWORDS_DICTIONARY.put("Data", KmlKeywords.Data);
+		KEYWORDS_DICTIONARY.put("SimpleData", KmlKeywords.SimpleData);
+		KEYWORDS_DICTIONARY.put("name", KmlKeywords.name);
+		KEYWORDS_DICTIONARY.put("description", KmlKeywords.description);
+		KEYWORDS_DICTIONARY.put("visibility", KmlKeywords.visibility);
+		KEYWORDS_DICTIONARY.put("open", KmlKeywords.open);
+		KEYWORDS_DICTIONARY.put("coordinates", KmlKeywords.coordinates);
+		KEYWORDS_DICTIONARY.put("gx_coord", KmlKeywords.gx_coord);
+		KEYWORDS_DICTIONARY.put("when", KmlKeywords.when);
+		KEYWORDS_DICTIONARY.put("styleUrl", KmlKeywords.styleUrl);
+		KEYWORDS_DICTIONARY.put("key", KmlKeywords.key);
+		KEYWORDS_DICTIONARY.put("color", KmlKeywords.color);
+		KEYWORDS_DICTIONARY.put("colorMode", KmlKeywords.colorMode);
+		KEYWORDS_DICTIONARY.put("width", KmlKeywords.width);
+		KEYWORDS_DICTIONARY.put("scale", KmlKeywords.scale);
+		KEYWORDS_DICTIONARY.put("heading", KmlKeywords.heading);
+		KEYWORDS_DICTIONARY.put("href", KmlKeywords.href);
+		KEYWORDS_DICTIONARY.put("north", KmlKeywords.north);
+		KEYWORDS_DICTIONARY.put("south", KmlKeywords.south);
+		KEYWORDS_DICTIONARY.put("east", KmlKeywords.east);
+		KEYWORDS_DICTIONARY.put("west", KmlKeywords.west);
+		KEYWORDS_DICTIONARY.put("rotation", KmlKeywords.rotation);
+		KEYWORDS_DICTIONARY.put("LatLonBox", KmlKeywords.LatLonBox);
+		KEYWORDS_DICTIONARY.put("value", KmlKeywords.value);
+	}
+
 	protected class KmlSaxHandler extends DefaultHandler {
 		
 		private StringBuilder mStringBuilder = new StringBuilder(1024);
@@ -375,8 +426,8 @@ public class KmlDocument implements Parcelable {
 				Log.e(BonusPackHelper.LOG_TAG, "Error reading NetworkLink:"+href);
 			}
 		}
-		
-		public void startElement(String uri, String localName, String name,
+
+		public void startElementOld(String uri, String localName, String name,
 				Attributes attributes) throws SAXException {
 			if (name.equals("Document")) {
 				mKmlCurrentFeature = mKmlRoot; //If there is a Document, it will be the root. 
@@ -451,13 +502,129 @@ public class KmlDocument implements Parcelable {
 			}
 			mStringBuilder.setLength(0);
 		}
-		
+
+		public void startElement(String uri, String localName, String name,
+								 Attributes attributes) throws SAXException {
+			KmlKeywords element = KEYWORDS_DICTIONARY.get(name);
+			switch (element) {
+				case Document: {
+					mKmlCurrentFeature = mKmlRoot; //If there is a Document, it will be the root.
+					mKmlCurrentFeature.mId = attributes.getValue("id");
+					break;
+				}
+				case Folder: {
+					mKmlCurrentFeature = new KmlFolder();
+					mKmlCurrentFeature.mId = attributes.getValue("id");
+					mKmlFeatureStack.add(mKmlCurrentFeature); //push on stack
+					break;
+				}
+				case NetworkLink: {
+					mKmlCurrentFeature = new KmlFolder();
+					mKmlCurrentFeature.mId = attributes.getValue("id");
+					mKmlFeatureStack.add(mKmlCurrentFeature); //push on stack
+					mIsNetworkLink = true;
+					break;
+				}
+				case GroundOverlay: {
+					mKmlCurrentGroundOverlay = new KmlGroundOverlay();
+					mKmlCurrentFeature = mKmlCurrentGroundOverlay;
+					mKmlCurrentFeature.mId = attributes.getValue("id");
+					mKmlFeatureStack.add(mKmlCurrentFeature); //push on stack
+					break;
+				}
+				case Placemark: {
+					mKmlCurrentFeature = new KmlPlacemark();
+					mKmlCurrentFeature.mId = attributes.getValue("id");
+					mKmlFeatureStack.add(mKmlCurrentFeature); //push on Feature stack
+					break;
+				}
+				case Point: {
+					mKmlCurrentGeometry = new KmlPoint();
+					mKmlGeometryStack.add(mKmlCurrentGeometry); //push on Geometry stack
+					break;
+				}
+				case LineString: {
+					mKmlCurrentGeometry = new KmlLineString();
+					mKmlGeometryStack.add(mKmlCurrentGeometry);
+					break;
+				}
+				case gx_Track: {
+					mKmlCurrentGeometry = new KmlTrack();
+					mKmlGeometryStack.add(mKmlCurrentGeometry);
+					break;
+				}
+				case Polygon: {
+					mKmlCurrentGeometry = new KmlPolygon();
+					mKmlGeometryStack.add(mKmlCurrentGeometry);
+					break;
+				}
+				case innerBoundaryIs: {
+					mIsInnerBoundary = true;
+					break;
+				}
+				case MultiGeometry: {
+					mKmlCurrentGeometry = new KmlMultiGeometry();
+					mKmlGeometryStack.add(mKmlCurrentGeometry);
+					break;
+				}
+				case Style: {
+					mCurrentStyle = new Style();
+					mCurrentStyleId = attributes.getValue("id");
+					break;
+				}
+				case StyleMap: {
+					mCurrentStyleMap = new StyleMap();
+					mCurrentStyleId = attributes.getValue("id");
+					break;
+				}
+				case LineStyle: {
+					mCurrentStyle.mLineStyle = new LineStyle();
+					mColorStyle = mCurrentStyle.mLineStyle;
+					break;
+				}
+				case PolyStyle: {
+					mCurrentStyle.mPolyStyle = new ColorStyle();
+					mColorStyle = mCurrentStyle.mPolyStyle;
+					break;
+				}
+				case IconStyle: {
+					mCurrentStyle.mIconStyle = new IconStyle();
+					mColorStyle = mCurrentStyle.mIconStyle;
+					break;
+				}
+				case hotSpot: {
+					if (mCurrentStyle != null && mColorStyle != null && mColorStyle instanceof IconStyle) {
+						mCurrentStyle.mIconStyle.mHotSpot = new HotSpot(
+								Float.parseFloat(attributes.getValue("x")),
+								Float.parseFloat(attributes.getValue("y")),
+								attributes.getValue("xunits"),
+								attributes.getValue("yunits")
+						);
+					/*
+					if ("fraction".equals(attributes.getValue("xunits")))
+						mCurrentStyle.mIconStyle.mHotSpotX = Float.parseFloat(attributes.getValue("x"));
+					if ("fraction".equals(attributes.getValue("yunits")))
+						mCurrentStyle.mIconStyle.mHotSpotY = Float.parseFloat(attributes.getValue("y"));
+					*/
+					}
+					break;
+				}
+				case Data:
+				case SimpleData: {
+					mDataName = attributes.getValue("name");
+					break;
+				}
+				default: break;
+			} //switch
+			mStringBuilder.setLength(0);
+		}
+
 		public @Override void characters(char[] ch, int start, int length)
 				throws SAXException {
 			mStringBuilder.append(ch, start, length);
 		}
 		
-		public void endElement(String uri, String localName, String name)
+		public void endElementOld(String uri, String localName, String name)
 				throws SAXException {
 			if (name.equals("Document")) {
 				//Document is the root, nothing to do. 
@@ -610,9 +777,233 @@ public class KmlDocument implements Parcelable {
 				mDataName = null;
 			}
 		}
-		
-	}
-	
+
+		public void endElement(String uri, String localName, String name)
+				throws SAXException {
+			KmlKeywords element = KEYWORDS_DICTIONARY.get(name);
+			switch (element) {
+				case Document: {
+					//Document is the root, nothing to do.
+					break;
+				}
+				case Folder:
+				case Placemark:
+				case NetworkLink:
+				case GroundOverlay: {
+					//this was a Feature:
+					KmlFolder parent = (KmlFolder) mKmlFeatureStack.get(mKmlFeatureStack.size() - 2); //get parent
+					parent.add(mKmlCurrentFeature); //add current in its parent
+					mKmlFeatureStack.remove(mKmlFeatureStack.size() - 1); //pop current from stack
+					mKmlCurrentFeature = mKmlFeatureStack.get(mKmlFeatureStack.size() - 1); //set current to top of stack
+					if (element == KmlKeywords.NetworkLink)
+						mIsNetworkLink = false;
+					else if (element == KmlKeywords.GroundOverlay)
+						mKmlCurrentGroundOverlay = null;
+					break;
+				}
+				case innerBoundaryIs: {
+					mIsInnerBoundary = false;
+					break;
+				}
+				case Point:
+				case LineString:
+				case Polygon:
+				case MultiGeometry:
+				case gx_Track: {
+					//this was a Geometry:
+					if (mKmlGeometryStack.size() == 1) {
+						//no MultiGeometry parent: add this Geometry in the current Feature:
+						((KmlPlacemark) mKmlCurrentFeature).mGeometry = mKmlCurrentGeometry;
+						mKmlGeometryStack.remove(mKmlGeometryStack.size() - 1); //pop current from stack
+						mKmlCurrentGeometry = null;
+					} else {
+						KmlMultiGeometry parent = (KmlMultiGeometry) mKmlGeometryStack.get(mKmlGeometryStack.size() - 2); //get parent
+						parent.addItem(mKmlCurrentGeometry); //add current in its parent
+						mKmlGeometryStack.remove(mKmlGeometryStack.size() - 1); //pop current from stack
+						mKmlCurrentGeometry = mKmlGeometryStack.get(mKmlGeometryStack.size() - 1); //set current to top of stack
+					}
+					break;
+				}
+				case name: {
+					mKmlCurrentFeature.mName = mStringBuilder.toString();
+					break;
+				}
+				case description: {
+					mKmlCurrentFeature.mDescription = mStringBuilder.toString();
+					break;
+				}
+				case visibility: {
+					mKmlCurrentFeature.mVisibility = ("1".equals(mStringBuilder.toString()));
+					break;
+				}
+				case open: {
+					mKmlCurrentFeature.mOpen = ("1".equals(mStringBuilder.toString()));
+					break;
+				}
+				case coordinates: {
+					if (mKmlCurrentFeature instanceof KmlPlacemark) {
+						if (!mIsInnerBoundary) {
+							mKmlCurrentGeometry.mCoordinates = parseKmlCoordinates(mStringBuilder.toString());
+						} else { //inside a Polygon innerBoundaryIs element: new hole
+							KmlPolygon polygon = (KmlPolygon) mKmlCurrentGeometry;
+							if (polygon.mHoles == null)
+								polygon.mHoles = new ArrayList<ArrayList<GeoPoint>>();
+							ArrayList<GeoPoint> hole = parseKmlCoordinates(mStringBuilder.toString());
+							polygon.mHoles.add(hole);
+						}
+					}
+					break;
+				}
+				case gx_coord: {
+					if (mKmlCurrentGeometry != null && mKmlCurrentGeometry instanceof KmlTrack)
+						((KmlTrack) mKmlCurrentGeometry).addGxCoord(mStringBuilder.toString());
+					break;
+				}
+				case when: {
+					if (mKmlCurrentGeometry != null && mKmlCurrentGeometry instanceof KmlTrack)
+						((KmlTrack) mKmlCurrentGeometry).addWhen(mStringBuilder.toString());
+					break;
+				}
+				case styleUrl: {
+					String styleUrl;
+					if (mStringBuilder.charAt(0) == '#')
+						styleUrl = mStringBuilder.substring(1); //remove the #
+					else //external url: keep as is:
+						styleUrl = mStringBuilder.toString();
+
+					if (mCurrentStyleMap != null) {
+						mCurrentStyleMap.setPair(mCurrentStyleKey, styleUrl);
+					} else if (mKmlCurrentFeature != null) {
+						mKmlCurrentFeature.mStyle = styleUrl;
+					}
+					break;
+				}
+				case key: {
+					mCurrentStyleKey = mStringBuilder.toString();
+					break;
+				}
+				case color: {
+					if (mCurrentStyle != null) {
+						if (mColorStyle != null)
+							mColorStyle.mColor = ColorStyle.parseKMLColor(mStringBuilder.toString());
+					} else if (mKmlCurrentGroundOverlay != null) {
+						mKmlCurrentGroundOverlay.mColor = ColorStyle.parseKMLColor(mStringBuilder.toString());
+					}
+					break;
+				}
+				case colorMode: {
+					if (mCurrentStyle != null && mColorStyle != null)
+						mColorStyle.mColorMode = (mStringBuilder.toString().equals("random")
+								? ColorStyle.MODE_RANDOM
+								: ColorStyle.MODE_NORMAL);
+					break;
+				}
+				case width: {
+					if (mCurrentStyle != null && mColorStyle != null && mColorStyle instanceof LineStyle)
+						mCurrentStyle.mLineStyle.mWidth = Float.parseFloat(mStringBuilder.toString());
+					break;
+				}
+				case scale: {
+					if (mCurrentStyle != null && mColorStyle != null && mColorStyle instanceof IconStyle) {
+						mCurrentStyle.mIconStyle.mScale = Float.parseFloat(mStringBuilder.toString());
+					}
+					break;
+				}
+				case heading: {
+					if (mCurrentStyle != null && mColorStyle != null && mColorStyle instanceof IconStyle) {
+						mCurrentStyle.mIconStyle.mHeading = Float.parseFloat(mStringBuilder.toString());
+					}
+					break;
+				}
+				case href: {
+					if (mCurrentStyle != null && mColorStyle != null && mColorStyle instanceof IconStyle) {
+						//href of an Icon in an IconStyle:
+						String href = mStringBuilder.toString();
+						mCurrentStyle.setIcon(href, mFile, mKMZFile);
+					} else if (mIsNetworkLink) {
+						//href of a NetworkLink:
+						String href = mStringBuilder.toString();
+						loadNetworkLink(href, mKMZFile);
+					} else if (mKmlCurrentGroundOverlay != null) {
+						//href of a GroundOverlay Icon:
+						mKmlCurrentGroundOverlay.setIcon(mStringBuilder.toString(), mFile, mKMZFile);
+					}
+					break;
+				}
+				case LineStyle:
+				case PolyStyle:
+				case IconStyle: {
+					mColorStyle = null;
+					break;
+				}
+				case Style: {
+					if (mCurrentStyleId != null)
+						putStyle(mCurrentStyleId, mCurrentStyle);
+					else {
+						mCurrentStyleId = addStyle(mCurrentStyle);
+					}
+					if (mKmlCurrentFeature != null && mKmlCurrentFeature != mKmlRoot) {
+						//this is an inline style. Set its style id to the KmlObject container:
+						mKmlCurrentFeature.mStyle = mCurrentStyleId;
+					}
+					mCurrentStyle = null;
+					mCurrentStyleId = null;
+					break;
+				}
+				case StyleMap: {
+					if (mCurrentStyleId != null)
+						putStyle(mCurrentStyleId, mCurrentStyleMap);
+					//TODO: inline StyleMap ???
+					mCurrentStyleMap = null;
+					mCurrentStyleId = null;
+					mCurrentStyleKey = null;
+					break;
+				}
+				case north: {
+					mNorth = Double.parseDouble(mStringBuilder.toString());
+					break;
+				}
+				case south: {
+					mSouth = Double.parseDouble(mStringBuilder.toString());
+					break;
+				}
+				case east: {
+					mEast = Double.parseDouble(mStringBuilder.toString());
+					break;
+				}
+				case west: {
+					mWest = Double.parseDouble(mStringBuilder.toString());
+					break;
+				}
+				case rotation: {
+					if (mKmlCurrentGroundOverlay != null) {
+						mKmlCurrentGroundOverlay.mRotation = Float.parseFloat(mStringBuilder.toString());
+					}
+					break;
+				}
+				case LatLonBox: {
+					if (mKmlCurrentGroundOverlay != null) {
+						mKmlCurrentGroundOverlay.setLatLonBox(mNorth, mSouth, mEast, mWest);
+					}
+					break;
+				}
+				case SimpleData: {
+					//We don't check the schema from SchemaData. We just pick the name and the value from SimpleData:
+					mKmlCurrentFeature.setExtendedData(mDataName, mStringBuilder.toString());
+					mDataName = null;
+					break;
+				}
+				case value: {
+					mKmlCurrentFeature.setExtendedData(mDataName, mStringBuilder.toString());
+					mDataName = null;
+					break;
+				}
+				default: break;
+			} //switch
+		} //endElement
+
+	} //KmlSaxHandler class
+
 	/**
 	 * save the document as a KML file on writer
 	 * @param writer
