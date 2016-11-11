@@ -1,6 +1,3 @@
-# WARNING on 7/09/2016
-Following changes in OSRM routing service API, applications using this service MUST URGENTLY upgrade to OSMBonusPack 5.8.1. The old OSRM service (V4) has just been stopped. 
-
 # About OSMBonusPack
 osmdroid is a library to interact with OpenStreetMap data inside an Android application. It offers an almost full/free replacement to Android map objects: MapView, MapController, Overlays (Marker, Polyline, Polygon), etc.
 
@@ -17,6 +14,9 @@ This "OSMBonusPack" library complements osmdroid with (very) useful classes:
 Have a look to the examples below, and to the [features](https://github.com/MKergall/osmbonuspack/wiki/features). 
 
 The [OSMNavigator](https://github.com/MKergall/osmbonuspack/wiki/OSMNavigator) application demonstrates the use of these classes. This is a generic-purpose Map/Navigation tool, including a KML viewer and editor.
+
+[![Get it on Google Play](http://steverichey.github.io/google-play-badge-svg/img/en_get.svg)](https://play.google.com/store/apps/details?id=com.osmnavigator)
+
 
 # Examples
 Geocoding, route display, bubble on the destination with the address and an image
