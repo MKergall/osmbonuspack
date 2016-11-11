@@ -1,5 +1,3 @@
-[![Release](https://jitpack.io/v/mkergall/osmbonuspack.svg)](https://jitpack.io/#/mkergall/osmbonuspack)
-
 # About OSMBonusPack
 osmdroid is a library to interact with OpenStreetMap data inside an Android application. It offers an almost full/free replacement to Android map objects: MapView, MapController, Overlays (Marker, Polyline, Polygon), etc.
 
@@ -66,6 +64,8 @@ Google Maps "My Places"  | rendered with OSMBonusPack
 Start with the [installation guide](https://github.com/MKergall/osmbonuspack/wiki/HowToInclude), then follow the [Tutorials](https://github.com/MKergall/osmbonuspack/wiki/Tutorial_0).
 
 In the [releases](https://github.com/MKergall/osmbonuspack/releases), you will find the library (aar file) and the javadoc. 
+
+[![Get it on Google Play](http://steverichey.github.io/google-play-badge-svg/img/en_get.svg)](https://play.google.com/store/apps/details?id=com.osmnavigator)
 
 # How to get help
 If you need help to use osmdroid or OSMBonusPack, go to [StackOverflow](http://stackoverflow.com/questions/tagged/osmdroid) with "osmdroid" tag. 
