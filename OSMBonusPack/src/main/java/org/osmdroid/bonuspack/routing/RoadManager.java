@@ -65,8 +65,8 @@ public abstract class RoadManager {
 	/**
 	 * Using the road high definition shape, builds and returns a Polyline. 
 	 * @param road
-	 * @param color
-	 * @param width
+	 * @param color Android Color. Setting some transparency is highly recommended.
+	 * @param width in pixels.
 	 */
 	public static Polyline buildRoadOverlay(Road road, int color, float width){
 		Polyline roadOverlay = new Polyline();
