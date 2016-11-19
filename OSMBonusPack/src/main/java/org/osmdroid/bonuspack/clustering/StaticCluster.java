@@ -33,7 +33,11 @@ public class StaticCluster {
 	public Marker getItem(int index) {
 	    return mItems.get(index);
 	}
-	
+
+	public ArrayList<Marker> getItems(){
+		return mItems;
+	}
+
 	public boolean add(Marker t) {
 	    return mItems.add(t);
 	}
