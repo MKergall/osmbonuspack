@@ -199,6 +199,20 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		String oUrl = overpassProvider.urlForTagSearchKml("highway=speed_camera", oBB, 500, 30);
 		boolean ok = overpassProvider.addInKmlFolder(mKmlDocument.mKmlRoot, oUrl);
 
+		//Variant - getting KML file from Assets:
+		/*
+		AssetManager assetManager = getAssets();
+		boolean ok;
+		try {
+			InputStream stream = assetManager.open("KML_Samples.kml");
+			ok = mKmlDocument.parseKMLStream(stream, null);
+			stream.close();
+		}catch (Exception e) {
+			e.printStackTrace();
+			ok = false;
+		}
+		*/
+
 		if (ok) {
 			//13.1 Simple styling
 			Drawable defaultMarker = ResourcesCompat.getDrawable(getResources(), R.drawable.marker_kml_point, null);
