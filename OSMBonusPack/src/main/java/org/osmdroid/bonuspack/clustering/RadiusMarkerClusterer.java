@@ -17,6 +17,7 @@ import org.osmdroid.views.overlay.Marker;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Radius-based Clustering algorithm:
@@ -113,11 +114,20 @@ public class RadiusMarkerClusterer extends MarkerClusterer {
         return cluster;
     }
 
-    @Override public Marker buildClusterMarker(StaticCluster cluster, MapView mapView) {
-        Marker m = new Marker(mapView);
+    @Override public Marker buildClusterMarker(final StaticCluster cluster, final MapView mapView) {
+        final Marker m = new Marker(mapView);
         m.setPosition(cluster.getPosition());
         m.setInfoWindow(null);
         m.setAnchor(mAnchorU, mAnchorV);
+        m.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker, MapView mapView) {
+                if (mMarkerClusterClickListener != null){
+                    mMarkerClusterClickListener.onMarkerClusterClick(cluster, mapView);
+                }
+                return false;
+            }
+        });
 
         Bitmap finalIcon = Bitmap.createBitmap(mClusterIcon.getWidth(), mClusterIcon.getHeight(), mClusterIcon.getConfig());
         Canvas iconCanvas = new Canvas(finalIcon);

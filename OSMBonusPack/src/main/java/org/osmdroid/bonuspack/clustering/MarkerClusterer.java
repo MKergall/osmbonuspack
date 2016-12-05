@@ -11,6 +11,7 @@ import org.osmdroid.views.overlay.Overlay;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 
 /** 
@@ -28,7 +29,8 @@ public abstract class MarkerClusterer extends Overlay {
 
 	/** impossible value for zoom level, to force clustering */
 	protected static final int FORCE_CLUSTERING = -1;
-	
+
+	protected OnMarkerClusterClickListener mMarkerClusterClickListener;
 	protected ArrayList<Marker> mItems = new ArrayList<Marker>();
 	protected Point mPoint = new Point();
 	protected ArrayList<StaticCluster> mClusters = new ArrayList<StaticCluster>();
@@ -93,7 +95,16 @@ public abstract class MarkerClusterer extends Overlay {
 	public ArrayList<Marker> getItems(){
 		return mItems;
 	}
-	
+
+	/** @return the listener for cluster marker clicks **/
+	public OnMarkerClusterClickListener getMarkerClusterClickListener() {
+		return mMarkerClusterClickListener;
+	}
+	/** Set the listener for clicks on a cluster **/
+	public void setMarkerClusterClickListener(OnMarkerClusterClickListener markerClusterClickListener) {
+		mMarkerClusterClickListener = markerClusterClickListener;
+	}
+
 	@Override protected void draw(Canvas canvas, MapView mapView, boolean shadow) {
 		//if zoom has changed and mapView is now stable, rebuild clusters:
 		int zoomLevel = mapView.getZoomLevel();
@@ -155,5 +166,9 @@ public abstract class MarkerClusterer extends Overlay {
 				return true;
 		}
 		return false;
+	}
+
+	public interface OnMarkerClusterClickListener {
+		boolean onMarkerClusterClick(StaticCluster cluster, MapView mapView);
 	}
 }
