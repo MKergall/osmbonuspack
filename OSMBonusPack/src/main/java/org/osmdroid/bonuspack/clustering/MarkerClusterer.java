@@ -94,7 +94,7 @@ public abstract class MarkerClusterer extends Overlay {
 		return mItems;
 	}
 	
-	@Override protected void draw(Canvas canvas, MapView mapView, boolean shadow) {
+	@Override public void draw(Canvas canvas, MapView mapView, boolean shadow) {
 		//if zoom has changed and mapView is now stable, rebuild clusters:
 		int zoomLevel = mapView.getZoomLevel();
 		if (zoomLevel != mLastZoomLevel && !mapView.isAnimating()){

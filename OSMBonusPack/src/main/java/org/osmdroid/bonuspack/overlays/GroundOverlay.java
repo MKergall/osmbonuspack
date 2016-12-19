@@ -103,7 +103,7 @@ public class GroundOverlay extends Overlay {
 		return new BoundingBox(north, pEast.getLongitude(), pSouthEast.getLatitude(), west);
 	}
 	
-	@Override protected void draw(Canvas canvas, MapView mapView, boolean shadow) {
+	@Override public void draw(Canvas canvas, MapView mapView, boolean shadow) {
 		if (shadow)
 			return;
 		if (mImage == null)

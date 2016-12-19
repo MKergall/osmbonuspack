@@ -1,6 +1,9 @@
 package org.osmdroid.bonuspack.overlays;
 
 import android.graphics.Canvas;
+
+import org.osmdroid.bonuspack.utils.BonusPackHelper;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Overlay;
 import java.util.Comparator;
@@ -8,14 +11,18 @@ import java.util.Iterator;
 import java.util.TreeSet;
 
 /**
- * A Folder overlay implementing Z-Index to all overlays that it contains.
+ * A Folder overlay implementing 2 advanced features:
+ *
+ * 1) Z-Index to all overlays that it contains.
  * Like Google Maps Android API:
  * "An overlay with a larger z-index is drawn over overlays with smaller z-indices.
  * The order of overlays with the same z-index value is arbitrary.
  * The default is 0."
  * Unlike Google Maps Android API, this applies to all overlays, including Markers.
  *
- * TODO - WORK IN PROGRESS.
+ * 2) Drawing optimization based on Bounding Box culling.
+ *
+ * TODO - DO NOT USE YET. WORK IN PROGRESS.
  *
  * @author M.Kergall
  */
@@ -26,19 +33,55 @@ public class FolderZOverlay extends Overlay {
 
     protected class ZOverlay implements Comparator<ZOverlay> {
         float mZIndex;
+        BoundingBox mBoundingBox;
+        boolean mBoundingBoxSet;
         Overlay mOverlay;
 
-        ZOverlay(Overlay o, float zIndex){
+        public ZOverlay(Overlay o, float zIndex){
             mOverlay = o;
             mZIndex = zIndex;
+            mBoundingBoxSet = false;
         }
 
         @Override public int compare(ZOverlay o1, ZOverlay o2){
             return (int)Math.signum(o1.mZIndex - o2.mZIndex);
         }
+
+        public void setBoundingBox(BoundingBox bb){
+            mBoundingBox = BonusPackHelper.cloneBoundingBox(bb);
+            mBoundingBoxSet = true;
+        }
+
+        public void unsetBoundingBox(){
+            mBoundingBox = null;
+            mBoundingBoxSet = false;
+        }
+
+        /**
+         * @param mapBB bounding box of the map view
+         * @param mapOrientation orientation of the map view
+         * @return true if the overlay should be drawn.
+         */
+        public boolean shouldBeDrawn(BoundingBox mapBB, float mapOrientation){
+            if (!mBoundingBoxSet)
+                return true;
+            if (mBoundingBox == null)
+                //null bounding box means overlay is empty, so nothing to draw:
+                return false;
+            if (mapOrientation != 0.0f)
+                //TODO - handle map rotation...
+                return true;
+            if (mBoundingBox.getLatSouth() > mapBB.getLatNorth()
+                || mBoundingBox.getLatNorth() < mapBB.getLatSouth()
+                || mBoundingBox.getLonWest() > mapBB.getLonEast()
+                || mBoundingBox.getLonEast() < mapBB.getLonWest())
+                //completely outside the map view:
+                return false;
+            return true;
+        }
     }
 
-    FolderZOverlay(){
+    public FolderZOverlay(){
         super();
         mList = new TreeSet<>();
         mName = "";
@@ -105,10 +148,30 @@ public class FolderZOverlay extends Overlay {
         mList.add(item);
     }
 
+    /**
+     * Define the bounding box of this overlay.
+     * This may dramatically increase drawing performance when the overlay is completely outside the current view.
+     * @param overlay
+     * @param bb the bounding box of this overlay.
+     */
+    public void setBoundingBox(Overlay overlay, BoundingBox bb){
+        ZOverlay item = get(overlay);
+        if (item == null)
+            return;
+        item.setBoundingBox(bb);
+    }
+
+    public void unsetBoundingBox(Overlay overlay){
+        ZOverlay item = get(overlay);
+        if (item == null)
+            return;
+        item.unsetBoundingBox();
+    }
+
     //TODO:
     //get highest z-index => getMaxZIndex
 
-    @Override protected void draw(Canvas canvas, MapView mapView, boolean shadow) {
+    @Override public void draw(Canvas canvas, MapView mapView, boolean shadow) {
         if (shadow)
             return;
 
@@ -117,7 +180,9 @@ public class FolderZOverlay extends Overlay {
             ZOverlay item = itr.next();
             Overlay overlay = item.mOverlay;
             if (overlay!=null && overlay.isEnabled()) {
-                //TODO overlay.draw(canvas, mapView, false); - IMPOSSIBLE, private method!
+                if (item.shouldBeDrawn(mapView.getBoundingBox(), mapView.getMapOrientation())) {
+                    overlay.draw(canvas, mapView, false);
+                }
             }
         }
     }
