@@ -33,6 +33,7 @@ public class KmlTrack extends KmlGeometry {
 
 	public KmlTrack(){
 		super();
+		mCoordinates = new ArrayList<>();
 		mWhen = new ArrayList<>();
 	}
 
@@ -40,7 +41,7 @@ public class KmlTrack extends KmlGeometry {
 	 * @param sGxCoord gx:Coord, string with "lon lat alt", comma-separated.
 	 * @return coord as a GeoPoint, or null if the element is empty or if parsing issue.
      */
-	public GeoPoint parseKmlGxCoord(String sGxCoord){
+	public static GeoPoint parseKmlGxCoord(String sGxCoord) {
 		int end1 = sGxCoord.indexOf(' ');
 		int end2 = sGxCoord.indexOf(' ', end1+1);
 		try {
@@ -56,8 +57,6 @@ public class KmlTrack extends KmlGeometry {
 	}
 
 	public void addGxCoord(String sGxCoord){
-		if (mCoordinates == null)
-				mCoordinates = new ArrayList<>();
 		mCoordinates.add(parseKmlGxCoord(sGxCoord));
 	}
 
@@ -65,7 +64,7 @@ public class KmlTrack extends KmlGeometry {
 	 * @param sWhen "when" string, in one of the KML dateTime formats. Local time format not supported yet.
 	 * @return java Date if success, or null
      */
-	public Date parseKmlWhen(String sWhen){
+	public static Date parseKmlWhen(String sWhen) {
 		SimpleDateFormat ft;
 		switch (sWhen.length()) {
 			case 4: ft = new SimpleDateFormat("yyyy"); break;
@@ -97,6 +96,20 @@ public class KmlTrack extends KmlGeometry {
 		if (mWhen == null)
 			mWhen = new ArrayList<>();
 		mWhen.add(parseKmlWhen(sWhen));
+	}
+
+	/**
+	 * Add a time element (coord+when) to the track.
+	 *
+	 * @param coord
+	 * @param when
+	 */
+	public void add(GeoPoint coord, Date when) {
+		if (coord == null)
+			mCoordinates.add(coord);
+		else
+			mCoordinates.add(coord.clone());
+		mWhen.add(when);
 	}
 
 	public void applyDefaultStyling(Polyline lineStringOverlay, Style defaultStyle, KmlPlacemark kmlPlacemark,
@@ -173,11 +186,8 @@ public class KmlTrack extends KmlGeometry {
 		return json;
 	}
 
-	@Override public BoundingBox getBoundingBox(){
-		if (mCoordinates!=null)
-			return BoundingBox.fromGeoPoints(mCoordinates);
-		else
-			return null;
+	@Override public BoundingBox getBoundingBox() {
+		return BoundingBox.fromGeoPoints(mCoordinates);
 	}
 
 	//Cloneable implementation ------------------------------------

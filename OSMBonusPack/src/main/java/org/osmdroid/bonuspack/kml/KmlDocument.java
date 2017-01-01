@@ -348,7 +348,7 @@ public class KmlDocument implements Parcelable {
 		KEYWORDS_DICTIONARY.put("visibility", KmlKeywords.visibility);
 		KEYWORDS_DICTIONARY.put("open", KmlKeywords.open);
 		KEYWORDS_DICTIONARY.put("coordinates", KmlKeywords.coordinates);
-		KEYWORDS_DICTIONARY.put("gx_coord", KmlKeywords.gx_coord);
+		KEYWORDS_DICTIONARY.put("gx:coord", KmlKeywords.gx_coord);
 		KEYWORDS_DICTIONARY.put("when", KmlKeywords.when);
 		KEYWORDS_DICTIONARY.put("styleUrl", KmlKeywords.styleUrl);
 		KEYWORDS_DICTIONARY.put("key", KmlKeywords.key);
@@ -1017,7 +1017,7 @@ public class KmlDocument implements Parcelable {
 	public boolean saveAsKML(Writer writer){
 		try {
 			writer.write("<?xml version='1.0' encoding='UTF-8'?>\n");
-			writer.write("<kml xmlns='http://www.opengis.net/kml/2.2'>\n");
+			writer.write("<kml xmlns='http://www.opengis.net/kml/2.2' xmlns:gx='http://www.google.com/kml/ext/2.2'>\n");
 			boolean result = true;
 			if (mKmlRoot != null)
 				result = mKmlRoot.writeAsKML(writer, true, this);
