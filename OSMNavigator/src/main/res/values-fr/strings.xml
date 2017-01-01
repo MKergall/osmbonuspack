@@ -67,6 +67,8 @@
 	<string name="menu_kml_url">Ouvrir url...</string>
 	<string name="menu_open_file">Ouvrir fichier...</string>
 	<string name="menu_overpassapi_wizard">OverpassAPI Wizard...</string>
+	<string name="menu_kml_record_tracks">Enreg. les traces</string>
+	<string name="menu_kml_stop_record_tracks">Stop enreg. des traces</string>
 	<string name="menu_kml_get_overlays">Récupérer les Overlays</string>
 	<string name="menu_kml_tree">Editer les objets...</string>
 	<string name="menu_kml_styles">Editer les styles...</string>

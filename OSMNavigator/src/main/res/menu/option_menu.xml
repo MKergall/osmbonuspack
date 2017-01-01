@@ -20,6 +20,9 @@
 					android:id="@+id/menu_overpass_api"
 					android:title="@string/menu_overpassapi_wizard"/>
 				<item
+					android:id="@+id/menu_kml_record_track"
+					android:title="@string/menu_kml_record_tracks"/>
+				<item
 					android:id="@+id/menu_kml_get_overlays"
 					android:title="@string/menu_kml_get_overlays"/>
 				<item

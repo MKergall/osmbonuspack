@@ -55,6 +55,7 @@ import org.osmdroid.bonuspack.kml.KmlFeature;
 import org.osmdroid.bonuspack.kml.KmlFolder;
 import org.osmdroid.bonuspack.kml.KmlPlacemark;
 import org.osmdroid.bonuspack.kml.KmlPoint;
+import org.osmdroid.bonuspack.kml.KmlTrack;
 import org.osmdroid.bonuspack.kml.Style;
 import org.osmdroid.bonuspack.location.FlickrPOIProvider;
 import org.osmdroid.bonuspack.location.GeoNamesPOIProvider;
@@ -103,6 +104,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -157,6 +159,8 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	public static KmlDocument mKmlDocument; //made static to pass between activities
 	public static Stack<KmlFeature> mKmlStack; //passed between activities, top is the current KmlFeature to edit. 
 	public static KmlFolder mKmlClipboard; //passed between activities. Folder for multiple items selection. 
+
+	boolean mIsRecordingTrack;
 
 	FriendsManager mFriendsManager;
 
@@ -271,6 +275,8 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			updateUIWithTrackingMode();
 		} else
 			mTrackingMode = false;
+
+		mIsRecordingTrack = false; //TODO restore state
 
 		AutoCompleteOnPreferences departureText = (AutoCompleteOnPreferences) findViewById(R.id.editDeparture);
 		departureText.setPrefKeys(SHARED_PREFS_APPKEY, PREF_LOCATIONS_KEY);
@@ -1568,6 +1574,13 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		case R.id.menu_overpass_api:
 			openOverpassAPIWizard();
 			return true;
+			case R.id.menu_kml_record_track:
+				mIsRecordingTrack = !mIsRecordingTrack;
+				if (mIsRecordingTrack)
+					item.setTitle(R.string.menu_kml_stop_record_tracks);
+				else
+					item.setTitle(R.string.menu_kml_record_tracks);
+				return true;
 		case R.id.menu_kml_get_overlays:
 			insertOverlaysInKml();
 			updateUIWithKml();
@@ -1716,6 +1729,38 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			//just redraw the location overlay:
 			map.invalidate();
 		}
+
+		if (mIsRecordingTrack) {
+			recordCurrentLocationInTrack(newLocation);
+		}
+	}
+
+	KmlTrack createTrack() {
+		KmlTrack t = new KmlTrack();
+		KmlPlacemark p = new KmlPlacemark();
+		p.mName = "My Track";
+		p.mGeometry = t;
+		mKmlDocument.mKmlRoot.mItems.add(0, p);
+		return t;
+	}
+
+	void recordCurrentLocationInTrack(GeoPoint currentLocation) {
+		//Find the KML track as first element in the current KML structure - and create it if necessary:
+		KmlTrack t = null;
+		if (mKmlDocument.mKmlRoot.mItems.size() == 0)
+			t = createTrack();
+		if (!(mKmlDocument.mKmlRoot.mItems.get(0) instanceof KmlPlacemark))
+			t = createTrack();
+		KmlPlacemark p = (KmlPlacemark) mKmlDocument.mKmlRoot.mItems.get(0);
+		if (!(p.mGeometry instanceof KmlTrack))
+			t = createTrack();
+		else
+			t = (KmlTrack) p.mGeometry;
+		//TODO check if current location is really different from last point of the track
+		//record in the track the current location at current time:
+		t.add(currentLocation, new Date());
+		//refresh KML:
+		updateUIWithKml();
 	}
 
 	@Override public void onProviderDisabled(String provider) {}
