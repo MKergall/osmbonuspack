@@ -206,6 +206,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		if (mNightMode)
 			map.getOverlayManager().getTilesOverlay().setColorFilter(TilesOverlay.INVERT_COLORS);
 
+		map.setTilesScaledToDpi(true);
 		map.setBuiltInZoomControls(true);
 		map.setMultiTouchControls(true);
 		IMapController mapController = map.getController();
