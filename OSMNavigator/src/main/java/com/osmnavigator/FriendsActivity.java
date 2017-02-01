@@ -25,8 +25,7 @@ import java.util.ArrayList;
 
 public class FriendsActivity extends Activity {
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.items_list);
 
@@ -36,7 +35,7 @@ public class FriendsActivity extends Activity {
 
         Intent myIntent = getIntent();
         //STATIC - final ArrayList<Friend> friends = myIntent.getParcelableArrayListExtra("FRIENDS");
-        ArrayList<Friend> friends = FriendsManager.mFriends;
+        ArrayList<Friend> friends = FriendsManager.getFriends();
         if (friends != null && friends.size() > 0) {
             title.setText(R.string.FriendsActivity_Title);
         } else {

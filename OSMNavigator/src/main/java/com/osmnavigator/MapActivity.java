@@ -1586,6 +1586,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			return true;
 			case R.id.menu_kml_record_track:
 				mIsRecordingTrack = !mIsRecordingTrack;
+				mFriendsManager.setTracksRecording(mIsRecordingTrack);
 				if (mIsRecordingTrack)
 					item.setTitle(R.string.menu_kml_stop_record_tracks);
 				else
@@ -1741,31 +1742,37 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		}
 
 		if (mIsRecordingTrack) {
-			recordCurrentLocationInTrack(newLocation);
+			recordCurrentLocationInTrack("my_track", "My Track", newLocation);
 		}
 	}
 
-	KmlTrack createTrack() {
+	KmlTrack createTrack(String id, String name) {
 		KmlTrack t = new KmlTrack();
 		KmlPlacemark p = new KmlPlacemark();
-		p.mName = "My Track";
+		p.mId = id;
+		p.mName = name;
 		p.mGeometry = t;
-		mKmlDocument.mKmlRoot.mItems.add(0, p);
+		mKmlDocument.mKmlRoot.add(p);
 		return t;
 	}
 
-	void recordCurrentLocationInTrack(GeoPoint currentLocation) {
-		//Find the KML track as first element in the current KML structure - and create it if necessary:
-		KmlTrack t = null;
-		if (mKmlDocument.mKmlRoot.mItems.size() == 0)
-			t = createTrack();
-		if (!(mKmlDocument.mKmlRoot.mItems.get(0) instanceof KmlPlacemark))
-			t = createTrack();
-		KmlPlacemark p = (KmlPlacemark) mKmlDocument.mKmlRoot.mItems.get(0);
-		if (!(p.mGeometry instanceof KmlTrack))
-			t = createTrack();
-		else
-			t = (KmlTrack) p.mGeometry;
+	void recordCurrentLocationInTrack(String trackId, String trackName, GeoPoint currentLocation) {
+		//Find the KML track in the current KML structure - and create it if necessary:
+		KmlTrack t;
+		KmlFeature f = mKmlDocument.mKmlRoot.findFeatureId(trackId, false);
+		if (f == null)
+			t = createTrack(trackId, trackName);
+		else if (!(f instanceof KmlPlacemark))
+			//id already defined but not a PlaceMark
+			return;
+		else {
+			KmlPlacemark p = (KmlPlacemark) f;
+			if (!(p.mGeometry instanceof KmlTrack))
+				//id already defined but not a Track
+				return;
+			else
+				t = (KmlTrack) p.mGeometry;
+		}
 		//TODO check if current location is really different from last point of the track
 		//record in the track the current location at current time:
 		t.add(currentLocation, new Date());

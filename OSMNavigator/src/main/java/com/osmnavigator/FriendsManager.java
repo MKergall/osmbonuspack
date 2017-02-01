@@ -37,24 +37,30 @@ import java.util.List;
  */
 public class FriendsManager {
 
-    MapActivity mActivity;
-    MapView mMap;
+    private MapActivity mActivity;
+    private MapView mMap;
 
-    protected static final int START_SHARING_REQUEST = 3;
-    protected static final int FRIENDS_REQUEST = 4;
+    public static final int START_SHARING_REQUEST = 3;
+    public static final int FRIENDS_REQUEST = 4;
 
-    Button mFriendsButton;
-    protected static ArrayList<Friend> mFriends; //
-    protected boolean mIsSharing;
-    protected FolderOverlay mFriendsMarkers; //
+    private Button mFriendsButton;
+    private static ArrayList<Friend> mFriends; //
+    private boolean mIsSharing;
+    private FolderOverlay mFriendsMarkers; //
+    private boolean mRecordTracks;
 
-    FriendsManager(MapActivity activity, MapView map) {
+    public FriendsManager(MapActivity activity, MapView map) {
         mActivity = activity;
         mMap = map;
+        mRecordTracks = false;
     }
 
-    void onCreate(Bundle savedInstanceState) {
-        mFriendsMarkers = new FolderOverlay(mActivity);
+    public static ArrayList<Friend> getFriends(){
+        return mFriends;
+    }
+
+    public void onCreate(Bundle savedInstanceState) {
+        mFriendsMarkers = new FolderOverlay();
         mMap.getOverlays().add(mFriendsMarkers);
         if (savedInstanceState != null) {
             //STATIC mFriends = savedInstanceState.getParcelable("friends");
@@ -77,11 +83,11 @@ public class FriendsManager {
         });
     }
 
-    void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean("is_sharing", mIsSharing);
     }
 
-    void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         switch (requestCode) {
             case START_SHARING_REQUEST:
                 if (resultCode == Activity.RESULT_OK) {
@@ -105,16 +111,16 @@ public class FriendsManager {
         }
     }
 
-    void onResume() {
+    public void onResume() {
         if (mIsSharing)
             startSharingTimer();
     }
 
-    void onPause() {
+    public void onPause() {
         stopSharingTimer();
     }
 
-    void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(Menu menu) {
         if (mIsSharing)
             menu.findItem(R.id.menu_sharing).setTitle(R.string.menu_stop_sharing);
         else
@@ -137,7 +143,7 @@ public class FriendsManager {
 
     //--------------------------------------------
 
-    static final String NAV_SERVER_URL = "http://comob.free.fr/sharing/";
+    protected static final String NAV_SERVER_URL = "http://comob.free.fr/sharing/";
 
     public String getUniqueId() {
         return Settings.Secure.getString(mActivity.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -171,8 +177,7 @@ public class FriendsManager {
             JsonObject jResult = json.getAsJsonObject();
             String answer = jResult.get("answer").getAsString();
             if (!"ok".equals(answer)) {
-                String error = jResult.get("error").getAsString();
-                return error;
+                return jResult.get("error").getAsString();
             }
         } catch (JsonSyntaxException e) {
             return "Technical error with the server";
@@ -181,24 +186,22 @@ public class FriendsManager {
     }
 
     private class StartSharingTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... params) {
+        @Override protected String doInBackground(String... params) {
             return callStartSharing(params[0], params[1], params[2]);
         }
 
-        @Override
-        protected void onPostExecute(String error) {
+        @Override protected void onPostExecute(String error) {
             if (error == null) {
                 startSharingTimer();
                 mIsSharing = true;
-                mFriendsButton.setVisibility(mIsSharing ? View.VISIBLE : View.GONE);
+                mFriendsButton.setVisibility(View.VISIBLE);
             } else
                 Toast.makeText(mActivity.getApplicationContext(), error, Toast.LENGTH_SHORT).show();
         }
     }
 
-    static final int SHARING_INTERVAL = 20 * 1000; //every 20 sec
-    protected Handler mSharingHandler;
+    private static final int SHARING_INTERVAL = 20 * 1000; //every 20 sec
+    private Handler mSharingHandler;
     private Runnable mSharingRunnable = new Runnable() {
         @Override
         public void run() {
@@ -233,6 +236,7 @@ public class FriendsManager {
                     + "&lon=" + myPosition.getLongitude()
                     + "&bearing=" + mActivity.mAzimuthAngleSpeed;
         } catch (UnsupportedEncodingException e) {
+            return "Technical error with the server";
         }
         Log.d(BonusPackHelper.LOG_TAG, "callUpdateSharing:" + url);
         String result = BonusPackHelper.requestStringFromUrl(url);
@@ -245,8 +249,7 @@ public class FriendsManager {
             JsonObject jResult = json.getAsJsonObject();
             String answer = jResult.get("answer").getAsString();
             if (!"ok".equals(answer)) {
-                String error = jResult.get("error").getAsString();
-                return error;
+                return jResult.get("error").getAsString();
             }
             JsonArray jFriends = jResult.get("people").getAsJsonArray();
             mFriends = new ArrayList<Friend>(jFriends.size());
@@ -274,8 +277,27 @@ public class FriendsManager {
         return -1;
     }
 
+    public void setTracksRecording(boolean recordTracks){
+        mRecordTracks = recordTracks;
+    }
+
+    public void recordTracks(){
+        for (Friend friend : mFriends) {
+            if (friend.mHasLocation)
+                mActivity.recordCurrentLocationInTrack(friend.mId, friend.mNickName, friend.mPosition);
+        }
+    }
+
     void updateUIWithFriendsMarkers() {
+        //retrieve the id of the "opened" friend (friend with opened bubble):
         int opened = getOpenedInfoWindow(mFriendsMarkers);
+        String openedFriendId = null;
+        if (opened != -1) {
+            Marker m = (Marker)mFriendsMarkers.getItems().get(opened);
+            Friend openedFriend = (Friend)m.getRelatedObject();
+            openedFriendId = openedFriend.mId;
+        }
+
         mFriendsMarkers.closeAllInfoWindows();
         mFriendsMarkers.getItems().clear();
         if (mFriends == null) {
@@ -299,26 +321,44 @@ public class FriendsManager {
             }
             if (!friend.mHasLocation)
                 marker.setEnabled(false);
+            marker.setRelatedObject(friend);
             mFriendsMarkers.add(marker);
         }
         mMap.invalidate();
-        if (opened != -1 && opened < mFriends.size()) {
-            //TODO - completely insufficient, as index may have changed.
+
+        //reopen the bubble on the "same" (but new) Friend marker:
+        opened = getFriendWithId(openedFriendId);
+        if (opened != -1) {
             Marker markerToOpen = (Marker) mFriendsMarkers.getItems().get(opened);
             markerToOpen.showInfoWindow();
         }
     }
 
+    /**
+     * @param friendId
+     * @return the index of the friend with id. -1 if not found.
+     */
+    public int getFriendWithId(String friendId){
+        if (friendId == null || mFriends == null)
+            return -1;
+        for (int i=0; i<mFriends.size(); i++) {
+            Friend f = mFriends.get(i);
+            if (friendId.equals(f.mId))
+                return i;
+        }
+        return -1;
+    }
+
     private class UpdateSharingTask extends AsyncTask<Void, Void, String> {
-        @Override
-        protected String doInBackground(Void... params) {
+        @Override protected String doInBackground(Void... params) {
             return callUpdateSharing();
         }
 
-        @Override
-        protected void onPostExecute(String error) {
+        @Override protected void onPostExecute(String error) {
             if (error == null) {
                 updateUIWithFriendsMarkers();
+                if (mRecordTracks)
+                    recordTracks();
             } else
                 Toast.makeText(mActivity.getApplicationContext(), error, Toast.LENGTH_SHORT).show();
         }
@@ -331,6 +371,7 @@ public class FriendsManager {
             url = NAV_SERVER_URL + "jstop.php?"
                     + "user_id=" + URLEncoder.encode(getUniqueId(), "UTF-8");
         } catch (UnsupportedEncodingException e) {
+            return "Technical error with the server";
         }
         String result = BonusPackHelper.requestStringFromUrl(url);
         if (result == null) {
@@ -342,8 +383,7 @@ public class FriendsManager {
             JsonObject jResult = json.getAsJsonObject();
             String answer = jResult.get("answer").getAsString();
             if (!"ok".equals(answer)) {
-                String error = jResult.get("error").getAsString();
-                return error;
+                return jResult.get("error").getAsString();
             }
         } catch (JsonSyntaxException e) {
             return "Technical error with the server";
@@ -352,18 +392,16 @@ public class FriendsManager {
     }
 
     private class StopSharingTask extends AsyncTask<Void, Void, String> {
-        @Override
-        protected String doInBackground(Void... params) {
+        @Override protected String doInBackground(Void... params) {
             return callStopSharing();
         }
 
-        @Override
-        protected void onPostExecute(String error) {
+        @Override protected void onPostExecute(String error) {
             if (error == null) {
                 updateUIWithFriendsMarkers();
                 stopSharingTimer();
                 mIsSharing = false;
-                mFriendsButton.setVisibility(mIsSharing ? View.VISIBLE : View.GONE);
+                mFriendsButton.setVisibility(View.GONE);
             } else
                 Toast.makeText(mActivity.getApplicationContext(), error, Toast.LENGTH_SHORT).show();
         }

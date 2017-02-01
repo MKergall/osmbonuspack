@@ -145,7 +145,27 @@ public class KmlFolder extends KmlFeature implements Cloneable, Parcelable {
 	public KmlFeature removeItem(int itemPosition){
 		return mItems.remove(itemPosition);
 	}
-	
+
+	/**
+	 * Find a feature with a specific id in the folder.
+	 * @param id feature id to find.
+	 * @param recurse set to true if you want to find
+	 * @return the feature found, or null if none has been found.
+     */
+	public KmlFeature findFeatureId(String id, boolean recurse){
+		for (KmlFeature f:mItems) {
+			if (f.mId != null && f.mId.equals(id))
+				return f;
+			if (recurse && f instanceof KmlFolder) {
+				//if it's a folder, search recursively inside:
+				KmlFeature ff = findFeatureId(id, recurse);
+				if (ff != null)
+					return ff;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Build a FolderOverlay, containing (recursively) overlays from all items of this Folder. 
 	 * @param map
