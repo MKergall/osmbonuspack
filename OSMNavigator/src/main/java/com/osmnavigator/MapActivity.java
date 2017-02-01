@@ -33,10 +33,12 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -70,6 +72,7 @@ import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.bonuspack.routing.RoadNode;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
+import org.osmdroid.config.Configuration;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.mapsforge.MapsForgeTileProvider;
 import org.osmdroid.mapsforge.MapsForgeTileSource;
@@ -179,7 +182,13 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+
+		Configuration.getInstance().setOsmdroidBasePath(new File(Environment.getExternalStorageDirectory(), "osmdroid1"));
+		Configuration.getInstance().setOsmdroidTileCache(new File(Environment.getExternalStorageDirectory(), "osmdroid1/tiles"));
+
+		LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View v = inflater.inflate(R.layout.main, null);
+		setContentView(v);
 
 		SharedPreferences prefs = getSharedPreferences("OSMNAVIGATOR", MODE_PRIVATE);
 
@@ -193,7 +202,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		flickrApiKey = ManifestUtil.retrieveKey(this, "FLICKR_API_KEY");
 		geonamesAccount = ManifestUtil.retrieveKey(this, "GEONAMES_ACCOUNT");
 
-		map = (MapView) findViewById(R.id.map);
+		map = (MapView) v.findViewById(R.id.map);
 
 		String tileProviderName = prefs.getString("TILE_PROVIDER", "Mapnik");
 		mNightMode = prefs.getBoolean("NIGHT_MODE", false);
