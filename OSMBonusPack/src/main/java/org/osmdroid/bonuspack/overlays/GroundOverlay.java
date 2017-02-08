@@ -116,13 +116,21 @@ public class GroundOverlay extends Overlay {
 		final Projection pj = mapView.getProjection();
 		
 		pj.toPixels(mPosition, mPositionPixels);
+		/*
 		GeoPoint pEast = mPosition.destinationPoint(mWidth, 90.0f);
 		GeoPoint pSouthEast = pEast.destinationPoint(mHeight, -180.0f);
 		pj.toPixels(pSouthEast, mSouthEastPixels);
 		int width = mSouthEastPixels.x-mPositionPixels.x;
 		int height = mSouthEastPixels.y-mPositionPixels.y;
 		mImage.setBounds(-width/2, -height/2, width/2, height/2);
-		
+		*/
+		GeoPoint pEast = mPosition.destinationPoint(mWidth/2, 90.0f);
+		GeoPoint pSouthEast = pEast.destinationPoint(mHeight/2, -180.0f);
+		pj.toPixels(pSouthEast, mSouthEastPixels);
+		int hWidth = mSouthEastPixels.x-mPositionPixels.x;
+		int hHeight = mSouthEastPixels.y-mPositionPixels.y;
+		mImage.setBounds(-hWidth, -hHeight, hWidth, hHeight);
+
 		mImage.setAlpha(255-(int)(mTransparency*255));
 
 		drawAt(canvas, mImage, mPositionPixels.x, mPositionPixels.y, false, -mBearing);
