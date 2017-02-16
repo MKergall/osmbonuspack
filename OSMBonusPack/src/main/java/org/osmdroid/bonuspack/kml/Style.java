@@ -31,12 +31,9 @@ public class Style extends StyleSelector implements Parcelable {
 	public Style(Bitmap icon, int lineColor, float lineWidth, int fillColor){
 		this();
 		mIconStyle = new IconStyle();
-		mIconStyle.mIcon = icon;
-		mLineStyle = new LineStyle();
-		mLineStyle.mColor = lineColor;
-		mLineStyle.mWidth = lineWidth;
-		mPolyStyle = new ColorStyle();
-		mPolyStyle.mColor = fillColor;
+ 		mIconStyle.mIcon = icon;
+		mLineStyle = new LineStyle(lineColor, lineWidth);
+		mPolyStyle = new ColorStyle(fillColor);
 	}
 	
 	public void setIcon(String iconHref, File containerFile, ZipFile kmzContainer){

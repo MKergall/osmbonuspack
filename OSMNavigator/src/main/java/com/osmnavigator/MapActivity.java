@@ -58,6 +58,7 @@ import org.osmdroid.bonuspack.kml.KmlFolder;
 import org.osmdroid.bonuspack.kml.KmlPlacemark;
 import org.osmdroid.bonuspack.kml.KmlPoint;
 import org.osmdroid.bonuspack.kml.KmlTrack;
+import org.osmdroid.bonuspack.kml.LineStyle;
 import org.osmdroid.bonuspack.kml.Style;
 import org.osmdroid.bonuspack.location.FlickrPOIProvider;
 import org.osmdroid.bonuspack.location.GeoNamesPOIProvider;
@@ -1746,6 +1747,10 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		}
 	}
 
+	static int[] TrackColor = {
+		Color.CYAN-0x20000000, Color.BLUE-0x20000000, Color.MAGENTA-0x20000000, Color.RED-0x20000000, Color.YELLOW-0x20000000
+	};
+
 	KmlTrack createTrack(String id, String name) {
 		KmlTrack t = new KmlTrack();
 		KmlPlacemark p = new KmlPlacemark();
@@ -1753,6 +1758,19 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		p.mName = name;
 		p.mGeometry = t;
 		mKmlDocument.mKmlRoot.add(p);
+		//set a color to this track by creating a style:
+		Style s = new Style();
+		int color;
+		try {
+			color = Integer.parseInt(id);
+			color = color % 5;
+			color = TrackColor[color];
+		} catch (NumberFormatException e) {
+			color = Color.GREEN-0x20000000;
+		}
+		s.mLineStyle = new LineStyle(color, 8.0f);
+		String styleId = mKmlDocument.addStyle(s);
+		p.mStyle = styleId;
 		return t;
 	}
 
@@ -1763,12 +1781,12 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		if (f == null)
 			t = createTrack(trackId, trackName);
 		else if (!(f instanceof KmlPlacemark))
-			//id already defined but not a PlaceMark
+			//id already defined but is not a PlaceMark
 			return;
 		else {
-			KmlPlacemark p = (KmlPlacemark) f;
+			KmlPlacemark p = (KmlPlacemark)f;
 			if (!(p.mGeometry instanceof KmlTrack))
-				//id already defined but not a Track
+				//id already defined but is not a Track
 				return;
 			else
 				t = (KmlTrack) p.mGeometry;

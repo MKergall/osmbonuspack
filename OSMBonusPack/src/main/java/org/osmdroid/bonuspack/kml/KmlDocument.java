@@ -427,6 +427,7 @@ public class KmlDocument implements Parcelable {
 			}
 		}
 
+		/*
 		public void startElementOld(String uri, String localName, String name,
 				Attributes attributes) throws SAXException {
 			if (name.equals("Document")) {
@@ -490,18 +491,17 @@ public class KmlDocument implements Parcelable {
 							attributes.getValue("xunits"),
 							attributes.getValue("yunits")
 					);
-					/*
-					if ("fraction".equals(attributes.getValue("xunits")))
-						mCurrentStyle.mIconStyle.mHotSpotX = Float.parseFloat(attributes.getValue("x"));
-					if ("fraction".equals(attributes.getValue("yunits")))
-						mCurrentStyle.mIconStyle.mHotSpotY = Float.parseFloat(attributes.getValue("y"));
-					*/
+					//if ("fraction".equals(attributes.getValue("xunits")))
+					//	mCurrentStyle.mIconStyle.mHotSpotX = Float.parseFloat(attributes.getValue("x"));
+					//if ("fraction".equals(attributes.getValue("yunits")))
+					//	mCurrentStyle.mIconStyle.mHotSpotY = Float.parseFloat(attributes.getValue("y"));
 				}
 			} else if (name.equals("Data") || name.equals("SimpleData")) {
 				mDataName = attributes.getValue("name");
 			}
 			mStringBuilder.setLength(0);
 		}
+		*/
 
 		public void startElement(String uri, String localName, String name,
 								 Attributes attributes) throws SAXException {
@@ -626,7 +626,7 @@ public class KmlDocument implements Parcelable {
 				throws SAXException {
 			mStringBuilder.append(ch, start, length);
 		}
-		
+		/*
 		public void endElementOld(String uri, String localName, String name)
 				throws SAXException {
 			if (name.equals("Document")) {
@@ -780,6 +780,7 @@ public class KmlDocument implements Parcelable {
 				mDataName = null;
 			}
 		}
+		*/
 
 		public void endElement(String uri, String localName, String name)
 				throws SAXException {
