@@ -1763,7 +1763,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		int color;
 		try {
 			color = Integer.parseInt(id);
-			color = color % 5;
+			color = color % TrackColor.length;
 			color = TrackColor[color];
 		} catch (NumberFormatException e) {
 			color = Color.GREEN-0x20000000;
