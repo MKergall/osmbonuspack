@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 import org.osmdroid.util.BoundingBox;
@@ -85,11 +86,12 @@ public class KmlPlacemark extends KmlFeature implements Cloneable, Parcelable {
 	public KmlPlacemark(JsonObject json){
 		this();
 		if (json.has("id"))
-				mId = json.get("id").getAsString();
-		JsonObject geometry = json.getAsJsonObject("geometry");
-		if (geometry != null) {
+			mId = json.get("id").getAsString();
+		JsonElement element = json.get("geometry");
+		if (element != null && !element.isJsonNull()) {
+			JsonObject geometry = element.getAsJsonObject();
 			mGeometry = KmlGeometry.parseGeoJSON(geometry);
-        }
+		}
 		if (json.has("properties")){
 			//Parse properties:
 			JsonObject properties = json.getAsJsonObject("properties");
@@ -159,7 +161,10 @@ public class KmlPlacemark extends KmlFeature implements Cloneable, Parcelable {
 		json.addProperty("type", "Feature");
 		if (mId != null)
 			json.addProperty("id", mId);
-		json.add("geometry", mGeometry.asGeoJSON());
+		if (mGeometry != null)
+			json.add("geometry", mGeometry.asGeoJSON());
+		else
+			json.add("geometry", JsonNull.INSTANCE);
 		json.add("properties", geoJSONProperties());
 		return json;
 	}
