@@ -94,24 +94,27 @@ public class KmlPlacemark extends KmlFeature implements Cloneable, Parcelable {
 		}
 		if (json.has("properties")){
 			//Parse properties:
-			JsonObject properties = json.getAsJsonObject("properties");
-			Set<Map.Entry<String,JsonElement>> entrySet = properties.entrySet();
-			for (Map.Entry<String,JsonElement> entry:entrySet){
-				String key = entry.getKey();
-				JsonElement je = entry.getValue();
-				String value;
-				try {
-					value = je.getAsString();
-				} catch (Exception e){
-					value = je.toString();
+			element = json.get("properties");
+			if (!element.isJsonNull()) {
+				JsonObject properties = json.getAsJsonObject("properties");
+				Set<Map.Entry<String, JsonElement>> entrySet = properties.entrySet();
+				for (Map.Entry<String, JsonElement> entry : entrySet) {
+					String key = entry.getKey();
+					JsonElement je = entry.getValue();
+					String value;
+					try {
+						value = je.getAsString();
+					} catch (Exception e) {
+						value = je.toString();
+					}
+					if (key != null && value != null)
+						setExtendedData(key, value);
 				}
-				if (key!=null && value!=null)
-					setExtendedData(key, value);
-			}
-			//Put "name" property in standard KML format:
-			if (mExtendedData!=null && mExtendedData.containsKey("name")){
-				mName = mExtendedData.get("name");
-				mExtendedData.remove("name");
+				//Put "name" property in standard KML format:
+				if (mExtendedData != null && mExtendedData.containsKey("name")) {
+					mName = mExtendedData.get("name");
+					mExtendedData.remove("name");
+				}
 			}
 		}
 	}
