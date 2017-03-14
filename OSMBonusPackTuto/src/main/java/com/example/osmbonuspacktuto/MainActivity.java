@@ -11,8 +11,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.StrictMode;
 import android.support.v4.content.res.ResourcesCompat;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -38,6 +40,7 @@ import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.bonuspack.routing.RoadNode;
+import org.osmdroid.config.Configuration;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
@@ -53,6 +56,7 @@ import org.osmdroid.views.overlay.infowindow.BasicInfoWindow;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -76,6 +80,11 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 
 		//Introduction
 		super.onCreate(savedInstanceState);
+
+		Configuration.getInstance().setMapViewHardwareAccelerated(true);
+		LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View v = inflater.inflate(R.layout.main, null);
+
 		setContentView(R.layout.main);
 		map = (MapView) findViewById(R.id.map);
 		map.setBuiltInZoomControls(true);
@@ -245,6 +254,15 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		//16. Handling Map events
 		MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(this);
 		map.getOverlays().add(0, mapEventsOverlay); //inserted at the "bottom" of all overlays
+
+		//Testing osmdroid issue #353 - turning HW acceleration on
+		com.example.osmbonuspacktuto.Polyline p = new com.example.osmbonuspacktuto.Polyline();
+		ArrayList<GeoPoint> l = new ArrayList();
+		l.add(new GeoPoint(48.0, 20.0)); l.add(new GeoPoint(48.0, -20.0));
+		//l.add(new GeoPoint(48.0, 160.0)); l.add(new GeoPoint(48.0, -160.0)); intersecting 180° line
+		p.setPoints(l);
+		map.getOverlays().add(p);
+
 	}
 
 	//--- Stuff for setting the mapview on a box at startup:
