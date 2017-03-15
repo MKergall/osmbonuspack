@@ -256,10 +256,14 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		map.getOverlays().add(0, mapEventsOverlay); //inserted at the "bottom" of all overlays
 
 		//Testing osmdroid issue #353 - turning HW acceleration on
-		com.example.osmbonuspacktuto.Polyline p = new com.example.osmbonuspacktuto.Polyline();
+		com.example.osmbonuspacktuto.Polygon p = new com.example.osmbonuspacktuto.Polygon();
+		p.setFillColor(0xAA00FF00);
 		ArrayList<GeoPoint> l = new ArrayList();
-		l.add(new GeoPoint(48.0, 20.0)); l.add(new GeoPoint(48.0, -20.0));
-		//l.add(new GeoPoint(48.0, 160.0)); l.add(new GeoPoint(48.0, -160.0)); intersecting 180° line
+		l.add(new GeoPoint(48.0, 20.0));
+		l.add(new GeoPoint(48.0, -20.0));
+		l.add(new GeoPoint(47.0, -20.0));
+		l.add(new GeoPoint(47.0, 20.0));
+		//l.add(new GeoPoint(48.0, 160.0)); l.add(new GeoPoint(48.0, -160.0)); //intersecting 180° line
 		p.setPoints(l);
 		map.getOverlays().add(p);
 
