@@ -11,6 +11,7 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.OverlayWithIW;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -20,6 +21,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
+import android.os.Build;
 import android.view.MotionEvent;
 
 /**
@@ -296,7 +298,20 @@ public class Polygon extends OverlayWithIW {
 		points.add(new GeoPoint(northLat, east.getLongitude()));
 		return points;
 	}
-	
+
+	public static boolean SDKsupportsPathOp() {
+		return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+	}
+
+	@TargetApi(Build.VERSION_CODES.KITKAT)
+	void clip(Path path, MapView mapView, Paint outlinePaint, Path clipPath, Rect clipRect) {
+		mapView.getIntrinsicScreenRect(clipRect);
+		float outlineWidth = outlinePaint.getStrokeWidth();
+		clipPath.addRect(clipRect.left - outlineWidth, clipRect.top - outlineWidth,
+				clipRect.right + outlineWidth, clipRect.bottom + outlineWidth, Path.Direction.CW);
+		path.op(clipPath, Path.Op.INTERSECT);
+	}
+
 	@Override public void draw(Canvas canvas, MapView mapView, boolean shadow) {
 
 		if (shadow) {
@@ -312,12 +327,10 @@ public class Polygon extends OverlayWithIW {
 			hole.buildPathPortion(pj);
 		}
 
-		//clipping to avoid issue #353
-		mapView.getIntrinsicScreenRect(mClipRect);
-		float outlineWidth = mOutlinePaint.getStrokeWidth();
-		mClipPath.addRect(mClipRect.left-outlineWidth, mClipRect.top-outlineWidth,
-				mClipRect.right+outlineWidth, mClipRect.bottom+outlineWidth, Path.Direction.CW);
-		mPath.op(mClipPath, Path.Op.INTERSECT);
+		if (SDKsupportsPathOp()) {
+			//clipping to avoid issue #353
+			clip(mPath, mapView, mOutlinePaint, mClipPath, mClipRect);
+		}
 
 		canvas.drawPath(mPath, mFillPaint);
 		canvas.drawPath(mPath, mOutlinePaint);

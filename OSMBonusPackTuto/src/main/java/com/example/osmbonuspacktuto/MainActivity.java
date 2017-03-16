@@ -81,7 +81,8 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		//Introduction
 		super.onCreate(savedInstanceState);
 
-		Configuration.getInstance().setMapViewHardwareAccelerated(true);
+		boolean hwAccelerationOK = com.example.osmbonuspacktuto.Polygon.SDKsupportsPathOp();
+		Configuration.getInstance().setMapViewHardwareAccelerated(hwAccelerationOK);
 		LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = inflater.inflate(R.layout.main, null);
 
@@ -256,9 +257,16 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		map.getOverlays().add(0, mapEventsOverlay); //inserted at the "bottom" of all overlays
 
 		//Testing osmdroid issue #353 - turning HW acceleration on
+		com.example.osmbonuspacktuto.Polyline pl = new com.example.osmbonuspacktuto.Polyline();
+		ArrayList<GeoPoint> l = new ArrayList();
+		l.add(new GeoPoint(48.5, 20.0));
+		l.add(new GeoPoint(48.5, -20.0));
+		pl.setPoints(l);
+		map.getOverlays().add(pl);
+
 		com.example.osmbonuspacktuto.Polygon p = new com.example.osmbonuspacktuto.Polygon();
 		p.setFillColor(0xAA00FF00);
-		ArrayList<GeoPoint> l = new ArrayList();
+		l = new ArrayList();
 		l.add(new GeoPoint(48.0, 20.0));
 		l.add(new GeoPoint(48.0, -20.0));
 		l.add(new GeoPoint(47.0, -20.0));
