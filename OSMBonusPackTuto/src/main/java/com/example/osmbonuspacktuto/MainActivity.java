@@ -94,6 +94,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		IMapController mapController = map.getController();
 		mapController.setZoom(10);
 		mapController.setCenter(startPoint);
+		map.setMapOrientation(20.0f);
 
 		//0. Using the Marker overlay
 		Marker startMarker = new Marker(map);

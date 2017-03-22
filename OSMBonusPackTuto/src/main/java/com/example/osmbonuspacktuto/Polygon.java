@@ -305,7 +305,7 @@ public class Polygon extends OverlayWithIW {
 
 	@TargetApi(Build.VERSION_CODES.KITKAT)
 	void clip(Path path, MapView mapView, Paint outlinePaint, Path clipPath, Rect clipRect) {
-		mapView.getIntrinsicScreenRect(clipRect);
+		mapView.getScreenRect(clipRect);
 		float outlineWidth = outlinePaint.getStrokeWidth();
 		clipPath.addRect(clipRect.left - outlineWidth, clipRect.top - outlineWidth,
 				clipRect.right + outlineWidth, clipRect.bottom + outlineWidth, Path.Direction.CW);
