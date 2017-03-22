@@ -7,8 +7,10 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.MotionEvent;
 
+import org.osmdroid.api.IMapView;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.GeometryMath;
@@ -49,6 +51,10 @@ public class Polyline extends OverlayWithIW {
 	/** Number of points that have precomputed values */
 	private int mPointsPrecomputed;
 	public boolean mRepeatPath = false; /** if true: at low zoom level showing multiple maps, path will be drawn on all maps */
+	/** Point coordinates for drawLines() */
+	private float[] mPts = null;
+	/** Bounding rectangle for view */
+	private final Rect mClipRect = new Rect();
 
 	/** bounding rectangle for the current line segment */
 	private final Rect mLineBounds = new Rect();
@@ -78,6 +84,7 @@ public class Polyline extends OverlayWithIW {
 	protected void clearPath() {
 		this.mPoints = new ArrayList<Point>();
 		this.mPointsPrecomputed = 0;
+                this.mPts = null;
 	}
 
 	protected void addPoint(final GeoPoint aPoint) {
@@ -213,83 +220,6 @@ public class Polyline extends OverlayWithIW {
 		}
 	}
 
-	/*
-	protected void drawOld(final Canvas canvas, final MapView mapView, final boolean shadow) {
-
-		if (shadow) {
-			return;
-		}
-
-		final int size = this.mPoints.size();
-		if (size < 2) {
-			// nothing to paint
-			return;
-		}
-
-		final Projection pj = mapView.getProjection();
-
-		// precompute new points to the intermediate projection.
-		precomputePoints(pj);
-
-		Point screenPoint0 = null; // points on screen
-		Point screenPoint1;
-		Point projectedPoint0; // points from the points list
-		Point projectedPoint1;
-
-		// clipping rectangle in the intermediate projection, to avoid performing projection.
-		BoundingBox boundingBox = pj.getBoundingBox();
-		Point topLeft = pj.toProjectedPixels(boundingBox.getLatNorth(),
-				boundingBox.getLonWest(), null);
-		Point bottomRight = pj.toProjectedPixels(boundingBox.getLatSouth(),
-				boundingBox.getLonEast(), null);
-		final Rect clipBounds = new Rect(topLeft.x, topLeft.y, bottomRight.x, bottomRight.y);
-		// take into account map orientation:
-		if (mapView.getMapOrientation() != 0.0f)
-			GeometryMath.getBoundingBoxForRotatatedRectangle(clipBounds, mapView.getMapOrientation(), clipBounds);
-
-		mPath.rewind();
-		projectedPoint0 = this.mPoints.get(size - 1);
-		mLineBounds.set(projectedPoint0.x, projectedPoint0.y, projectedPoint0.x, projectedPoint0.y);
-
-		for (int i = size - 2; i >= 0; i--) {
-			// compute next points
-			projectedPoint1 = this.mPoints.get(i);
-			mLineBounds.union(projectedPoint1.x, projectedPoint1.y);
-
-			if (!Rect.intersects(clipBounds, mLineBounds)) {
-				// skip this line, move to next point
-				projectedPoint0 = projectedPoint1;
-				screenPoint0 = null;
-				continue;
-			}
-
-			// the starting point may be not calculated, because previous segment was out of clip
-			// bounds
-			if (screenPoint0 == null) {
-				screenPoint0 = pj.toPixelsFromProjected(projectedPoint0, this.mTempPoint1);
-				mPath.moveTo(screenPoint0.x, screenPoint0.y);
-			}
-
-			screenPoint1 = pj.toPixelsFromProjected(projectedPoint1, this.mTempPoint2);
-
-			// skip this point, too close to previous point
-			if (Math.abs(screenPoint1.x - screenPoint0.x) + Math.abs(screenPoint1.y - screenPoint0.y) <= 1) {
-				continue;
-			}
-
-			mPath.lineTo(screenPoint1.x, screenPoint1.y);
-
-			// update starting point to next position
-			projectedPoint0 = projectedPoint1;
-			screenPoint0.x = screenPoint1.x;
-			screenPoint0.y = screenPoint1.y;
-			mLineBounds.set(projectedPoint0.x, projectedPoint0.y, projectedPoint0.x, projectedPoint0.y);
-		}
-
-		canvas.drawPath(mPath, mPaint);
-	}
-	*/
-
 	@Override
 	public void draw(final Canvas canvas, final MapView mapView, final boolean shadow) {
 
@@ -305,11 +235,17 @@ public class Polyline extends OverlayWithIW {
 
 		final Projection pj = mapView.getProjection();
 
+
 		final int halfMapSize = TileSystem.MapSize(mapView.getProjection().getZoomLevel()) / 2; // 180° in longitude in pixels
 		final int southLimit = pj.toPixelsFromMercator(0, halfMapSize * 2, null).y;            // southern Limit of the map in Pixels
 
 		// precompute new points to the intermediate projection.
 		precomputePoints(pj);
+
+		// not all points will be drawn due to zoom level and clipping (allow for 25-50% before calling drawLines)
+		if (mPts == null || mPts.length < size)
+			mPts = new float[Math.max(256, 2*size)];
+		int j=0;
 
 		Point projectedPoint0 = mPoints.get(0); // points from the points list
 
@@ -324,8 +260,18 @@ public class Polyline extends OverlayWithIW {
 			Point projectedPoint1 = mPoints.get(i);
 			screenPoint1 = pj.toPixelsFromProjected(projectedPoint1, this.mTempPoint2);
 
-			if (Math.abs(screenPoint1.x - screenPoint0.x) + Math.abs(screenPoint1.y - screenPoint0.y) <= 1) {
-				// skip this point, too close to previous point
+
+			// skip points too close to previous point or on same side of view
+			if (Math.abs(screenPoint1.x - screenPoint0.x) + Math.abs(screenPoint1.y - screenPoint0.y) <= 1)
+				continue;
+			mapView.getScreenRect(mClipRect);
+			if ( (screenPoint0.x < mClipRect.left && screenPoint1.x < mClipRect.left) ||
+			     (screenPoint0.x > mClipRect.right && screenPoint1.x > mClipRect.right) ||
+			     (screenPoint0.y < mClipRect.top && screenPoint1.y < mClipRect.top) ||
+			     (screenPoint0.y > mClipRect.bottom && screenPoint1.y > mClipRect.bottom) ) {
+				// update starting point to next position
+				screenPoint0.x = screenPoint1.x;
+				screenPoint0.y = screenPoint1.y;
 				continue;
 			}
 
@@ -364,22 +310,40 @@ public class Polyline extends OverlayWithIW {
 						y0 -= halfMapSize * 2;
 					}
 				}
-				//mPath.lineTo(x1, y1);
-				canvas.drawLine(screenPoint0.x, screenPoint0.y, x1, y1, mPaint);
-				//mPath.moveTo(x0, y0);
+
+				if (j+4 > mPts.length) {
+					canvas.drawLines(mPts, 0, j, mPaint);
+					//Log.d(IMapView.LOGTAG,"Polyline points : " + j/4);
+					j = 0;
+				}
+				mPts[j++] = screenPoint0.x;
+				mPts[j++] = screenPoint0.y;
+				mPts[j++] = x1;
+				mPts[j++] = y1;
+
 				screenPoint0.x = x0;
 				screenPoint0.y = y0;
 			} // end of line break check
 
-			//mPath.lineTo(screenPoint1.x, screenPoint1.y);
-			canvas.drawLine(screenPoint0.x, screenPoint0.y, screenPoint1.x, screenPoint1.y, mPaint);
+			if (j+4 > mPts.length) {
+				canvas.drawLines(mPts, 0, j, mPaint);
+				//Log.d(IMapView.LOGTAG,"Polyline points : " + j/4);
+				j = 0;
+			}
+			mPts[j++] = screenPoint0.x;
+			mPts[j++] = screenPoint0.y;
+			mPts[j++] = screenPoint1.x;
+			mPts[j++] = screenPoint1.y;
 
 			// update starting point to next position
 			screenPoint0.x = screenPoint1.x;
 			screenPoint0.y = screenPoint1.y;
 		}
 
-		//canvas.drawPath(mPath, mPaint);
+		if ( j > 0 ) {
+			canvas.drawLines(mPts, 0, j, mPaint);
+			//Log.d(IMapView.LOGTAG,"Polyline points : " + j/4);
+		}
 
 		/* (Should we really keep that? This is not supported by any other overlay)
 		if (mRepeatPath) {
