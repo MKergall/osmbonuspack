@@ -93,10 +93,11 @@ public class IconStyle extends ColorStyle implements Parcelable {
 	/** apply all IconStyle attributes to the Marker */
 	public void styleMarker(Marker marker, Context context){
 		BitmapDrawable icon = getFinalIcon(context);
-		marker.setIcon(icon);
-		if (icon != null)
+		if (icon != null) {
+			marker.setIcon(icon);
 			marker.setAnchor(mHotSpot.getX(icon.getIntrinsicWidth() / mScale),
 					1.0f - mHotSpot.getY(icon.getIntrinsicHeight() / mScale));
+		} //else, default Marker icon will be used.
 		//Y coords are top->bottom for Marker Anchor, and bottom->up for KML hotSpot
 		marker.setRotation(mHeading);
 	}
