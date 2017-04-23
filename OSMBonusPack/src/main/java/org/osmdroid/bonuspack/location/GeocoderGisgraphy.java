@@ -7,8 +7,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
+import org.osmdroid.bonuspack.utils.StatusException;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -106,8 +108,7 @@ public class GeocoderGisgraphy {
 	/**
 	 * Equivalent to Geocoder::getFromLocation(String locationName, int maxResults). 
 	 */
-	public List<Address> getFromLocationName(String locationName, int maxResults)
-	throws IOException {
+	public List<Address> getFromLocationName(String locationName, int maxResults) throws IOException, StatusException {
 		String url = mServiceUrl
 			+ "geocoding/geocode?"
 			+ "format=json"
@@ -117,7 +118,7 @@ public class GeocoderGisgraphy {
 		String result = BonusPackHelper.requestStringFromUrl(url);
 		//Log.d(BonusPackHelper.LOG_TAG, result);
 		if (result == null)
-			throw new IOException();
+			throw new StatusException(HttpURLConnection.HTTP_NO_CONTENT);
 		try {
 			JSONObject jsonResult = new JSONObject(result);
 			JSONArray jResults = jsonResult.getJSONArray("result");

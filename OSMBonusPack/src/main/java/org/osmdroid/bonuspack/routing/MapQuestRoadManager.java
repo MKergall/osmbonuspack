@@ -5,12 +5,14 @@ import android.util.Log;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.bonuspack.utils.HttpConnection;
 import org.osmdroid.bonuspack.utils.PolylineEncoder;
+import org.osmdroid.bonuspack.utils.StatusException;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -79,8 +81,10 @@ public class MapQuestRoadManager extends RoadManager {
 	/**
 	 * @param waypoints list of GeoPoints. Must have at least 2 entries, start and end points. 
 	 * @return the road
+	 * @throws IOException if there is problem with internet connection
+	 * @throws StatusException if there si some problem other then internet connection. For problem details see {@link StatusException#getHttpStatusCode()}
 	 */
-	@Override public Road getRoad(ArrayList<GeoPoint> waypoints) {
+	@Override public Road getRoad(ArrayList<GeoPoint> waypoints) throws IOException, StatusException {
 		String url = getUrl(waypoints);
 		Log.d(BonusPackHelper.LOG_TAG, "MapQuestRoadManager.getRoute:"+url);
 		Road road = null;
@@ -94,7 +98,7 @@ public class MapQuestRoadManager extends RoadManager {
 		return road;
 	}
 
-	@Override public Road[] getRoads(ArrayList<GeoPoint> waypoints) {
+	@Override public Road[] getRoads(ArrayList<GeoPoint> waypoints) throws IOException, StatusException {
 		Road road = getRoad(waypoints);
 		Road[] roads = new Road[1];
 		roads[0] = road;

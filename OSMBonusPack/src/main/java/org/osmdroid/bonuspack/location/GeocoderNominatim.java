@@ -11,10 +11,12 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
+import org.osmdroid.bonuspack.utils.StatusException;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,12 +98,39 @@ public class GeocoderNominatim {
 		if (jAddress.has("road")){
 			gAddress.setAddressLine(addressIndex++, jAddress.get("road").getAsString());
 			gAddress.setThoroughfare(jAddress.get("road").getAsString());
+		} else if (jAddress.has("pedestrian")){
+			gAddress.setAddressLine(addressIndex++, jAddress.get("pedestrian").getAsString());
+			gAddress.setThoroughfare(jAddress.get("pedestrian").getAsString());
+		} else if (jAddress.has("footway")){
+			gAddress.setAddressLine(addressIndex++, jAddress.get("footway").getAsString());
+			gAddress.setThoroughfare(jAddress.get("footway").getAsString());
+		} else if (jAddress.has("cycleway")){
+			gAddress.setAddressLine(addressIndex++, jAddress.get("cycleway").getAsString());
+			gAddress.setThoroughfare(jAddress.get("cycleway").getAsString());
+		} else if (jAddress.has("bridleway")){
+			gAddress.setAddressLine(addressIndex++, jAddress.get("bridleway").getAsString());
+			gAddress.setThoroughfare(jAddress.get("bridleway").getAsString());
+		} else if (jAddress.has("highway")){
+			gAddress.setAddressLine(addressIndex++, jAddress.get("highway").getAsString());
+			gAddress.setThoroughfare(jAddress.get("highway").getAsString());
+		} else if (jAddress.has("address26")){
+			gAddress.setAddressLine(addressIndex++, jAddress.get("address26").getAsString());
+			gAddress.setThoroughfare(jAddress.get("address26").getAsString());
 		}
+
+		/** since in documentations {@link Address#getSubThoroughfare()} says:
+		 *  "This may correspond to the street number of the address" */
+		if (jAddress.has("house_number"))
+			gAddress.setSubThoroughfare(jAddress.get("house_number").getAsString());
+
 		if (jAddress.has("suburb")){
 			//gAddress.setAddressLine(addressIndex++, jAddress.getString("suburb"));
 				//not kept => often introduce "noise" in the address.
 			gAddress.setSubLocality(jAddress.get("suburb").getAsString());
+		} else if (jAddress.has("sub-city")){
+			gAddress.setSubLocality(jAddress.get("sub-city").getAsString());
 		}
+
 		if (jAddress.has("postcode")){
 			gAddress.setAddressLine(addressIndex++, jAddress.get("postcode").getAsString());
 			gAddress.setPostalCode(jAddress.get("postcode").getAsString());
@@ -120,9 +149,13 @@ public class GeocoderNominatim {
 		
 		if (jAddress.has("county")){ //France: departement
 			gAddress.setSubAdminArea(jAddress.get("county").getAsString());
+		} else if (jAddress.has("departement")){
+			gAddress.setSubAdminArea(jAddress.get("departement").getAsString());
 		}
 		if (jAddress.has("state")){ //France: region
 			gAddress.setAdminArea(jAddress.get("state").getAsString());
+		} else if (jAddress.has("region")){
+			gAddress.setAdminArea(jAddress.get("region").getAsString());
 		}
 		if (jAddress.has("country")){
 			gAddress.setAddressLine(addressIndex++, jAddress.get("country").getAsString());
@@ -130,14 +163,9 @@ public class GeocoderNominatim {
 		}
 		if (jAddress.has("country_code"))
 			gAddress.setCountryCode(jAddress.get("country_code").getAsString());
-		
-		/* Other possible OSM tags in Nominatim results not handled yet: 
-		 * subway, golf_course, bus_stop, parking,...
-		 * house, house_number, building
-		 * city_district (13e Arrondissement)
-		 * road => or highway, ...
-		 * sub-city (like suburb) => locality, isolated_dwelling, hamlet ...
-		 * state_district
+
+		/* Other possible OSM tags in Nominatim results not handled yet:
+		 * state_district, ...
 		*/
 		
 		//Add non-standard (but very useful) information in Extras bundle:
@@ -173,6 +201,108 @@ public class GeocoderNominatim {
 			String display_name = jResult.get("display_name").getAsString();
 			extras.putString("display_name", display_name);
 		}
+		if (jResult.has("place_id")){
+			String place_id = jResult.get("place_id").getAsString();
+			extras.putString("place_id", place_id);
+		}
+		if (jResult.has("type")){
+			String type = jResult.get("type").getAsString();
+			extras.putString("type", type);
+		}
+		if (jResult.has("licence")){
+			String licence = jResult.get("licence").getAsString();
+			extras.putString("licence", licence);
+		}
+		//would be nice to have all location parts if needed
+		if (jAddress.has("city")){
+			String city = jAddress.get("city").getAsString();
+			extras.putString("city", city);
+		}
+		if (jAddress.has("town")){
+			String town = jAddress.get("town").getAsString();
+			extras.putString("town", town);
+		}
+		if (jAddress.has("village")){
+			String village = jAddress.get("village").getAsString();
+			extras.putString("village", village);
+		}
+		if (jAddress.has("subway")){
+			String subway = jAddress.get("subway").getAsString();
+			extras.putString("subway", subway);
+		}
+		if (jAddress.has("golf_course")){
+			String golf_course = jAddress.get("golf_course").getAsString();
+			extras.putString("golf_course", golf_course);
+		}
+		if (jAddress.has("bus_stop")){
+			String bus_stop = jAddress.get("bus_stop").getAsString();
+			extras.putString("bus_stop", bus_stop);
+		}
+		if (jAddress.has("parking")){
+			String parking = jAddress.get("parking").getAsString();
+			extras.putString("parking", parking);
+		}
+		if (jAddress.has("house")){
+			String house = jAddress.get("house").getAsString();
+			extras.putString("house", house);
+		}
+		if (jAddress.has("building")){
+			String building = jAddress.get("building").getAsString();
+			extras.putString("building", building);
+		}
+		if (jAddress.has("city_district")){
+			String city_district = jAddress.get("city_district").getAsString();
+			extras.putString("city_district", city_district);
+		}
+		if (jAddress.has("pedestrian")){
+			String highway = jAddress.get("pedestrian").getAsString();
+			extras.putString("pedestrian", highway);
+		}
+		if (jAddress.has("footway")){
+			String highway = jAddress.get("footway").getAsString();
+			extras.putString("footway", highway);
+		}
+		if (jAddress.has("highway")){
+			String highway = jAddress.get("highway").getAsString();
+			extras.putString("highway", highway);
+		}
+		if (jAddress.has("sub-city")){
+			String sub_city = jAddress.get("sub-city").getAsString();
+			extras.putString("sub-city", sub_city);
+		}
+		if (jAddress.has("locality")){
+			String locality = jAddress.get("locality").getAsString();
+			extras.putString("locality", locality);
+		}
+		if (jAddress.has("isolated_dwelling")){
+			String isolated_dwelling = jAddress.get("isolated_dwelling").getAsString();
+			extras.putString("isolated_dwelling", isolated_dwelling);
+		}
+		if (jAddress.has("cycleway")){
+			String cycleway = jAddress.get("cycleway").getAsString();
+			extras.putString("cycleway", cycleway);
+		}
+		if (jAddress.has("hamlet")){
+			String hamlet = jAddress.get("hamlet").getAsString();
+			extras.putString("hamlet", hamlet);
+		}
+		if (jAddress.has("region")){
+			String region = jAddress.get("region").getAsString();
+			extras.putString("region", region);
+		}
+		if (jAddress.has("departement")){
+			String departement = jAddress.get("departement").getAsString();
+			extras.putString("departement", departement);
+		}
+		if (jAddress.has("neighbourhood")){
+			String neighbourhood = jAddress.get("neighbourhood").getAsString();
+			extras.putString("neighbourhood", neighbourhood);
+		}
+		if (jAddress.has("residential")){
+			String residential = jAddress.get("residential").getAsString();
+			extras.putString("residential", residential);
+		}
+
 		gAddress.setExtras(extras);
 		
 		return gAddress;
@@ -181,8 +311,7 @@ public class GeocoderNominatim {
 	/**
 	 * Equivalent to Geocoder::getFromLocation(double latitude, double longitude, int maxResults). 
 	 */
-	public List<Address> getFromLocation(double latitude, double longitude, int maxResults) 
-	throws IOException {
+	public List<Address> getFromLocation(double latitude, double longitude, int maxResults) throws IOException, StatusException {
 		String url = mServiceUrl + "reverse?";
 		if (mKey != null)
 			url += "key=" + mKey + "&";
@@ -194,7 +323,7 @@ public class GeocoderNominatim {
 		Log.d(BonusPackHelper.LOG_TAG, "GeocoderNominatim::getFromLocation:"+url);
 		String result = BonusPackHelper.requestStringFromUrl(url, mUserAgent);
 		if (result == null)
-			throw new IOException();
+			throw new StatusException(HttpURLConnection.HTTP_NO_CONTENT);
 		try {
 			JsonParser parser = new JsonParser();
 			JsonElement json = parser.parse(result);
@@ -217,8 +346,7 @@ public class GeocoderNominatim {
 	public List<Address> getFromLocationName(String locationName, int maxResults, 
 			double lowerLeftLatitude, double lowerLeftLongitude, 
 			double upperRightLatitude, double upperRightLongitude,
-			boolean bounded)
-	throws IOException {
+			boolean bounded) throws IOException, StatusException {
 		String url = mServiceUrl + "search?";
 		if (mKey != null)
 			url += "key=" + mKey + "&";
@@ -245,7 +373,7 @@ public class GeocoderNominatim {
 		String result = BonusPackHelper.requestStringFromUrl(url, mUserAgent);
 		//Log.d(BonusPackHelper.LOG_TAG, result);
 		if (result == null)
-			throw new IOException();
+			throw new StatusException(HttpURLConnection.HTTP_NO_CONTENT);
 		try {
 			JsonParser parser = new JsonParser();
 			JsonElement json = parser.parse(result);
@@ -270,10 +398,9 @@ public class GeocoderNominatim {
 	 */
 	public List<Address> getFromLocationName(String locationName, int maxResults, 
 			double lowerLeftLatitude, double lowerLeftLongitude, 
-			double upperRightLatitude, double upperRightLongitude)
-	throws IOException {
-		return getFromLocationName(locationName, maxResults, 
-				lowerLeftLatitude, lowerLeftLongitude, 
+			double upperRightLatitude, double upperRightLongitude) throws IOException, StatusException {
+		return getFromLocationName(locationName, maxResults,
+				lowerLeftLatitude, lowerLeftLongitude,
 				upperRightLatitude, upperRightLongitude, true);
 	}
 
@@ -287,8 +414,7 @@ public class GeocoderNominatim {
 	 * "display_name": the address, as a single String<br>
 	 * "polygonpoints": the enclosing polygon of the location (depending on setOptions usage), as an ArrayList of GeoPoint<br>
 	 */
-	public List<Address> getFromLocationName(String locationName, int maxResults)
-	throws IOException {
+	public List<Address> getFromLocationName(String locationName, int maxResults) throws IOException, StatusException {
 		return getFromLocationName(locationName, maxResults, 0.0, 0.0, 0.0, 0.0, false);
 	}
 	

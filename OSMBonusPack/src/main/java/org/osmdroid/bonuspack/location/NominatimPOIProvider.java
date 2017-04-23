@@ -7,9 +7,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
+import org.osmdroid.bonuspack.utils.StatusException;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
@@ -78,12 +81,12 @@ public class NominatimPOIProvider {
 	 * @param url full URL request. Assumes
 	 * @return the list of POI, of null if technical issue. 
 	 */
-	public ArrayList<POI> getThem(String url){
+	public ArrayList<POI> getThem(String url) throws IOException, StatusException {
 		Log.d(BonusPackHelper.LOG_TAG, "NominatimPOIProvider:get:"+url);
 		String jString = BonusPackHelper.requestStringFromUrl(url, mUserAgent);
 		if (jString == null) {
 			Log.e(BonusPackHelper.LOG_TAG, "NominatimPOIProvider: request failed.");
-			return null;
+			throw new StatusException(HttpURLConnection.HTTP_NO_CONTENT);
 		}
 		try {
 			JSONArray jPlaceIds = new JSONArray(jString);
@@ -128,7 +131,7 @@ public class NominatimPOIProvider {
 	 * @return the list of POI close to position, null if technical issue.
 	 */
 	public ArrayList<POI> getPOICloseTo(GeoPoint position, String facility, 
-			int maxResults, double maxDistance){
+			int maxResults, double maxDistance) throws IOException, StatusException {
 		String url = getUrlCloseTo(position, facility, maxResults, maxDistance);
 		return getThem(url);
 	}
@@ -139,7 +142,7 @@ public class NominatimPOIProvider {
 	 * @param maxResults
 	 * @return list of POIs inside the bounding box, null if technical issue.
 	 */
-	public ArrayList<POI> getPOIInside(BoundingBox boundingBox, String facility, int maxResults){
+	public ArrayList<POI> getPOIInside(BoundingBox boundingBox, String facility, int maxResults) throws IOException, StatusException {
 		String url = getUrlInside(boundingBox, facility, maxResults);
 		return getThem(url);
 	}
@@ -155,7 +158,7 @@ public class NominatimPOIProvider {
 	 * @see org.osmdroid.bonuspack.routing.Road#getRouteLow for simplifying a route path
 	 */
 	public ArrayList<POI> getPOIAlong(ArrayList<GeoPoint> path, String facility, 
-		int maxResults, double maxWidth){
+		int maxResults, double maxWidth) throws IOException, StatusException {
 		StringBuilder url = getCommonUrl(facility, maxResults);
 		url.append("&routewidth="+maxWidth);
 		url.append("&route=");

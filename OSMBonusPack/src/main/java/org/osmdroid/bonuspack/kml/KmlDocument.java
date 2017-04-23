@@ -203,7 +203,12 @@ public class KmlDocument implements Parcelable {
 	public boolean parseKMLUrl(String url){
 		Log.d(BonusPackHelper.LOG_TAG, "KmlProvider.parseKMLUrl:"+url);
 		HttpConnection connection = new HttpConnection();
-		connection.doGet(url);
+		try {
+			connection.doGet(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 		InputStream stream = connection.getStream();
 		boolean ok;
 		if (stream == null){

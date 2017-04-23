@@ -1,8 +1,10 @@
 package org.osmdroid.bonuspack.routing;
 
+import org.osmdroid.bonuspack.utils.StatusException;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Polyline;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -23,8 +25,10 @@ public abstract class RoadManager {
 	 * @param waypoints
 	 * @return the road found.
 	 * In case of error, road status is set to error, and the shape has just straight lines between waypoints.
+	 * @throws IOException if there is problem with internet connection
+	 * @throws StatusException if there si some problem other then internet connection. For problem details see {@link StatusException#getHttpStatusCode()}
 	 */
-	public abstract Road getRoad(ArrayList<GeoPoint> waypoints);
+	public abstract Road getRoad(ArrayList<GeoPoint> waypoints) throws IOException, StatusException;
 
 	/**
 	 * @param waypoints
@@ -32,8 +36,10 @@ public abstract class RoadManager {
 	 * Road at index 0 is the shortest (in time).
 	 * The array may contain more entries, for alternate routes - assuming the routing service used supports alternate routes.
 	 * In case of error, return 1 road with its status set to error, and its shape with just straight lines between waypoints.
+	 * @throws IOException if there is problem with internet connection
+	 * @throws StatusException if there si some problem other then internet connection. For problem details see {@link StatusException#getHttpStatusCode()}
 	 */
-	public abstract Road[] getRoads(ArrayList<GeoPoint> waypoints);
+	public abstract Road[] getRoads(ArrayList<GeoPoint> waypoints) throws IOException, StatusException;
 
 	public RoadManager() {
 		mOptions = "";

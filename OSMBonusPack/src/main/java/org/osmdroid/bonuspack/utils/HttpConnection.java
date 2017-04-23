@@ -60,18 +60,19 @@ public class HttpConnection {
 		mUserAgent = userAgent;
 	}
 
-	public void doGet(final String url) {
-        try {
-            Request.Builder request = new Request.Builder().url(url);
-            if (mUserAgent != null)
-                request.addHeader("User-Agent", mUserAgent);
-            response = getOkHttpClient().newCall(request.build()).execute();
-            Integer status = response.code();
-            if (status != 200) {
-                Log.e(BonusPackHelper.LOG_TAG, "Invalid response from server: " + status.toString());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    /**
+     * @throws IOException if there is problem with internet connection
+     * @throws StatusException if there si some problem other then internet connection. For problem details see {@link StatusException#getHttpStatusCode()}
+     * */
+	public void doGet(final String url) throws StatusException, IOException {
+        Request.Builder request = new Request.Builder().url(url);
+        if (mUserAgent != null)
+            request.addHeader("User-Agent", mUserAgent);
+        response = getOkHttpClient().newCall(request.build()).execute();
+        Integer status = response.code();
+        if (status != 200) {
+            Log.e(BonusPackHelper.LOG_TAG, "Invalid response from server: " + status.toString());
+            throw new StatusException(status);
         }
   }
 
