@@ -138,7 +138,7 @@ public class OSRMRoadManager extends RoadManager {
 			GeoPoint p = waypoints.get(i);
 			if (i>0)
 				urlString.append(';');
-			urlString.append(Double.toString(p.getLongitude()) + "," + Double.toString(p.getLatitude()));
+			urlString.append(geoPointAsLonLatString(p));
 		}
 		urlString.append("?alternatives="+(getAlternate?"true" : "false"));
 		urlString.append("&overview=full&steps=true");
