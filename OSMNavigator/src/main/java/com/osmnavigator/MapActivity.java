@@ -38,7 +38,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -46,7 +45,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.mapsforge.map.rendertheme.ExternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
@@ -62,7 +60,7 @@ import org.osmdroid.bonuspack.kml.LineStyle;
 import org.osmdroid.bonuspack.kml.Style;
 import org.osmdroid.bonuspack.location.FlickrPOIProvider;
 import org.osmdroid.bonuspack.location.GeoNamesPOIProvider;
-import org.osmdroid.bonuspack.location.GeocoderNominatim;
+import org.osmdroid.bonuspack.location.GeocoderMapzen;
 import org.osmdroid.bonuspack.location.OverpassAPIProvider;
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.bonuspack.location.PicasaPOIProvider;
@@ -96,6 +94,7 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Marker.OnMarkerDragListener;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polygon;
+//import org.osmdroid.bonuspack.overlays.Polygon;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.TilesOverlay;
@@ -103,7 +102,6 @@ import org.osmdroid.views.overlay.infowindow.BasicInfoWindow;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 import org.osmdroid.views.overlay.mylocation.DirectedLocationOverlay;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -180,12 +178,16 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	static String mapQuestApiKey;
 	static String flickrApiKey;
 	static String geonamesAccount;
+	static String mapzenApiKey;
 
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		Configuration.getInstance().setOsmdroidBasePath(new File(Environment.getExternalStorageDirectory(), "osmdroid"));
 		Configuration.getInstance().setOsmdroidTileCache(new File(Environment.getExternalStorageDirectory(), "osmdroid/tiles"));
+
+		boolean hwAccelerationOK = org.osmdroid.bonuspack.overlays.Polygon.SDKsupportsPathOp();
+		Configuration.getInstance().setMapViewHardwareAccelerated(hwAccelerationOK);
 
 		LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = inflater.inflate(R.layout.main, null);
@@ -202,6 +204,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		mapQuestApiKey = ManifestUtil.retrieveKey(this, "MAPQUEST_API_KEY");
 		flickrApiKey = ManifestUtil.retrieveKey(this, "FLICKR_API_KEY");
 		geonamesAccount = ManifestUtil.retrieveKey(this, "GEONAMES_ACCOUNT");
+		mapzenApiKey = ManifestUtil.retrieveKey(this, "MAPZEN_APIKEY");
 
 		map = (MapView) v.findViewById(R.id.map);
 
@@ -608,7 +611,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	 * Reverse Geocoding
      */
     public String getAddress(GeoPoint p){
-		GeocoderNominatim geocoder = new GeocoderNominatim(userAgent);
+		GeocoderMapzen geocoder = new GeocoderMapzen(mapzenApiKey);
 		String theAddress;
 		try {
 			double dLatitude = p.getLatitude();
@@ -642,8 +645,8 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		protected List<Address> doInBackground(Object... params) {
 			String locationAddress = (String)params[0];
 			mIndex = (Integer)params[1];
-			GeocoderNominatim geocoder = new GeocoderNominatim(userAgent);
-			geocoder.setOptions(true); //ask for enclosing polygon (if any)
+			GeocoderMapzen geocoder = new GeocoderMapzen(mapzenApiKey);
+			//geocoder.setOptions(true); //ask for enclosing polygon (if any)
 			try {
 				BoundingBox viewbox = map.getBoundingBox();
 				List<Address> foundAdresses = geocoder.getFromLocationName(locationAddress, 1,

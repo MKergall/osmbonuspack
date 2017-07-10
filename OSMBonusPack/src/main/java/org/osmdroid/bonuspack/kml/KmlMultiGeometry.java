@@ -97,9 +97,9 @@ public class KmlMultiGeometry extends KmlGeometry implements Cloneable, Parcelab
 			BoundingBox itemBB = item.getBoundingBox();
 			if (itemBB != null){
 				if (finalBB == null){
-					finalBB = BonusPackHelper.cloneBoundingBox(itemBB);
+					finalBB = itemBB.clone();
 				} else {
-					finalBB = BonusPackHelper.concatBoundingBox(itemBB, finalBB);
+					finalBB = finalBB.concat(itemBB);
 				}
 			}
 		}

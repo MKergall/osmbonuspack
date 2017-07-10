@@ -11,7 +11,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StrictMode;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
@@ -19,7 +18,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
 import org.osmdroid.bonuspack.clustering.StaticCluster;
@@ -56,7 +54,6 @@ import org.osmdroid.views.overlay.infowindow.BasicInfoWindow;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -81,7 +78,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		//Introduction
 		super.onCreate(savedInstanceState);
 
-		boolean hwAccelerationOK = com.example.osmbonuspacktuto.Polygon.SDKsupportsPathOp();
+		boolean hwAccelerationOK = org.osmdroid.bonuspack.overlays.Polygon.SDKsupportsPathOp();
 		Configuration.getInstance().setMapViewHardwareAccelerated(hwAccelerationOK);
 		LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = inflater.inflate(R.layout.main, null);
@@ -210,20 +207,6 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		String oUrl = overpassProvider.urlForTagSearchKml("highway=speed_camera", oBB, 500, 30);
 		boolean ok = overpassProvider.addInKmlFolder(mKmlDocument.mKmlRoot, oUrl);
 
-		//Variant - getting KML file from Assets:
-		/*
-		AssetManager assetManager = getAssets();
-		boolean ok;
-		try {
-			InputStream stream = assetManager.open("KML_Samples.kml");
-			ok = mKmlDocument.parseKMLStream(stream, null);
-			stream.close();
-		}catch (Exception e) {
-			e.printStackTrace();
-			ok = false;
-		}
-		*/
-
 		if (ok) {
 			//13.1 Simple styling
 			Drawable defaultMarker = ResourcesCompat.getDrawable(getResources(), R.drawable.marker_kml_point, null);
@@ -258,16 +241,10 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		map.getOverlays().add(0, mapEventsOverlay); //inserted at the "bottom" of all overlays
 
 		//Testing osmdroid issue #353 - turning HW acceleration on
-		com.example.osmbonuspacktuto.Polyline pl = new com.example.osmbonuspacktuto.Polyline();
-		ArrayList<GeoPoint> l = new ArrayList();
-		l.add(new GeoPoint(48.5, 20.0));
-		l.add(new GeoPoint(48.5, -20.0));
-		pl.setPoints(l);
-		map.getOverlays().add(pl);
-
-		com.example.osmbonuspacktuto.Polygon p = new com.example.osmbonuspacktuto.Polygon();
+		/*
+		org.osmdroid.bonuspack.overlays.Polygon p = new org.osmdroid.bonuspack.overlays.Polygon();
 		p.setFillColor(0xAA00FF00);
-		l = new ArrayList();
+		ArrayList<GeoPoint> l = new ArrayList();
 		l.add(new GeoPoint(48.0, 20.0));
 		l.add(new GeoPoint(48.0, -20.0));
 		l.add(new GeoPoint(47.0, -20.0));
@@ -275,7 +252,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		//l.add(new GeoPoint(48.0, 160.0)); l.add(new GeoPoint(48.0, -160.0)); //intersecting 180° line
 		p.setPoints(l);
 		map.getOverlays().add(p);
-
+		*/
 	}
 
 	//--- Stuff for setting the mapview on a box at startup:

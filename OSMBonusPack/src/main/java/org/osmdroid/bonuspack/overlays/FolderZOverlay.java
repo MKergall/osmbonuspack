@@ -48,7 +48,7 @@ public class FolderZOverlay extends Overlay {
         }
 
         public void setBoundingBox(BoundingBox bb){
-            mBoundingBox = BonusPackHelper.cloneBoundingBox(bb);
+            mBoundingBox = bb.clone();
             mBoundingBoxSet = true;
         }
 

@@ -33,23 +33,6 @@ public class BonusPackHelper {
 		//return Build.MANUFACTURER.equals("unknown");
 		return ("google_sdk".equals(Build.PRODUCT) || "sdk".equals(Build.PRODUCT));
 	}
-	
-	public static BoundingBox cloneBoundingBox(BoundingBox bb){
-		return new BoundingBox(
-				bb.getLatNorth(),
-				bb.getLonEast(),
-				bb.getLatSouth(),
-				bb.getLonWest());
-	}
-	
-	/** @return the BoundingBox enclosing bb1 and bb2 BoundingBoxes */
-	public static BoundingBox concatBoundingBox(BoundingBox bb1, BoundingBox bb2){
-		return new BoundingBox(
-				Math.max(bb1.getLatNorth(), bb2.getLatNorth()),
-				Math.max(bb1.getLonEast(), bb2.getLonEast()),
-				Math.min(bb1.getLatSouth(), bb2.getLatSouth()),
-				Math.min(bb1.getLonWest(), bb2.getLonWest()));
-	}
 
 	/**
 	 * @return the whole content of the http request, as a string

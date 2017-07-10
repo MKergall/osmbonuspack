@@ -2,9 +2,7 @@ package org.osmdroid.bonuspack.kml;
 
 import android.content.Context;
 import android.os.Parcel;
-
 import com.google.gson.JsonObject;
-
 import org.osmdroid.bonuspack.kml.KmlFeature.Styler;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.util.BoundingBox;
@@ -13,7 +11,6 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.infowindow.BasicInfoWindow;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.text.ParseException;

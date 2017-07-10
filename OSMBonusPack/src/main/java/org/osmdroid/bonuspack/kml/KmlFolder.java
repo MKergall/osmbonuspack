@@ -71,9 +71,9 @@ public class KmlFolder extends KmlFeature implements Cloneable, Parcelable {
 			BoundingBox itemBB = item.getBoundingBox();
 			if (itemBB != null){
 				if (BB == null){
-					BB = BonusPackHelper.cloneBoundingBox(itemBB);
+					BB = itemBB.clone();
 				} else {
-					BB = BonusPackHelper.concatBoundingBox(itemBB, BB);
+					BB = BB.concat(itemBB);
 				}
 			}
 		}
