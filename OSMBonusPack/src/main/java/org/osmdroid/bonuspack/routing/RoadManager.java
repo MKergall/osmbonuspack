@@ -3,6 +3,7 @@ package org.osmdroid.bonuspack.routing;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Polyline;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 public abstract class RoadManager {
 
   protected String mOptions;
+  final protected DecimalFormat mLatLonFormat = new DecimalFormat("0.000000");
 
 	/**
 	 * @param waypoints
@@ -53,13 +55,16 @@ public abstract class RoadManager {
 	 * @return the GeoPoint as a string, properly formatted: lat,lon
 	 */
 	protected String geoPointAsString(GeoPoint p){
-		StringBuilder result = new StringBuilder();
-		double d = p.getLatitude();
-		result.append(Double.toString(d));
-		d = p.getLongitude();
-		result.append(",");
-		result.append(Double.toString(d));
-		return result.toString();
+		return mLatLonFormat.format(p.getLatitude())  + ',' +
+				mLatLonFormat.format(p.getLongitude());
+	}
+
+	/**
+	 * @return the GeoPoint as a string, properly formatted: lon,lat
+	 */
+	protected String geoPointAsLonLatString(GeoPoint p){
+		return mLatLonFormat.format(p.getLongitude())  + ',' +
+				mLatLonFormat.format(p.getLatitude());
 	}
 	
 	/**
