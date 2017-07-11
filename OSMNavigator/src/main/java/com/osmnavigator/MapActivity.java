@@ -175,7 +175,6 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	static final String userAgent = "OsmNavigator/1.0";
 
 	static String graphHopperApiKey;
-	static String mapQuestApiKey;
 	static String flickrApiKey;
 	static String geonamesAccount;
 	static String mapzenApiKey;
@@ -201,7 +200,6 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		TileSourceFactory.addTileSource(MAPBOXSATELLITELABELLED);
 
 		graphHopperApiKey = ManifestUtil.retrieveKey(this, "GRAPHHOPPER_API_KEY");
-		mapQuestApiKey = ManifestUtil.retrieveKey(this, "MAPQUEST_API_KEY");
 		flickrApiKey = ManifestUtil.retrieveKey(this, "FLICKR_API_KEY");
 		geonamesAccount = ManifestUtil.retrieveKey(this, "GEONAMES_ACCOUNT");
 		mapzenApiKey = ManifestUtil.retrieveKey(this, "MAPZEN_APIKEY");
@@ -962,8 +960,6 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			case GRAPHHOPPER_FASTEST:
 				roadManager = new GraphHopperRoadManager(graphHopperApiKey, false);
 				roadManager.addRequestOption("locale="+locale.getLanguage());
-				//roadManager = new MapQuestRoadManager(mapQuestApiKey);
-				//roadManager.addRequestOption("locale="+locale.getLanguage()+"_"+locale.getCountry());
 				break;
 			case GRAPHHOPPER_BICYCLE:
 				roadManager = new GraphHopperRoadManager(graphHopperApiKey, false);

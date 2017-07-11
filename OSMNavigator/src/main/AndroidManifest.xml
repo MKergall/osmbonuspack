@@ -25,9 +25,6 @@
             android:name="GRAPHHOPPER_API_KEY"
             android:value="AMFmC5P8s958tcjfFRJmefNboJ5H0HN6PLFyvdm3"/>
         <meta-data
-            android:name="MAPQUEST_API_KEY"
-            android:value="Fmjtd%7Cluubn10zn9%2C8s%3Do5-90rnq6"/>
-        <meta-data
             android:name="FLICKR_API_KEY"
             android:value="c39be46304a6c6efda8bc066c185cd7e"/>
         <meta-data
