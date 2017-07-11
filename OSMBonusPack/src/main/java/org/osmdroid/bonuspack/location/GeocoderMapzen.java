@@ -34,9 +34,13 @@ public class GeocoderMapzen {
 	protected String mKey, mOptions;
     protected Locale mLocale;
 
+	public GeocoderMapzen(String appKey, Locale locale) {
+		mKey = appKey;
+		mLocale = locale;
+	}
+
 	public GeocoderMapzen(String appKey) {
-        mKey = appKey;
-        mLocale = Locale.getDefault();
+        this(appKey, Locale.getDefault());
 	}
 
 	static public boolean isPresent(){
@@ -65,43 +69,30 @@ public class GeocoderMapzen {
 
         JsonObject jProperties = jResult.get("properties").getAsJsonObject();
 		int addressIndex = 0;
-		if (jProperties.has("road")){
-			gAddress.setAddressLine(addressIndex++, jProperties.get("road").getAsString());
-			gAddress.setThoroughfare(jProperties.get("road").getAsString());
+		if (jProperties.has("name")){
+            gAddress.setAddressLine(addressIndex++, jProperties.get("name").getAsString());
+            gAddress.setThoroughfare(jProperties.get("name").getAsString());
+        }
+		if (jProperties.has("postalcode")){
+			gAddress.setAddressLine(addressIndex++, jProperties.get("postalcode").getAsString());
+			gAddress.setPostalCode(jProperties.get("postalcode").getAsString());
 		}
-		if (jProperties.has("suburb")){
-			//gAddress.setAddressLine(addressIndex++, jAddress.getString("suburb"));
-				//not kept => often introduce "noise" in the address.
-			gAddress.setSubLocality(jProperties.get("suburb").getAsString());
+		if (jProperties.has("locality")) {
+            gAddress.setAddressLine(addressIndex++, jProperties.get("locality").getAsString());
+            gAddress.setLocality(jProperties.get("locality").getAsString());
+        }
+		if (jProperties.has("macrocounty")){ //France: departement
+			gAddress.setSubAdminArea(jProperties.get("macrocounty").getAsString());
 		}
-		if (jProperties.has("postcode")){
-			gAddress.setAddressLine(addressIndex++, jProperties.get("postcode").getAsString());
-			gAddress.setPostalCode(jProperties.get("postcode").getAsString());
-		}
-		
-		if (jProperties.has("city")){
-			gAddress.setAddressLine(addressIndex++, jProperties.get("city").getAsString());
-			gAddress.setLocality(jProperties.get("city").getAsString());
-		} else if (jProperties.has("town")){
-			gAddress.setAddressLine(addressIndex++, jProperties.get("town").getAsString());
-			gAddress.setLocality(jProperties.get("town").getAsString());
-		} else if (jProperties.has("village")){
-			gAddress.setAddressLine(addressIndex++, jProperties.get("village").getAsString());
-			gAddress.setLocality(jProperties.get("village").getAsString());
-		}
-		
-		if (jProperties.has("county")){ //France: departement
-			gAddress.setSubAdminArea(jProperties.get("county").getAsString());
-		}
-		if (jProperties.has("state")){ //France: region
-			gAddress.setAdminArea(jProperties.get("state").getAsString());
+		if (jProperties.has("region")){ //France: region
+			gAddress.setAdminArea(jProperties.get("region").getAsString());
 		}
 		if (jProperties.has("country")){
 			gAddress.setAddressLine(addressIndex++, jProperties.get("country").getAsString());
 			gAddress.setCountryName(jProperties.get("country").getAsString());
 		}
-		if (jProperties.has("country_code"))
-			gAddress.setCountryCode(jProperties.get("country_code").getAsString());
+		if (jProperties.has("country_a"))
+			gAddress.setCountryCode(jProperties.get("country_a").getAsString());
 
 		//Add non-standard (but very useful) information in Extras bundle:
 		Bundle extras = new Bundle();
@@ -136,6 +127,7 @@ public class GeocoderMapzen {
 		url += "point.lat=" + latitude
     			+ "&point.lon=" + longitude
                 + "&size=" + maxResults;
+		url += "&lang=" + mLocale.getLanguage();
         if (mOptions != null){
             url += '&' + mOptions;
         }
@@ -164,7 +156,7 @@ public class GeocoderMapzen {
 	/**
 	 * Equivalent to Geocoder::getFromLocation(String locationName, int maxResults, double lowerLeftLatitude, double lowerLeftLongitude, double upperRightLatitude, double upperRightLongitude)
 	 * but adding bounded parameter. 
-	 * @param bounded true = return only results which are inside the view box; false = view box is used as a preferred area to find search results. 
+	 * @param bounded true = return only results which are inside the view box. Else, view box is ignored.
 	 */
 	public List<Address> getFromLocationName(String locationName, int maxResults, 
 			double lowerLeftLatitude, double lowerLeftLongitude, 
@@ -229,7 +221,6 @@ public class GeocoderMapzen {
 	 * Some useful information, returned by Nominatim, that doesn't fit naturally within Android Address, are added in the bundle Address.getExtras():<br>
 	 * "boundingbox": the enclosing bounding box, as a BoundingBox<br>
 	 * "osm_id": the OSM id, as a long<br>
-	 * "osm_type": one of the 3 OSM types, as a string (node, way, or relation). <br>
 	 * "display_name": the address, as a single String<br>
 	 */
 	public List<Address> getFromLocationName(String locationName, int maxResults)
