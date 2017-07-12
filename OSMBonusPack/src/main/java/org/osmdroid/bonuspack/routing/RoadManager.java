@@ -5,6 +5,7 @@ import org.osmdroid.views.overlay.Polyline;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Generic class to get a route between a start and a destination point, 
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 public abstract class RoadManager {
 
   protected String mOptions;
-  final protected DecimalFormat mLatLonFormat = new DecimalFormat("0.000000");
 
 	/**
 	 * @param waypoints
@@ -55,16 +55,16 @@ public abstract class RoadManager {
 	 * @return the GeoPoint as a string, properly formatted: lat,lon
 	 */
 	protected String geoPointAsString(GeoPoint p){
-		return mLatLonFormat.format(p.getLatitude())  + ',' +
-				mLatLonFormat.format(p.getLongitude());
+		Locale l = null;
+		return String.format(l, "%.10f,%.10f", p.getLatitude(), p.getLongitude());
 	}
 
 	/**
 	 * @return the GeoPoint as a string, properly formatted: lon,lat
 	 */
 	protected String geoPointAsLonLatString(GeoPoint p){
-		return mLatLonFormat.format(p.getLongitude())  + ',' +
-				mLatLonFormat.format(p.getLatitude());
+		Locale l = null;
+		return String.format(l, "%.10f,%.10f", p.getLongitude(), p.getLatitude());
 	}
 	
 	/**
