@@ -185,7 +185,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		Configuration.getInstance().setOsmdroidBasePath(new File(Environment.getExternalStorageDirectory(), "osmdroid"));
 		Configuration.getInstance().setOsmdroidTileCache(new File(Environment.getExternalStorageDirectory(), "osmdroid/tiles"));
 
-		boolean hwAccelerationOK = org.osmdroid.bonuspack.overlays.Polygon.SDKsupportsPathOp();
+		boolean hwAccelerationOK = true; // = org.osmdroid.bonuspack.overlays.Polygon.SDKsupportsPathOp();
 		Configuration.getInstance().setMapViewHardwareAccelerated(hwAccelerationOK);
 
 		LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
