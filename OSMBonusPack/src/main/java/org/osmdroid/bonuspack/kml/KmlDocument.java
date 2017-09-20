@@ -319,7 +319,7 @@ public class KmlDocument implements Parcelable {
 	protected enum KmlKeywords {Document, Folder, NetworkLink, GroundOverlay, Placemark, Point, LineString, gx_Track,
 		Polygon, innerBoundaryIs, MultiGeometry, Style, StyleMap, LineStyle, PolyStyle, IconStyle, hotSpot,
 		Data, SimpleData, name, description, visibility, open, coordinates, gx_coord, when, styleUrl, key, color,
-		colorMode, width, scale, heading, href, north, south, east, west, rotation, LatLonBox, value}
+		colorMode, width, scale, heading, href, north, south, east, west, rotation, LatLonBox, value, id}
 
 	protected static HashMap<String, KmlKeywords> KEYWORDS_DICTIONARY;
 	static {
@@ -343,6 +343,7 @@ public class KmlDocument implements Parcelable {
 		KEYWORDS_DICTIONARY.put("hotSpot", KmlKeywords.hotSpot);
 		KEYWORDS_DICTIONARY.put("Data", KmlKeywords.Data);
 		KEYWORDS_DICTIONARY.put("SimpleData", KmlKeywords.SimpleData);
+		KEYWORDS_DICTIONARY.put("id", KmlKeywords.id);
 		KEYWORDS_DICTIONARY.put("name", KmlKeywords.name);
 		KEYWORDS_DICTIONARY.put("description", KmlKeywords.description);
 		KEYWORDS_DICTIONARY.put("visibility", KmlKeywords.visibility);
@@ -832,6 +833,10 @@ public class KmlDocument implements Parcelable {
 				}
 				case name: {
 					mKmlCurrentFeature.mName = mStringBuilder.toString();
+					break;
+				}
+				case id: {
+					mKmlCurrentFeature.mId = mStringBuilder.toString();
 					break;
 				}
 				case description: {
