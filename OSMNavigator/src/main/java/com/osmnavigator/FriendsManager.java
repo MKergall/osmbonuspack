@@ -21,12 +21,14 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
+import org.osmdroid.bonuspack.utils.StatusException;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -161,7 +163,14 @@ public class FriendsManager {
 		nameValuePairs.add(new BasicNameValuePair("message", message));
 		String result = BonusPackHelper.requestStringFromPost(url, nameValuePairs);
 		*/
-        String result = BonusPackHelper.requestStringFromUrl(url);
+        String result;
+        try {
+            result = BonusPackHelper.requestStringFromUrl(url);
+        } catch (IOException e) {
+            return "Problem with server communication, check internet connection";
+        } catch (StatusException e) {
+            return "Problem with server communication httpStatusCode:"+e.getHttpStatusCode();
+        }
         if (result == null) {
             return "Technical error with the server";
         }
@@ -235,7 +244,14 @@ public class FriendsManager {
         } catch (UnsupportedEncodingException e) {
         }
         Log.d(BonusPackHelper.LOG_TAG, "callUpdateSharing:" + url);
-        String result = BonusPackHelper.requestStringFromUrl(url);
+        String result;
+        try {
+            result = BonusPackHelper.requestStringFromUrl(url);
+        } catch (IOException e) {
+            return "Problem with server communication, check internet connection";
+        } catch (StatusException e) {
+            return "Problem with server communication httpStatusCode:"+e.getHttpStatusCode();
+        }
         if (result == null) {
             return "Technical error with the server";
         }
@@ -332,7 +348,14 @@ public class FriendsManager {
                     + "user_id=" + URLEncoder.encode(getUniqueId(), "UTF-8");
         } catch (UnsupportedEncodingException e) {
         }
-        String result = BonusPackHelper.requestStringFromUrl(url);
+        String result;
+        try {
+            result = BonusPackHelper.requestStringFromUrl(url);
+        } catch (IOException e) {
+            return "Problem with server communication, check internet connection";
+        } catch (StatusException e) {
+            return "Problem with server communication httpStatusCode:"+e.getHttpStatusCode();
+        }
         if (result == null) {
             return "Technical error with the server";
         }

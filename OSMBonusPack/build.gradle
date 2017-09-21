@@ -1,5 +1,8 @@
 apply plugin: 'com.android.library'
 
+//set version name here
+def libVersionName = "6.0-SNAPSHOT"
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
@@ -8,7 +11,9 @@ android {
         minSdkVersion 10
         targetSdkVersion 25
         versionCode 60
-        versionName "6.0-SNAPSHOT"
+        versionName libVersionName
+        //adds version to .aar file
+        setProperty("archivesBaseName", "${archivesBaseName}-$versionName")
     }
     buildTypes {
         release {
@@ -16,13 +21,30 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    lintOptions{
+        disable 'MissingTranslation'
+    }
+}
+
+//for use of aar files as libs
+repositories {
+    jcenter()
+    flatDir {
+        dirs 'aarLibs'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
+//    compile(name:'osmdroid-android-5.5-release', ext:'aar')
+    compile ('org.osmdroid:osmdroid-android-5.5-release@aar'){
+        transitive=true
+    }
+
     compile "com.android.support:support-v4:25.3.1"
-    compile 'org.osmdroid:osmdroid-android:5.5:release@aar'
+//    compile 'org.osmdroid:osmdroid-android:5.5:release@aar'
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
@@ -35,4 +57,64 @@ install {
     repositories.mavenInstaller {
         pom.version = "6.0-SNAPSHOT"
     }
+}
+
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+//    compile project(":OSMBonusPack")
+
+    compile 'org.osmdroid:osmdroid-mapsforge:5.5:release@aar'
+    compile 'org.mapsforge:mapsforge-map-android:0.6.1'
+    compile 'org.mapsforge:mapsforge-map:0.6.1'
+}
+
+//to generate sources after Build > Build APK
+afterEvaluate {
+    assembleDebug.doLast {
+        logger.warn('--- assembleDebug copy libs to generatedLibs')
+        copySourcesAar.execute()
+        sourcesJar.execute()
+        copySourcesJar.execute()
+    }
+    assembleRelease.doLast {
+        logger.warn('--- assembleRelease copy libs to generatedLibs')
+        copySourcesAar.execute()
+        sourcesJar.execute()
+        copySourcesJar.execute()
+    }
+}
+
+//task to generate java doc, Gradle -> Tasks -> Other -> sourcesJar > run(double click)
+//sources will be in build\libs\*-sources.jar
+task sourcesJar(type: Jar) {
+    logger.warn('---START sourcesJar')
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+    logger.warn('---END sourcesJar')
+}
+
+task copySourcesJar(type: Copy){
+    //versionName
+    def fromDir = ("$buildDir/libs")
+    def toDir = rootProject.file('OSMBonusPack/generatedLibs');
+    from fromDir
+    into toDir
+    include('**/*.jar', '**/*.aar') //exclude ('**/*unsigned.apk', '**/*unaligned.apk')
+
+    logger.warn('--- copyJAR fromDir:'+fromDir+' toDir:'+toDir)
+}
+copySourcesJar.dependsOn sourcesJar
+copySourcesJar.mustRunAfter sourcesJar
+
+task copySourcesAar(name: 'copySourcesAar', type: Copy){
+    def fromDir = ("$buildDir/outputs/aar")
+//    def fromDir = rootProject.file('widgetsmodule/src/test');
+    def toDir = rootProject.file('OSMBonusPack/generatedLibs');
+    from fromDir
+    into toDir
+    include('**/*.aar', '**/*.jar')
+
+    logger.warn('--- copyAAR fromDir:'+fromDir+' toDir:'+toDir)
 }

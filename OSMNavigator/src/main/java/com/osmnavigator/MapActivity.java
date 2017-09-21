@@ -69,6 +69,7 @@ import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.bonuspack.routing.RoadNode;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
+import org.osmdroid.bonuspack.utils.StatusException;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.mapsforge.MapsForgeTileProvider;
 import org.osmdroid.mapsforge.MapsForgeTileSource;
@@ -596,7 +597,13 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		try {
 			double dLatitude = p.getLatitude();
 			double dLongitude = p.getLongitude();
-			List<Address> addresses = geocoder.getFromLocation(dLatitude, dLongitude, 1);
+			List<Address> addresses = null;
+			try {
+				addresses = geocoder.getFromLocation(dLatitude, dLongitude, 1);
+			} catch (StatusException e) {
+				e.printStackTrace();
+				return "";
+			}
 			StringBuilder sb = new StringBuilder();
 			if (addresses.size() > 0) {
 				Address address = addresses.get(0);
@@ -963,7 +970,12 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 				default:
 				return null;
 			}
-			return roadManager.getRoads(waypoints);
+			try {
+				return roadManager.getRoads(waypoints);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
 		}
 
 		protected void onPostExecute(Road[] result) {
@@ -1086,27 +1098,35 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	private class POILoadingTask extends AsyncTask<Object, Void, ArrayList<POI>> {
 		String mFeatureTag;
 		String message;
+		BoundingBox bb;
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			bb = map.getBoundingBox();
+		}
+		
 		protected ArrayList<POI> doInBackground(Object... params) {
 			mFeatureTag = (String)params[0];
-			BoundingBox bb = map.getBoundingBox();
-			if (mFeatureTag == null || mFeatureTag.equals("")){
-				return null;
-			} else if (mFeatureTag.equals("wikipedia")){
-				GeoNamesPOIProvider poiProvider = new GeoNamesPOIProvider(geonamesAccount);
-				//Get POI inside the bounding box of the current map view:
-				ArrayList<POI> pois = poiProvider.getPOIInside(bb, 30);
-				return pois;
-			} else if (mFeatureTag.equals("flickr")){
-				FlickrPOIProvider poiProvider = new FlickrPOIProvider(flickrApiKey);
-				ArrayList<POI> pois = poiProvider.getPOIInside(bb, 30);
-				return pois;
-			} else if (mFeatureTag.startsWith("picasa")){
-				PicasaPOIProvider poiProvider = new PicasaPOIProvider(null);
-				//allow to search for keywords among picasa photos:
-				String q = mFeatureTag.substring("picasa".length());
-				ArrayList<POI> pois = poiProvider.getPOIInside(bb, 50, q);
-				return pois;
-			} else {
+			try {
+				if (mFeatureTag == null || mFeatureTag.equals("")){
+					return null;
+				} else if (mFeatureTag.equals("wikipedia")){
+					GeoNamesPOIProvider poiProvider = new GeoNamesPOIProvider(geonamesAccount);
+					//Get POI inside the bounding box of the current map view:
+					ArrayList<POI> pois = poiProvider.getPOIInside(bb, 30);
+					return pois;
+				} else if (mFeatureTag.equals("flickr")){
+					FlickrPOIProvider poiProvider = new FlickrPOIProvider(flickrApiKey);
+					ArrayList<POI> pois = poiProvider.getPOIInside(bb, 30);
+					return pois;
+				} else if (mFeatureTag.startsWith("picasa")){
+					PicasaPOIProvider poiProvider = new PicasaPOIProvider(null);
+					//allow to search for keywords among picasa photos:
+					String q = mFeatureTag.substring("picasa".length());
+					ArrayList<POI> pois = poiProvider.getPOIInside(bb, 50, q);
+					return pois;
+				} else {
 				/*
 				NominatimPOIProvider poiProvider = new NominatimPOIProvider();
 				ArrayList<POI> pois;
@@ -1116,15 +1136,19 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 					pois = poiProvider.getPOIAlong(mRoad.getRouteLow(), mFeatureTag, 100, 2.0);
 				}
 				*/
-				OverpassAPIProvider overpassProvider = new OverpassAPIProvider();
-				String osmTag = getOSMTag(mFeatureTag);
-				if (osmTag == null){
-					message = mFeatureTag + " is not a valid feature.";
-					return null;
+					OverpassAPIProvider overpassProvider = new OverpassAPIProvider();
+					String osmTag = getOSMTag(mFeatureTag);
+					if (osmTag == null){
+						message = mFeatureTag + " is not a valid feature.";
+						return null;
+					}
+					String oUrl = overpassProvider.urlForPOISearch(osmTag, bb, 100, 10);
+					ArrayList<POI> pois = overpassProvider.getPOIsFromUrl(oUrl);
+					return pois;
 				}
-				String oUrl = overpassProvider.urlForPOISearch(osmTag, bb, 100, 10);
-				ArrayList<POI> pois = overpassProvider.getPOIsFromUrl(oUrl);
-				return pois;
+			} catch (Exception e){
+				message = "Problem with server connection. "+e.getMessage();
+				return null;
 			}
 		}
 		protected void onPostExecute(ArrayList<POI> pois) {
@@ -1238,7 +1262,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		builder.show();
 	}
 
-	boolean getKMLFromOverpass(String query){
+	boolean getKMLFromOverpass(String query) throws IOException, StatusException {
 		OverpassAPIProvider overpassProvider = new OverpassAPIProvider();
 		String oUrl = overpassProvider.urlForTagSearchKml(query, map.getBoundingBox(), 500, 30);
 		return overpassProvider.addInKmlFolder(mKmlDocument.mKmlRoot, oUrl);
@@ -1274,7 +1298,11 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			boolean ok = false;
 			if (isOverpassRequest){
 				//mUri contains the query
-				ok = getKMLFromOverpass(mUri);
+				try {
+					ok = getKMLFromOverpass(mUri);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			} else if (mUri.startsWith("file:/")){
 				mUri = mUri.substring("file:/".length());
 				File file = new File(mUri);

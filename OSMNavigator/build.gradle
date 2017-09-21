@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
@@ -17,14 +18,25 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions{
+        disable 'MissingTranslation'
+    }
+
+    // `return void` removes the lint error: `Not all execution paths return a value`.
+    return void
+}
+
+//for use of aar files as libs
+repositories {
+    jcenter()
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile project(":OSMBonusPack")
-
-    compile 'org.osmdroid:osmdroid-mapsforge:5.5:release@aar'
-    compile 'org.mapsforge:mapsforge-map-android:0.6.1'
-    compile 'org.mapsforge:mapsforge-map:0.6.1'
+//    compile(name:'osmdroid-android-5.5-release', ext:'aar')
 }

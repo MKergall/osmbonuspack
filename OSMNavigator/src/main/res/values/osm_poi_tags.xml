@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 	<!--  
 	  Mapping from human-friendly facility to OSM tag. 
 	  Used to search for facilities using Overpass API. 
 	  See http://wiki.openstreetmap.org/wiki/Map_Features
 	-->
-   	<string-array name="osm_poi_tags">
+   	<string-array name="osm_poi_tags" tools:ignore="InconsistentArrays">
 		<!-- Aeroway -->
 		<item>airport|aeroway=aerodrome</item>
 		<!-- Amenity -->

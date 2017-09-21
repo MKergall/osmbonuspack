@@ -41,3 +41,6 @@ local.properties
 
 /build
 com_crashlytics_export_strings.xml
+
+*/generatedLibs/*.aar
+*/generatedLibs/*.jar

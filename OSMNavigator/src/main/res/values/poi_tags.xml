@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 		<!--  
 		  Nominatim keywords that can be used for facility search. 
 		  Note that Nominatim facility search uses Special Phrases instead of OSM tags. 
@@ -11,7 +11,7 @@
 		  For OSM tags, see http://wiki.openstreetmap.org/wiki/Map_Features
 		  But, again, note that keywords for Nominatim are not the OSM features. 
 		-->
-    	<string-array name="poi_tags">
+    	<string-array name="poi_tags" tools:ignore="InconsistentArrays">
 		<!-- Aeroway -->
 		<item>Airport</item>
 		<!-- Amenity -->
