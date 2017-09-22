@@ -46,7 +46,7 @@ dependencies {
     compile "com.android.support:support-v4:25.3.1"
     compile 'org.osmdroid:osmdroid-android:5.5:release@aar'
     compile 'org.apache.commons:commons-lang3:3.3.2'
-    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
 
 }
