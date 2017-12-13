@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * @author M.Kergall
  */
 public class StaticCluster {
-	protected final ArrayList<Marker> mItems = new ArrayList<Marker>();
+	protected final ArrayList<Marker> mItems = new ArrayList<>();
 	protected GeoPoint mCenter;
 	protected Marker mMarker;
 	

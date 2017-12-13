@@ -155,7 +155,7 @@ public class Road  implements Parcelable {
 	 * But OSRM legs are not precise, as there is no node "dedicated" to waypoints. 
 	 */
 	public void buildLegs(ArrayList<GeoPoint> waypoints){
-		mLegs = new ArrayList<RoadLeg>();
+		mLegs = new ArrayList<>();
 		int firstNodeIndex = 0;
 		//For all intermediate waypoints, search the node closest to the waypoint
 		int w = waypoints.size();

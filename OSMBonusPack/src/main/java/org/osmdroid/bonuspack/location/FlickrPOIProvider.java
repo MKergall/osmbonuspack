@@ -112,7 +112,7 @@ public class FlickrPOIProvider {
 			JSONObject jPhotos = jRoot.getJSONObject("photos");
 			JSONArray jPhotoArray = jPhotos.getJSONArray("photo");
 			int n = jPhotoArray.length();
-			ArrayList<POI> pois = new ArrayList<POI>(n);
+			ArrayList<POI> pois = new ArrayList<>(n);
 			for (int i=0; i<n; i++){
 				JSONObject jPhoto = jPhotoArray.getJSONObject(i);
 				String photoId = jPhoto.getString("id");

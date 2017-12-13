@@ -66,7 +66,7 @@ public class FriendsManager {
             mFriends = null;
             mIsSharing = false;
         }
-        mFriendsButton = (Button) mActivity.findViewById(R.id.buttonFriends);
+        mFriendsButton = mActivity.findViewById(R.id.buttonFriends);
         mFriendsButton.setVisibility(mIsSharing ? View.VISIBLE : View.GONE);
         mFriendsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {

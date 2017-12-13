@@ -60,8 +60,7 @@ public class AutoCompleteOnPreferences extends AutoCompleteTextView {
 	
 	protected void setPreferences(){
 		String[] prefs = getPreferences();
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
-				android.R.layout.simple_dropdown_item_1line, prefs);
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, prefs);
 		this.setAdapter(adapter);
 	}
 
@@ -94,7 +93,7 @@ public class AutoCompleteOnPreferences extends AutoCompleteTextView {
 		JSONArray prefValuesArray;
 		try {
 			prefValuesArray = new JSONArray(prefValues);
-			LinkedList<String> prefValuesList = new LinkedList<String>();
+			LinkedList<String> prefValuesList = new LinkedList<>();
 
 			for (int i=0; i<prefValuesArray.length(); i++){
 				String prefValue = prefValuesArray.getString(i);

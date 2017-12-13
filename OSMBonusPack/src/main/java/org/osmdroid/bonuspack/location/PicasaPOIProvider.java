@@ -107,7 +107,7 @@ class PicasaXMLHandler extends DefaultHandler {
 	int mTotalResults;
 	
 	public PicasaXMLHandler() {
-		mPOIs = new ArrayList<POI>();
+		mPOIs = new ArrayList<>();
 	}
 	
 	@Override public void startElement(String uri, String localName, String qName,
@@ -123,7 +123,7 @@ class PicasaXMLHandler extends DefaultHandler {
 				mPOI.mUrl = mPOI.mUrl.replaceFirst("https://", "http://");
 			}
 		}
-		mString = new String();
+		mString = "";
 	}
 	
 	@Override public void characters(char[] ch, int start, int length)

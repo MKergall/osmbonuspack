@@ -93,7 +93,7 @@ public abstract class KmlGeometry implements Cloneable, Parcelable {
 	}
 	
 	public static ArrayList<GeoPoint> cloneArrayOfGeoPoint(ArrayList<GeoPoint> coords){
-		ArrayList<GeoPoint> result = new ArrayList<GeoPoint>(coords.size());
+		ArrayList<GeoPoint> result = new ArrayList<>(coords.size());
 		for (GeoPoint p:coords)
 			result.add(p.clone());
 		return result;
@@ -111,7 +111,7 @@ public abstract class KmlGeometry implements Cloneable, Parcelable {
 	public static ArrayList<GeoPoint> parseGeoJSONPositions(JsonArray json){
 		if (json == null)
 			return null;
-		ArrayList<GeoPoint> coordinates = new  ArrayList<GeoPoint>(json.size());
+		ArrayList<GeoPoint> coordinates = new ArrayList<>(json.size());
 		for (int i=0; i<json.size(); i++){
 			JsonArray position = json.get(i).getAsJsonArray();
 			GeoPoint p = KmlGeometry.parseGeoJSONPosition(position);

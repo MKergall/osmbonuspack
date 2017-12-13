@@ -19,7 +19,7 @@ public class StyleMap extends StyleSelector implements Parcelable {
 	/** default constructor */
 	public StyleMap(){
 		super();
-		mPairs = new HashMap<String, String>();
+		mPairs = new HashMap<>();
 	}
 	
 	public void setPair(String key, String styleUrl){
@@ -75,7 +75,7 @@ public class StyleMap extends StyleSelector implements Parcelable {
 	
 	public StyleMap(Parcel in){
 		int size = in.readInt();
-		mPairs = new HashMap<String, String>(size);
+		mPairs = new HashMap<>(size);
 		for(int i=0; i<size; i++){
 			String key = in.readString();
 			String value = in.readString();

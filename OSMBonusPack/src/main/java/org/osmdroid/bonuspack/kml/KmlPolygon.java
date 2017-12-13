@@ -93,7 +93,7 @@ public class KmlPolygon extends KmlGeometry {
 		mCoordinates = KmlGeometry.parseGeoJSONPositions(rings.get(0).getAsJsonArray());
 		//next rings are the holes:
 		if (rings.size() > 1){
-			mHoles = new ArrayList<ArrayList<GeoPoint>>(rings.size()-1);
+			mHoles = new ArrayList<>(rings.size() - 1);
 			for (int i=1; i<rings.size(); i++){
 				ArrayList<GeoPoint> hole = KmlGeometry.parseGeoJSONPositions(rings.get(i).getAsJsonArray());
 				mHoles.add(hole);
@@ -146,7 +146,7 @@ public class KmlPolygon extends KmlGeometry {
 	@Override public KmlPolygon clone(){
 		KmlPolygon kmlPolygon = (KmlPolygon)super.clone();
 		if (mHoles != null){
-			kmlPolygon.mHoles = new ArrayList<ArrayList<GeoPoint>>(mHoles.size());
+			kmlPolygon.mHoles = new ArrayList<>(mHoles.size());
 			for (ArrayList<GeoPoint> hole:mHoles){
 				kmlPolygon.mHoles.add(cloneArrayOfGeoPoint(hole));
 			}
@@ -183,7 +183,7 @@ public class KmlPolygon extends KmlGeometry {
 		super(in);
 		int holes = in.readInt();
 		if (holes != 0){
-			mHoles = new ArrayList<ArrayList<GeoPoint>>(holes);
+			mHoles = new ArrayList<>(holes);
 			for (int i=0; i<holes; i++){
 				ArrayList<GeoPoint> l = in.readArrayList(GeoPoint.class.getClassLoader());
 				mHoles.add(l);

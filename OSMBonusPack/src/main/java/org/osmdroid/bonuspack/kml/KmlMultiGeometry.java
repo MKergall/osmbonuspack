@@ -31,7 +31,7 @@ public class KmlMultiGeometry extends KmlGeometry implements Cloneable, Parcelab
 	
 	public KmlMultiGeometry(){
 		super();
-		mItems = new ArrayList<KmlGeometry>();
+		mItems = new ArrayList<>();
 	}
 
 	/** GeoJSON constructor */
@@ -110,7 +110,7 @@ public class KmlMultiGeometry extends KmlGeometry implements Cloneable, Parcelab
 	
 	@Override public KmlMultiGeometry clone(){
 		KmlMultiGeometry kmlMultiGeometry = (KmlMultiGeometry)super.clone();
-		kmlMultiGeometry.mItems = new ArrayList<KmlGeometry>(mItems.size());
+		kmlMultiGeometry.mItems = new ArrayList<>(mItems.size());
 		for (KmlGeometry item:mItems)
 			kmlMultiGeometry.mItems.add(item.clone());
 		return kmlMultiGeometry;

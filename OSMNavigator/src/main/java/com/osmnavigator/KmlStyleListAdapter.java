@@ -40,10 +40,10 @@ public class KmlStyleListAdapter extends BaseAdapter {
 	        LayoutInflater inflater = (LayoutInflater) viewGroup.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	        convertView = inflater.inflate(R.layout.kml_list_item, null);
 	    }
-	    TextView itemText = (TextView) convertView.findViewById(R.id.listItemTxt);
+	    TextView itemText = convertView.findViewById(R.id.listItemTxt);
 	    itemText.setText(item);
 	    
-		ImageView img = (ImageView)convertView.findViewById(R.id.listItemImg);
+		ImageView img = convertView.findViewById(R.id.listItemImg);
 		Style style = MapActivity.mKmlDocument.getStyle(item);
 		if (style != null && style.mIconStyle != null && style.mIconStyle.mIcon != null)
 			img.setImageDrawable(style.mIconStyle.getFinalIcon(convertView.getContext()));

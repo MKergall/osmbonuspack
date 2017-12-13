@@ -20,15 +20,15 @@ public class StartSharingActivity extends Activity {
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-        eNickName = (EditText) findViewById(R.id.nickname);
+        eNickName = findViewById(R.id.nickname);
         eNickName.setText(SP.getString("NICKNAME", ""));
 
-        eGroup = (EditText) findViewById(R.id.group);
+        eGroup = findViewById(R.id.group);
         eGroup.setText(SP.getString("GROUP", ""));
 
-        eMessage = (EditText) findViewById(R.id.message);
+        eMessage = findViewById(R.id.message);
 
-        Button btnOk = (Button) findViewById(R.id.btnOK);
+        Button btnOk = findViewById(R.id.btnOK);
         btnOk.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 saveAndFinish();

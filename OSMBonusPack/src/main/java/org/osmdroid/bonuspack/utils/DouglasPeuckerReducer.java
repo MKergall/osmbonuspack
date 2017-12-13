@@ -46,7 +46,7 @@ public class DouglasPeuckerReducer {
         );
 
         // all done, return the reduced shape
-        ArrayList<GeoPoint> newShape = new ArrayList<GeoPoint>(n); // the new shape to return
+        ArrayList<GeoPoint> newShape = new ArrayList<>(n); // the new shape to return
         for (int i=0; i<n; i++){
         	if (marked[i])
         		newShape.add(shape.get(i));

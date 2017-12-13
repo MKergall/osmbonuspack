@@ -31,7 +31,7 @@ public class RouteActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.items_list);
 
-        ListView list = (ListView) findViewById(R.id.items);
+        ListView list = findViewById(R.id.items);
 
         Intent myIntent = getIntent();
         final int selectedRoad = myIntent.getIntExtra("SELECTED_ROAD", 0);
@@ -89,14 +89,14 @@ class RoadNodesAdapter extends BaseAdapter implements OnClickListener {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.item_layout, null);
         }
-        TextView tvTitle = (TextView)convertView.findViewById(R.id.title);
+        TextView tvTitle = convertView.findViewById(R.id.title);
         String instructions = (entry.mInstructions==null ? "" : entry.mInstructions);
         tvTitle.setText("" + (position+1) + ". " + instructions);
-        TextView tvDetails = (TextView)convertView.findViewById(R.id.details);
+        TextView tvDetails = convertView.findViewById(R.id.details);
         tvDetails.setText(Road.getLengthDurationText(mContext, entry.mLength, entry.mDuration));
         int iconId = iconIds.getResourceId(entry.mManeuverType, R.drawable.ic_empty);
    		Drawable icon = mContext.getResources().getDrawable(iconId);
-		ImageView ivManeuver = (ImageView)convertView.findViewById(R.id.thumbnail);
+		ImageView ivManeuver = convertView.findViewById(R.id.thumbnail);
    		ivManeuver.setImageDrawable(icon);
         return convertView;
     }

@@ -138,7 +138,7 @@ public class MapQuestRoadManager extends RoadManager {
 		int n = mNodes.size();
 		if (n == 0)
 			return mNodes;
-		ArrayList<RoadNode> newNodes = new ArrayList<RoadNode>(n);
+		ArrayList<RoadNode> newNodes = new ArrayList<>(n);
 		RoadNode lastNode = null;
 		for (int i=1; i<n-1; i++){ //1, n-1 => first and last MapQuest nodes are irrelevant.
 			RoadNode node = mNodes.get(i);
@@ -167,7 +167,7 @@ public class MapQuestRoadManager extends RoadManager {
 	 * @return new road shape
 	 */
 	public ArrayList<GeoPoint> finalizeRoadShape(Road road, ArrayList<RoadLink> links){
-		ArrayList<GeoPoint> newShape = new ArrayList<GeoPoint>(road.mRouteHigh.size());
+		ArrayList<GeoPoint> newShape = new ArrayList<>(road.mRouteHigh.size());
 		RoadNode nodeStart = road.mNodes.get(0);
 		RoadNode nodeEnd = road.mNodes.get(road.mNodes.size()-1);
 		int shapeIndexStart = links.get(nodeStart.mNextRoadLink).mShapeIndex;

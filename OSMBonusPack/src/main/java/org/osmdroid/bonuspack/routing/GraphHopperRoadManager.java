@@ -37,7 +37,7 @@ public class GraphHopperRoadManager extends RoadManager {
 	/** mapping from GraphHopper directions to MapQuest maneuver IDs: */
 	static final HashMap<Integer, Integer> MANEUVERS;
 	static {
-		MANEUVERS = new HashMap<Integer, Integer>();
+		MANEUVERS = new HashMap<>();
 		MANEUVERS.put(0, 1); //Continue
 		MANEUVERS.put(1, 6); //Slight right
 		MANEUVERS.put(2, 7); //Right

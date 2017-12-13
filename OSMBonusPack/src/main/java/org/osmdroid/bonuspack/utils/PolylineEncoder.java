@@ -61,7 +61,7 @@ public class PolylineEncoder {
         int index = 0;
         int len = encodedString.length();
         int lat = 0, lng = 0, alt = 0;
-        ArrayList<GeoPoint> polyline = new ArrayList<GeoPoint>(len/3);
+        ArrayList<GeoPoint> polyline = new ArrayList<>(len / 3);
         	//capacity estimate: polyline size is roughly 1/3 of string length for a 5digits encoding, 1/5 for 10digits. 
 
         while (index < len) {

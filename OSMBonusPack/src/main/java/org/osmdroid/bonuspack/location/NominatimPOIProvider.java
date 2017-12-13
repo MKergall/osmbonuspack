@@ -91,7 +91,7 @@ public class NominatimPOIProvider {
 		try {
 			JSONArray jPlaceIds = new JSONArray(jString);
 			int n = jPlaceIds.length();
-			ArrayList<POI> pois = new ArrayList<POI>(n);
+			ArrayList<POI> pois = new ArrayList<>(n);
 			Bitmap thumbnail = null;
 			for (int i=0; i<n; i++){
 				JSONObject jPlace = jPlaceIds.getJSONObject(i);

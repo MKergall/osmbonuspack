@@ -76,7 +76,7 @@ public class KmlDocument implements Parcelable {
 
 	/** default constructor, with the kmlRoot as an empty Folder */
 	public KmlDocument(){
-		mStyles = new HashMap<String, StyleSelector>();
+		mStyles = new HashMap<>();
 		mMaxStyleId = 0;
 		mKmlRoot = new KmlFolder();
 		mLocalFile = null;
@@ -159,7 +159,7 @@ public class KmlDocument implements Parcelable {
 	
 	/** KML coordinates are: lon,lat{,alt} tuples separated by separators (space, tab, cr). */
 	protected static ArrayList<GeoPoint> parseKmlCoordinates(String input){
-		LinkedList<GeoPoint> tmpCoords = new LinkedList<GeoPoint>();
+		LinkedList<GeoPoint> tmpCoords = new LinkedList<>();
 		int i = 0;
 		int tupleStart = 0;
 		int length = input.length();
@@ -188,7 +188,7 @@ public class KmlDocument implements Parcelable {
 			}
 			i++;
 		}
-		ArrayList<GeoPoint> coordinates = new ArrayList<GeoPoint>(tmpCoords.size());
+		ArrayList<GeoPoint> coordinates = new ArrayList<>(tmpCoords.size());
 		coordinates.addAll(tmpCoords);
 		return coordinates;
 	}
@@ -200,26 +200,22 @@ public class KmlDocument implements Parcelable {
 	 * @param url
 	 * @return true if OK, false if any error. 
 	 */
-	public boolean parseKMLUrl(String url){
-		Log.d(BonusPackHelper.LOG_TAG, "KmlProvider.parseKMLUrl:"+url);
-		HttpConnection connection = new HttpConnection();
-		try {
-			connection.doGet(url);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-		InputStream stream = connection.getStream();
-		boolean ok;
-		if (stream == null){
-			ok = false;
-		} else {
-			ok = parseKMLStream(stream, null);
-		}
-		connection.close();
-		//Log.d(BonusPackHelper.LOG_TAG, "KmlProvider.parseKMLUrl - end");
-		return ok;
-	}
+	public boolean parseKMLUrl(String url) {
+        Log.d(BonusPackHelper.LOG_TAG, "KmlProvider.parseKMLUrl:" + url);
+        HttpConnection connection = new HttpConnection();
+        try {
+            connection.doGet(url);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        InputStream stream = connection.getStream();
+        boolean ok;
+        ok = stream != null && parseKMLStream(stream, null);
+        connection.close();
+        //Log.d(BonusPackHelper.LOG_TAG, "KmlProvider.parseKMLUrl - end");
+        return ok;
+    }
 
 	/**
 	 * Get the default path for KML file on Android: on the external storage, in a "kml" directory. 
@@ -346,9 +342,9 @@ public class KmlDocument implements Parcelable {
 			mFile = file;
 			mKMZFile = kmzContainer;
 			mKmlRoot = new KmlFolder();
-			mKmlFeatureStack = new ArrayList<KmlFeature>();
+			mKmlFeatureStack = new ArrayList<>();
 			mKmlFeatureStack.add(mKmlRoot);
-			mKmlGeometryStack = new ArrayList<KmlGeometry>();
+			mKmlGeometryStack = new ArrayList<>();
 			mIsNetworkLink = false;
 			mIsInnerBoundary = false;
 		}
@@ -508,7 +504,7 @@ public class KmlDocument implements Parcelable {
 					} else { //inside a Polygon innerBoundaryIs element: new hole
 						KmlPolygon polygon = (KmlPolygon) mKmlCurrentGeometry;
 						if (polygon.mHoles == null)
-							polygon.mHoles = new ArrayList<ArrayList<GeoPoint>>();
+							polygon.mHoles = new ArrayList<>();
 						ArrayList<GeoPoint> hole = parseKmlCoordinates(mStringBuilder.toString());
 						polygon.mHoles.add(hole);
 					}
@@ -776,7 +772,7 @@ public class KmlDocument implements Parcelable {
 		mKmlRoot = in.readParcelable(KmlFeature.class.getClassLoader());
 		//mStyles = in.readHashMap(Style.class.getClassLoader());
 		int size = in.readInt();
-		mStyles = new HashMap<String, StyleSelector>(size);
+		mStyles = new HashMap<>(size);
 		for(int i=0; i<size; i++){
 			String key = in.readString();
 			Style value = in.readParcelable(Style.class.getClassLoader());

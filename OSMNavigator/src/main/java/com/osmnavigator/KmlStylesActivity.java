@@ -30,13 +30,13 @@ public class KmlStylesActivity extends Activity {
 	ListView mListView;
 	
 	HashMap<String, StyleSelector> mStyles; //the genuine Styles of the KmlDocument
-	static ArrayList<String> mStyleList = new ArrayList<String>(); //the list of style names, as an array
+	static ArrayList<String> mStyleList = new ArrayList<>(); //the list of style names, as an array
 	static int mPosition;
 	
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.kml_styles);
-		mListView = (ListView) findViewById(R.id.listviewKml);
+		mListView = findViewById(R.id.listviewKml);
 		registerForContextMenu(mListView);
 		
 		mStyles = MapActivity.mKmlDocument.getStyles();

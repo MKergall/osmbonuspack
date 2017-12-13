@@ -57,7 +57,7 @@ public class KmlGroundOverlay extends KmlFeature implements Cloneable, Parcelabl
 		GeoPoint pS = p.destinationPoint(overlay.getHeight()/2, 180.0f);
 		GeoPoint pE = p.destinationPoint(overlay.getWidth()/2, 90.0f);
 		GeoPoint pW = p.destinationPoint(overlay.getWidth()/2, -90.0f);
-		mCoordinates = new ArrayList<GeoPoint>(2);
+		mCoordinates = new ArrayList<>(2);
 		mCoordinates.add(new GeoPoint(pN.getLatitude(), pW.getLongitude())); //NW
 		mCoordinates.add(new GeoPoint(pS.getLatitude(), pE.getLongitude())); //SE
 		//mIconHref = ???
@@ -98,7 +98,7 @@ public class KmlGroundOverlay extends KmlFeature implements Cloneable, Parcelabl
 	}
 	
 	public void setLatLonBox(double north, double south, double east, double west){
-		mCoordinates = new ArrayList<GeoPoint>(2);
+		mCoordinates = new ArrayList<>(2);
 		mCoordinates.add(new GeoPoint(north, west));
 		mCoordinates.add(new GeoPoint(south, east));
 	}

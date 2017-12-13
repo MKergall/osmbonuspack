@@ -45,7 +45,7 @@ public class KmlPoint extends KmlGeometry implements Parcelable, Cloneable {
 	
 	public void setPosition(GeoPoint position){
 		if (mCoordinates == null){
-			mCoordinates = new ArrayList<GeoPoint>(1);
+			mCoordinates = new ArrayList<>(1);
 			mCoordinates.add(position);
 		} else
 			mCoordinates.set(0, position);

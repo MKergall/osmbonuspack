@@ -190,7 +190,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		flickrApiKey = ManifestUtil.retrieveKey(this, "FLICKR_API_KEY");
 		geonamesAccount = ManifestUtil.retrieveKey(this, "GEONAMES_ACCOUNT");
 
-		map = (MapView) findViewById(R.id.map);
+		map = findViewById(R.id.map);
 
 		String tileProviderName = prefs.getString("TILE_PROVIDER", "Mapnik");
 		mNightMode = prefs.getBoolean("NIGHT_MODE", false);
@@ -260,7 +260,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		updateUIWithItineraryMarkers();
 
 		//Tracking system:
-		mTrackingModeButton = (Button)findViewById(R.id.buttonTrackingMode);
+		mTrackingModeButton = findViewById(R.id.buttonTrackingMode);
 		mTrackingModeButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				mTrackingMode = !mTrackingMode;
@@ -273,20 +273,20 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		} else
 			mTrackingMode = false;
 
-		AutoCompleteOnPreferences departureText = (AutoCompleteOnPreferences) findViewById(R.id.editDeparture);
+		AutoCompleteOnPreferences departureText = findViewById(R.id.editDeparture);
 		departureText.setPrefKeys(SHARED_PREFS_APPKEY, PREF_LOCATIONS_KEY);
 
-		Button searchDepButton = (Button)findViewById(R.id.buttonSearchDep);
+		Button searchDepButton = findViewById(R.id.buttonSearchDep);
 		searchDepButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				handleSearchButton(START_INDEX, R.id.editDeparture);
 			}
 		});
 
-		AutoCompleteOnPreferences destinationText = (AutoCompleteOnPreferences) findViewById(R.id.editDestination);
+		AutoCompleteOnPreferences destinationText = findViewById(R.id.editDestination);
 		destinationText.setPrefKeys(SHARED_PREFS_APPKEY, PREF_LOCATIONS_KEY);
 
-		Button searchDestButton = (Button)findViewById(R.id.buttonSearchDest);
+		Button searchDestButton = findViewById(R.id.buttonSearchDest);
 		searchDestButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				handleSearchButton(DEST_INDEX, R.id.editDestination);
@@ -326,11 +326,10 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		//POIs:
 		//POI search interface:
 		String[] poiTags = getResources().getStringArray(R.array.poi_tags);
-		poiTagText = (AutoCompleteTextView) findViewById(R.id.poiTag);
-		ArrayAdapter<String> poiAdapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_dropdown_item_1line, poiTags);
+		poiTagText = findViewById(R.id.poiTag);
+		ArrayAdapter<String> poiAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, poiTags);
 		poiTagText.setAdapter(poiAdapter);
-		Button setPOITagButton = (Button) findViewById(R.id.buttonSetPOITag);
+		Button setPOITagButton = findViewById(R.id.buttonSetPOITag);
 		setPOITagButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				//Hide the soft keyboard:
@@ -365,7 +364,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			updateUIWithKml();
 		} else { //first launch: 
 			mKmlDocument = new KmlDocument();
-			mKmlStack = new Stack<KmlFeature>();
+			mKmlStack = new Stack<>();
 			mKmlClipboard = new KmlFolder();
 			//check if intent has been passed with a kml URI to load (url or file)
 			Intent onCreateIntent = getIntent();
@@ -381,7 +380,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 
 		checkPermissions();
 
-		Button menuButton = (Button) findViewById(R.id.buttonMenu);
+		Button menuButton = findViewById(R.id.buttonMenu);
 		menuButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -681,7 +680,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
      * Geocoding of the departure or destination address
      */
 	public void handleSearchButton(int index, int editResId){
-		EditText locationEdit = (EditText)findViewById(editResId);
+		EditText locationEdit = findViewById(editResId);
 		//Hide the soft keyboard:
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(locationEdit.getWindowToken(), 0);
@@ -869,7 +868,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		mSelectedRoad = roadIndex;
 		putRoadNodes(mRoads[roadIndex]);
 		//Set route info in the text view:
-		TextView textView = (TextView)findViewById(R.id.routeInfo);
+		TextView textView = findViewById(R.id.routeInfo);
 		textView.setText(mRoads[roadIndex].getLengthDurationText(this, -1));
 		for (int i=0; i<mRoadOverlays.length; i++){
 			Paint p = mRoadOverlays[i].getPaint();
@@ -892,7 +891,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 
 	void updateUIWithRoads(Road[] roads){
 		mRoadNodeMarkers.getItems().clear();
-		TextView textView = (TextView)findViewById(R.id.routeInfo);
+		TextView textView = findViewById(R.id.routeInfo);
 		textView.setText("");
 		List<Overlay> mapOverlays = map.getOverlays();
 		if (mRoadOverlays != null){
@@ -1414,7 +1413,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 
 	@Override public boolean longPressHelper(GeoPoint p) {
 		mClickedGeoPoint = p;
-		Button searchButton = (Button)findViewById(R.id.buttonSearchDest);
+		Button searchButton = findViewById(R.id.buttonSearchDest);
 		openContextMenu(searchButton);
 		//menu is hooked on the "Search Destination" button, as it must be hooked somewhere.
 		return true;
@@ -1726,7 +1725,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		if (prevLocation != null && pLoc.getProvider().equals(LocationManager.GPS_PROVIDER)){
 			mSpeed = pLoc.getSpeed() * 3.6;
 			long speedInt = Math.round(mSpeed);
-			TextView speedTxt = (TextView)findViewById(R.id.speed);
+			TextView speedTxt = findViewById(R.id.speed);
 			speedTxt.setText(speedInt + " km/h");
 
 			//TODO: check if speed is not too small

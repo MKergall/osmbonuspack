@@ -125,7 +125,7 @@ public class OverpassAPIProvider {
 			JsonElement json = parser.parse(jString);
 			JsonObject jResult = json.getAsJsonObject();
 			JsonArray jElements = jResult.get("elements").getAsJsonArray();
-			ArrayList<POI> pois = new ArrayList<POI>(jElements.size());
+			ArrayList<POI> pois = new ArrayList<>(jElements.size());
 			for (JsonElement j:jElements){
 				JsonObject jo = j.getAsJsonObject();
 				POI poi = new POI(POI.POI_SERVICE_OVERPASS_API);
@@ -214,7 +214,7 @@ public class OverpassAPIProvider {
 	
 	protected ArrayList<GeoPoint> parseGeometry(JsonObject jo){
 		JsonArray jGeometry = jo.get("geometry").getAsJsonArray();
-		ArrayList<GeoPoint> coords = new ArrayList<GeoPoint>(jGeometry.size());
+		ArrayList<GeoPoint> coords = new ArrayList<>(jGeometry.size());
 		for (JsonElement j:jGeometry){
 			JsonObject jLatLon = j.getAsJsonObject();
 			GeoPoint p = geoPointFromJson(jLatLon);

@@ -77,7 +77,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		//Introduction
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		map = (MapView) findViewById(R.id.map);
+		map = findViewById(R.id.map);
 		map.setBuiltInZoomControls(true);
 		map.setMultiTouchControls(true);
 		GeoPoint startPoint = new GeoPoint(48.13, -1.63);
@@ -102,7 +102,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		//2. Playing with the RoadManager
 		//roadManager roadManager = new MapQuestRoadManager("YOUR_API_KEY");
 		//roadManager.addRequestOption("routeType=bicycle");
-		ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
+		ArrayList<GeoPoint> waypoints = new ArrayList<>();
 		waypoints.add(startPoint);
 		GeoPoint endPoint = new GeoPoint(48.4, -1.9);
 		waypoints.add(endPoint);
@@ -257,7 +257,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		Polyline mPolyline;
 
 		OnMarkerDragListenerDrawer() {
-			mTrace = new ArrayList<GeoPoint>(100);
+			mTrace = new ArrayList<>(100);
 			mPolyline = new Polyline();
 			mPolyline.setColor(0xAA0000FF);
 			mPolyline.setWidth(2.0f);
@@ -286,7 +286,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 
 		public CustomInfoWindow(MapView mapView) {
 			super(org.osmdroid.bonuspack.R.layout.bonuspack_bubble, mapView);
-			Button btn = (Button) (mView.findViewById(org.osmdroid.bonuspack.R.id.bubble_moreinfo));
+			Button btn = mView.findViewById(org.osmdroid.bonuspack.R.id.bubble_moreinfo);
 			btn.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View view) {
 					if (mSelectedPoi.mUrl != null) {
@@ -308,7 +308,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 
 			//8. put thumbnail image in bubble, fetching the thumbnail in background:
 			if (mSelectedPoi.mThumbnailPath != null) {
-				ImageView imageView = (ImageView) mView.findViewById(org.osmdroid.bonuspack.R.id.bubble_image);
+				ImageView imageView = mView.findViewById(org.osmdroid.bonuspack.R.id.bubble_image);
 				mSelectedPoi.fetchThumbnailOnThread(imageView);
 			}
 		}

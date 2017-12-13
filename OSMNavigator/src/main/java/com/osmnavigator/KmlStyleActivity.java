@@ -40,21 +40,21 @@ public class KmlStyleActivity extends Activity {
 			mStyle.mPolyStyle = new ColorStyle();
 		}
 		
-		eStyleId = (EditText)findViewById(R.id.style_id);
+		eStyleId = findViewById(R.id.style_id);
 		mInitialStyleId = getIntent().getExtras().getString("STYLE_ID"); 
 		eStyleId.setText(mInitialStyleId);
 		
-		eIconHref = (EditText)findViewById(R.id.icon);
+		eIconHref = findViewById(R.id.icon);
 		if (mStyle.mIconStyle.mHref != null)
 			eIconHref.setText(mStyle.mIconStyle.mHref);
 		
-		eOutlineColor = (EditText)findViewById(R.id.outlineColor);
+		eOutlineColor = findViewById(R.id.outlineColor);
 		eOutlineColor.setText(mStyle.mLineStyle.colorAsAndroidString());
 		
-		tOutlineWidthValue = (TextView)findViewById(R.id.outlineWidthValue);
+		tOutlineWidthValue = findViewById(R.id.outlineWidthValue);
 		tOutlineWidthValue.setText(""+(int)mStyle.mLineStyle.mWidth);
 		
-		sbOutlineWidth = (SeekBar)findViewById(R.id.outlineWidth);
+		sbOutlineWidth = findViewById(R.id.outlineWidth);
 		sbOutlineWidth.setProgress((int)mStyle.mLineStyle.mWidth);
 		sbOutlineWidth.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			@Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -64,10 +64,10 @@ public class KmlStyleActivity extends Activity {
 			@Override public void onStopTrackingTouch(SeekBar seekBar) {}
 		});
 		
-		eFillColor = (EditText)findViewById(R.id.fillColor);
+		eFillColor = findViewById(R.id.fillColor);
 		eFillColor.setText(mStyle.mPolyStyle.colorAsAndroidString());
 		
-		Button btnOk = (Button) findViewById(R.id.btnOK);
+		Button btnOk = findViewById(R.id.btnOK);
 		btnOk.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View view) {
 				save();

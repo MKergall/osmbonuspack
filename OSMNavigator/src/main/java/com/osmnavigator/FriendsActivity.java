@@ -30,9 +30,9 @@ public class FriendsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.items_list);
 
-        TextView title = (TextView) findViewById(R.id.title);
+        TextView title = findViewById(R.id.title);
 
-        ListView list = (ListView) findViewById(R.id.items);
+        ListView list = findViewById(R.id.items);
 
         Intent myIntent = getIntent();
         //STATIC - final ArrayList<Friend> friends = myIntent.getParcelableArrayListExtra("FRIENDS");
@@ -98,12 +98,12 @@ class FriendAdapter extends BaseAdapter implements OnClickListener {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.item_layout, null);
         }
-        TextView tvTitle = (TextView) convertView.findViewById(R.id.title);
+        TextView tvTitle = convertView.findViewById(R.id.title);
         tvTitle.setText(entry.mNickName);
-        TextView tvDetails = (TextView) convertView.findViewById(R.id.details);
+        TextView tvDetails = convertView.findViewById(R.id.details);
         tvDetails.setText(entry.mMessage);
 
-        ImageView ivPhoto = (ImageView) convertView.findViewById(R.id.thumbnail);
+        ImageView ivPhoto = convertView.findViewById(R.id.thumbnail);
         ivPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_menu_sharing/*entry.mThumbnail*/));
         //entry.fetchThumbnailOnThread(ivPhoto);
 

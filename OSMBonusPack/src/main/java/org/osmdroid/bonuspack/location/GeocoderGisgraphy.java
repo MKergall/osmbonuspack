@@ -122,7 +122,7 @@ public class GeocoderGisgraphy {
 		try {
 			JSONObject jsonResult = new JSONObject(result);
 			JSONArray jResults = jsonResult.getJSONArray("result");
-			List<Address> list = new ArrayList<Address>(jResults.length());
+			List<Address> list = new ArrayList<>(jResults.length());
 			int n = Math.min(maxResults, jResults.length());
 			for (int i=0; i<n; i++){
 				JSONObject jResult = jResults.getJSONObject(i);

@@ -48,7 +48,7 @@ public class KmlListAdapter extends BaseAdapter {
             LayoutInflater inflater = (LayoutInflater) viewGroup.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.kml_list_item, null);
         }
-        TextView itemText = (TextView) convertView.findViewById(R.id.listItemTxt);
+        TextView itemText = convertView.findViewById(R.id.listItemTxt);
         itemText.setText(item.mName);
         
         //Handle checkbox:
@@ -67,7 +67,7 @@ public class KmlListAdapter extends BaseAdapter {
         }
         */
         
-		ImageView img = (ImageView)convertView.findViewById(R.id.listItemImg);
+		ImageView img = convertView.findViewById(R.id.listItemImg);
 		if (item instanceof KmlFolder) {
 			img.setImageResource(R.drawable.moreinfo_arrow);
 		} else if (item instanceof KmlPlacemark){

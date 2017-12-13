@@ -106,15 +106,12 @@ public abstract class KmlFeature implements Parcelable, Cloneable {
 	 * @param C KmlGeometry subclass to compare
 	 * @return true if this a KML Placemark containing a KML Geometry of class C. 
 	 */
-	public boolean hasGeometry(Class<? extends KmlGeometry> C){
-		if (!(this instanceof KmlPlacemark))
-			return false;
-		KmlPlacemark placemark = (KmlPlacemark)this;
-		KmlGeometry geometry = placemark.mGeometry;
-		if (geometry == null)
-			return false;
-		return C.isInstance(geometry);
-	}
+	public boolean hasGeometry(Class<? extends KmlGeometry> C) {
+        if (!(this instanceof KmlPlacemark)) return false;
+        KmlPlacemark placemark = (KmlPlacemark) this;
+        KmlGeometry geometry = placemark.mGeometry;
+        return geometry != null && C.isInstance(geometry);
+    }
 	
 	/**
 	 * @param name
@@ -153,7 +150,7 @@ public abstract class KmlFeature implements Parcelable, Cloneable {
 	 */
 	public void setExtendedData(String name, String value){
 		if (mExtendedData == null)
-			mExtendedData = new HashMap<String,String>();
+			mExtendedData = new HashMap<>();
 		mExtendedData.put(name, value);
 	}
 
@@ -251,7 +248,7 @@ public abstract class KmlFeature implements Parcelable, Cloneable {
 			return null;
 		}
 		if (mExtendedData != null){
-			kmlFeature.mExtendedData = new HashMap<String,String>(mExtendedData.size());
+			kmlFeature.mExtendedData = new HashMap<>(mExtendedData.size());
 			kmlFeature.mExtendedData.putAll(mExtendedData);
 		}
 		return kmlFeature;

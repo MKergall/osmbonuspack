@@ -80,7 +80,7 @@ public class GeoNamesPOIProvider {
 			JSONObject jRoot = new JSONObject(jString);
 			JSONArray jPlaceIds = jRoot.getJSONArray("geonames");
 			int n = jPlaceIds.length();
-			ArrayList<POI> pois = new ArrayList<POI>(n);
+			ArrayList<POI> pois = new ArrayList<>(n);
 			for (int i=0; i<n; i++){
 				JSONObject jPlace = jPlaceIds.getJSONObject(i);
 				POI poi = new POI(POI.POI_SERVICE_GEONAMES_WIKIPEDIA);
@@ -171,7 +171,7 @@ class GeoNamesXMLHandler extends DefaultHandler {
 	ArrayList<POI> mPOIs;
 	
 	public GeoNamesXMLHandler() {
-		mPOIs = new ArrayList<POI>();
+		mPOIs = new ArrayList<>();
 	}
 	
 	@Override public void startElement(String uri, String localName, String name,
@@ -179,7 +179,7 @@ class GeoNamesXMLHandler extends DefaultHandler {
 		if (localName.equals("entry")){
 			mPOI = new POI(POI.POI_SERVICE_GEONAMES_WIKIPEDIA);
 		}
-		mString = new String();
+		mString = "";
 	}
 	
 	@Override public void characters(char[] ch, int start, int length)

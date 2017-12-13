@@ -172,7 +172,7 @@ public class GeocoderNominatim {
 		Bundle extras = new Bundle();
 		if (jResult.has("polygonpoints")){
 			JsonArray jPolygonPoints = jResult.get("polygonpoints").getAsJsonArray();
-			ArrayList<GeoPoint> polygonPoints = new ArrayList<GeoPoint>(jPolygonPoints.size());
+			ArrayList<GeoPoint> polygonPoints = new ArrayList<>(jPolygonPoints.size());
 			for (int i=0; i<jPolygonPoints.size(); i++){
 				JsonArray jCoords = jPolygonPoints.get(i).getAsJsonArray();
 				double lon = jCoords.get(0).getAsDouble();
@@ -329,7 +329,7 @@ public class GeocoderNominatim {
 			JsonElement json = parser.parse(result);
 			JsonObject jResult = json.getAsJsonObject();
 			Address gAddress = buildAndroidAddress(jResult);
-			List<Address> list = new ArrayList<Address>(1);
+			List<Address> list = new ArrayList<>(1);
 			if (gAddress != null)
 				list.add(gAddress);
 			return list;
@@ -378,7 +378,7 @@ public class GeocoderNominatim {
 			JsonParser parser = new JsonParser();
 			JsonElement json = parser.parse(result);
 			JsonArray jResults = json.getAsJsonArray();
-			List<Address> list = new ArrayList<Address>(jResults.size());
+			List<Address> list = new ArrayList<>(jResults.size());
 			for (int i=0; i<jResults.size(); i++){
 				JsonObject jResult = jResults.get(i).getAsJsonObject();
 				Address gAddress = buildAndroidAddress(jResult);

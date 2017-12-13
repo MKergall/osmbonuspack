@@ -77,8 +77,8 @@ import java.util.ArrayList;
 		//Log.d("ZOOM", "zoomlevel="+mapView.getZoomLevel()+"  cells="+numCellsW);
 		//Log.d("ZOOM", "gridSizeX="+gridSizeX+"  gridSizeY="+gridSizeY);
 		
-		ArrayList<StaticCluster> clusters = new ArrayList<StaticCluster>();
-		LongSparseArray<StaticCluster> sparseArray = new LongSparseArray<StaticCluster>();
+		ArrayList<StaticCluster> clusters = new ArrayList<>();
+		LongSparseArray<StaticCluster> sparseArray = new LongSparseArray<>();
 		for (Marker item:mItems){
 			//TODO - add 180° to prevent negative values
 			long gridX = (long)(item.getPosition().getLongitude() / gridSizeX);

@@ -34,7 +34,7 @@ public class KmlFolder extends KmlFeature implements Cloneable, Parcelable {
 
 	public KmlFolder(){
 		super();
-		mItems = new ArrayList<KmlFeature>();
+		mItems = new ArrayList<>();
 	}
 	
 	public KmlFolder(FolderOverlay overlay, KmlDocument kmlDoc){
@@ -227,7 +227,7 @@ public class KmlFolder extends KmlFeature implements Cloneable, Parcelable {
 	public KmlFolder clone(){
 		KmlFolder kmlFolder = (KmlFolder)super.clone();
 		if (mItems != null){
-			kmlFolder.mItems = new ArrayList<KmlFeature>(mItems.size());
+			kmlFolder.mItems = new ArrayList<>(mItems.size());
 			for (KmlFeature item:mItems)
 				kmlFolder.mItems.add(item.clone());
 		}

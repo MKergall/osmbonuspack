@@ -37,20 +37,20 @@ public class KmlTreeActivity extends Activity {
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.kml_main);
-		mListView = (ListView) findViewById(R.id.listviewKml);
+		mListView = findViewById(R.id.listviewKml);
 		registerForContextMenu(mListView);
 		
 		mCurrentKmlFeature = MapActivity.mKmlStack.peek();
 		mKmlClipboard = MapActivity.mKmlClipboard;
 		
-		eHeader = (EditText)findViewById(R.id.name);
+		eHeader = findViewById(R.id.name);
 		eHeader.setText(mCurrentKmlFeature.mName);
 		
-		eDescription = (EditText)findViewById(R.id.description);
+		eDescription = findViewById(R.id.description);
 		eDescription.setText(mCurrentKmlFeature.mDescription);
 		
-		sStyleSpinner = (Spinner) findViewById(R.id.styleSpinner);
-		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, stylesWithEmpty());
+		sStyleSpinner = findViewById(R.id.styleSpinner);
+		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, stylesWithEmpty());
 		spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		sStyleSpinner.setAdapter(spinnerAdapter);
 		if (mCurrentKmlFeature.mStyle != null){
@@ -58,7 +58,7 @@ public class KmlTreeActivity extends Activity {
 			sStyleSpinner.setSelection(spinnerPosition);
 		}
 		
-		CheckBox cVisible = (CheckBox)findViewById(R.id.checkbox_visible);
+		CheckBox cVisible = findViewById(R.id.checkbox_visible);
 		cVisible.setChecked(mCurrentKmlFeature.mVisibility);
 		
 		if (mCurrentKmlFeature instanceof KmlFolder){

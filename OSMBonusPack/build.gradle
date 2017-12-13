@@ -4,13 +4,13 @@ apply plugin: 'com.android.library'
 def libVersionName = "6.0-SNAPSHOT"
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
-        minSdkVersion 10
+        minSdkVersion 14
         targetSdkVersion 25
-        versionCode 60
+        versionCode 61
         versionName libVersionName
         //adds version to .aar file
         setProperty("archivesBaseName", "${archivesBaseName}-$versionName")
@@ -36,19 +36,24 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-//    compile(name:'osmdroid-android-5.5-release', ext:'aar')
-//    compile ('org.osmdroid:osmdroid-android-5.5-release@aar'){
+//    implementation(name:'osmdroid-android-5.5-release', ext:'aar')
+//    implementation ('org.osmdroid:osmdroid-android-5.5-release@aar'){
 //        transitive=true
 //    }
 
-    compile "com.android.support:support-v4:25.3.1"
-    compile 'org.osmdroid:osmdroid-android:5.5:release@aar'
-    compile 'org.apache.commons:commons-lang3:3.3.2'
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    implementation "com.android.support:support-v4:26.1.0"
+    implementation 'org.osmdroid:osmdroid-android:5.5:release@aar'
+    implementation 'org.apache.commons:commons-lang3:3.3.2'
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.7.0'
 
+    //    implementation project(":OSMBonusPack")
+
+    implementation 'org.osmdroid:osmdroid-mapsforge:5.5:release@aar'
+    implementation 'org.mapsforge:mapsforge-map-android:0.6.1'
+    implementation 'org.mapsforge:mapsforge-map:0.6.1'
 }
 
 apply from: '../maven.gradle'
@@ -60,15 +65,6 @@ install {
 }
 
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
-//    compile project(":OSMBonusPack")
-
-    compile 'org.osmdroid:osmdroid-mapsforge:5.5:release@aar'
-    compile 'org.mapsforge:mapsforge-map-android:0.6.1'
-    compile 'org.mapsforge:mapsforge-map:0.6.1'
-}
 
 //to generate sources after Build > Build APK
 afterEvaluate {
@@ -98,7 +94,7 @@ task sourcesJar(type: Jar) {
 task copySourcesJar(type: Copy){
     //versionName
     def fromDir = ("$buildDir/libs")
-    def toDir = rootProject.file('OSMBonusPack/generatedLibs');
+    def toDir = rootProject.file('OSMBonusPack/generatedLibs')
     from fromDir
     into toDir
     include('**/*.jar', '**/*.aar') //exclude ('**/*unsigned.apk', '**/*unaligned.apk')
@@ -111,7 +107,7 @@ copySourcesJar.mustRunAfter sourcesJar
 task copySourcesAar(name: 'copySourcesAar', type: Copy){
     def fromDir = ("$buildDir/outputs/aar")
 //    def fromDir = rootProject.file('widgetsmodule/src/test');
-    def toDir = rootProject.file('OSMBonusPack/generatedLibs');
+    def toDir = rootProject.file('OSMBonusPack/generatedLibs')
     from fromDir
     into toDir
     include('**/*.aar', '**/*.jar')
