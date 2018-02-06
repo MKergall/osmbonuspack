@@ -73,7 +73,7 @@ public class GroundOverlay extends Overlay {
 		mWidth = width;
 		mHeight = height;
 	}
-	
+
 	public float getHeight(){
 		return mHeight;
 	}
@@ -89,13 +89,16 @@ public class GroundOverlay extends Overlay {
 	public float getTransparency(){
 		return mTransparency;
 	}
-	
-	/** @return the bounding box, 
-	 * not taking into account the bearing => TODO... */
-	public BoundingBox getBoundingBox(){
+
+	protected void computeHeight(){
 		if (mHeight == NO_DIMENSION && mImage != null){
 			mHeight = mWidth * mImage.getIntrinsicHeight() / mImage.getIntrinsicWidth();
 		}
+	}
+
+	/** @return the bounding box, ignoring the bearing of the GroundOverlay (similar to Google Maps API) */
+	public BoundingBox getBoundingBox(){
+		computeHeight();
 		GeoPoint pEast = mPosition.destinationPoint(mWidth, 90.0f);
 		GeoPoint pSouthEast = pEast.destinationPoint(mHeight, -180.0f);
 		double north = mPosition.getLatitude()*2 - pSouthEast.getLatitude();
@@ -103,27 +106,27 @@ public class GroundOverlay extends Overlay {
 		return new BoundingBox(north, pEast.getLongitude(), pSouthEast.getLatitude(), west);
 	}
 	
+	public void setPositionFromBounds(BoundingBox bb){
+		mPosition = bb.getCenterWithDateLine();
+		GeoPoint pEast = new GeoPoint(mPosition.getLatitude(), bb.getLonEast());
+		GeoPoint pWest = new GeoPoint(mPosition.getLatitude(), bb.getLonWest());
+		mWidth = (float)pEast.distanceToAsDouble(pWest);
+		GeoPoint pSouth = new GeoPoint(bb.getLatSouth(), mPosition.getLongitude());
+		GeoPoint pNorth = new GeoPoint(bb.getLatNorth(), mPosition.getLongitude());
+		mHeight = (float)pSouth.distanceToAsDouble(pNorth);
+	}
+
 	@Override public void draw(Canvas canvas, MapView mapView, boolean shadow) {
 		if (shadow)
 			return;
 		if (mImage == null)
 			return;
-		
-		if (mHeight == NO_DIMENSION){
-			mHeight = mWidth * mImage.getIntrinsicHeight() / mImage.getIntrinsicWidth();
-		}
+
+		computeHeight();
 		
 		final Projection pj = mapView.getProjection();
 		
 		pj.toPixels(mPosition, mPositionPixels);
-		/*
-		GeoPoint pEast = mPosition.destinationPoint(mWidth, 90.0f);
-		GeoPoint pSouthEast = pEast.destinationPoint(mHeight, -180.0f);
-		pj.toPixels(pSouthEast, mSouthEastPixels);
-		int width = mSouthEastPixels.x-mPositionPixels.x;
-		int height = mSouthEastPixels.y-mPositionPixels.y;
-		mImage.setBounds(-width/2, -height/2, width/2, height/2);
-		*/
 		GeoPoint pEast = mPosition.destinationPoint(mWidth/2, 90.0f);
 		GeoPoint pSouthEast = pEast.destinationPoint(mHeight/2, -180.0f);
 		pj.toPixels(pSouthEast, mSouthEastPixels);
