@@ -78,10 +78,12 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		//Introduction
 		super.onCreate(savedInstanceState);
 
-		boolean hwAccelerationOK = org.osmdroid.bonuspack.overlays.Polygon.SDKsupportsPathOp();
+		/*
+		boolean hwAccelerationOK = true; //org.osmdroid.bonuspack.overlays.Polygon.SDKsupportsPathOp();
 		Configuration.getInstance().setMapViewHardwareAccelerated(hwAccelerationOK);
 		LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = inflater.inflate(R.layout.main, null);
+		*/
 
 		setContentView(R.layout.main);
 		map = (MapView) findViewById(R.id.map);
@@ -89,9 +91,8 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		map.setMultiTouchControls(true);
 		GeoPoint startPoint = new GeoPoint(48.13, -1.63);
 		IMapController mapController = map.getController();
-		mapController.setZoom(10);
+		mapController.setZoom(10.0);
 		mapController.setCenter(startPoint);
-		map.setMapOrientation(20.0f);
 
 		//0. Using the Marker overlay
 		Marker startMarker = new Marker(map);
@@ -239,20 +240,6 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		//16. Handling Map events
 		MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(this);
 		map.getOverlays().add(0, mapEventsOverlay); //inserted at the "bottom" of all overlays
-
-		//Testing osmdroid issue #353 - turning HW acceleration on
-		/*
-		org.osmdroid.bonuspack.overlays.Polygon p = new org.osmdroid.bonuspack.overlays.Polygon();
-		p.setFillColor(0xAA00FF00);
-		ArrayList<GeoPoint> l = new ArrayList();
-		l.add(new GeoPoint(48.0, 20.0));
-		l.add(new GeoPoint(48.0, -20.0));
-		l.add(new GeoPoint(47.0, -20.0));
-		l.add(new GeoPoint(47.0, 20.0));
-		//l.add(new GeoPoint(48.0, 160.0)); l.add(new GeoPoint(48.0, -160.0)); //intersecting 180° line
-		p.setPoints(l);
-		map.getOverlays().add(p);
-		*/
 	}
 
 	//--- Stuff for setting the mapview on a box at startup:
@@ -445,6 +432,26 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		myGroundOverlay.setBearing(mGroundOverlayBearing);
 		mGroundOverlayBearing += 20.0f;
 		map.getOverlays().add(myGroundOverlay);
+
+		/*
+		Drawable d = ResourcesCompat.getDrawable(getResources(), R.drawable.bonuspack_bubble_black, null);
+		myGroundOverlay.setImage(d.mutate());
+		BoundingBox bb = new BoundingBox(p.getLatitude()+map.getLatitudeSpanDouble()/2,
+				p.getLongitude()+map.getLongitudeSpanDouble()/2,
+				p.getLatitude(),
+				p.getLongitude());
+		myGroundOverlay.setPositionFromBounds(bb);
+		map.getOverlays().add(myGroundOverlay);
+
+		Marker ne = new Marker(map);
+		ne.setPosition(new GeoPoint(bb.getLatNorth(), bb.getLonEast()));
+		ne.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+		map.getOverlays().add(ne);
+		Marker sw = new Marker(map);
+		sw.setPosition(new GeoPoint(bb.getLatSouth(), bb.getLonWest()));
+		sw.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+		map.getOverlays().add(sw);
+		*/
 
 		map.invalidate();
 		return true;

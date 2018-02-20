@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 10
         targetSdkVersion 23
-        versionCode 63
-        versionName "6.3-SNAPSHOT"
+        versionCode 65
+        versionName "6.5-SNAPSHOT"
     }
     buildTypes {
         release {
@@ -18,11 +18,18 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile "com.android.support:support-v4:23.2.1"
-    compile 'org.osmdroid:osmdroid-android:5.6.5'
+    compile 'org.osmdroid:osmdroid-android:6.0.1'
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
@@ -33,6 +40,6 @@ apply from: '../maven.gradle'
 
 install {
     repositories.mavenInstaller {
-        pom.version = "6.3-SNAPSHOT"
+        pom.version = "6.5-SNAPSHOT"
     }
 }

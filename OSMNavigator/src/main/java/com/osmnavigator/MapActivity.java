@@ -87,6 +87,7 @@ import org.osmdroid.tileprovider.util.SimpleRegisterReceiver;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.NetworkLocationIgnorer;
+import org.osmdroid.util.TileSystem;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.MapEventsOverlay;
@@ -94,7 +95,6 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Marker.OnMarkerDragListener;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polygon;
-//import org.osmdroid.bonuspack.overlays.Polygon;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.TilesOverlay;
@@ -185,8 +185,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		Configuration.getInstance().setOsmdroidBasePath(new File(Environment.getExternalStorageDirectory(), "osmdroid"));
 		Configuration.getInstance().setOsmdroidTileCache(new File(Environment.getExternalStorageDirectory(), "osmdroid/tiles"));
 
-		boolean hwAccelerationOK = true; // = org.osmdroid.bonuspack.overlays.Polygon.SDKsupportsPathOp();
-		Configuration.getInstance().setMapViewHardwareAccelerated(hwAccelerationOK);
+		//Configuration.getInstance().setMapViewHardwareAccelerated(true);
 
 		LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = inflater.inflate(R.layout.main, null);
@@ -220,6 +219,12 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		map.setTilesScaledToDpi(true);
 		map.setBuiltInZoomControls(true);
 		map.setMultiTouchControls(true);
+		map.setMinZoomLevel(1.0);
+		map.setMaxZoomLevel(21.0);
+		map.setVerticalMapRepetitionEnabled(false);
+		map.setScrollableAreaLimitLatitude(TileSystem.MaxLatitude,-TileSystem.MaxLatitude, 0/*map.getHeight()/2*/);
+		//Toast.makeText(this, "H="+map.getHeight(), Toast.LENGTH_LONG).show();
+
 		IMapController mapController = map.getController();
 
 		//To use MapEventsReceiver methods, we add a MapEventsOverlay:
@@ -232,7 +237,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		//mOrientation = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 
 		//map prefs:
-		mapController.setZoom(prefs.getInt("MAP_ZOOM_LEVEL", 5));
+		mapController.setZoom((double)prefs.getFloat("MAP_ZOOM_LEVEL_F", 5));
 		mapController.setCenter(new GeoPoint((double) prefs.getFloat("MAP_CENTER_LAT", 48.5f),
 				(double)prefs.getFloat("MAP_CENTER_LON", 2.5f)));
 
@@ -474,7 +479,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	void savePrefs(){
 		SharedPreferences prefs = getSharedPreferences("OSMNAVIGATOR", MODE_PRIVATE);
 		SharedPreferences.Editor ed = prefs.edit();
-		ed.putInt("MAP_ZOOM_LEVEL", map.getZoomLevel());
+		ed.putFloat("MAP_ZOOM_LEVEL_F", (float)map.getZoomLevelDouble());
 		GeoPoint c = (GeoPoint) map.getMapCenter();
 		ed.putFloat("MAP_CENTER_LAT", (float)c.getLatitude());
 		ed.putFloat("MAP_CENTER_LON", (float)c.getLongitude());

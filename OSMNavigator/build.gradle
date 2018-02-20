@@ -8,8 +8,8 @@ android {
         applicationId "com.osmnavigator"
         minSdkVersion 10
         targetSdkVersion 23
-        versionCode 17
-        versionName "1.7"
+        versionCode 18
+        versionName "1.8"
     }
     buildTypes {
         release {
@@ -17,12 +17,25 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        disable 'MissingTranslation'
+    }
+}
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile project(":OSMBonusPack")
+
+    //including using JitPack:
+    //compile 'com.github.MKergall:osmbonuspack:6.4'
 
     compile 'org.osmdroid:osmdroid-mapsforge:5.5:release@aar'
     compile 'org.mapsforge:mapsforge-map-android:0.6.1'

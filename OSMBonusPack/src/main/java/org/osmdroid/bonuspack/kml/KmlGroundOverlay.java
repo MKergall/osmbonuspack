@@ -111,9 +111,9 @@ public class KmlGroundOverlay extends KmlFeature implements Cloneable, Parcelabl
 			GeoPoint pSE = mCoordinates.get(1);
 			overlay.setPosition(GeoPoint.fromCenterBetween(pNW, pSE));
 			GeoPoint pNE = new GeoPoint(pNW.getLatitude(), pSE.getLongitude());
-			int width = pNE.distanceTo(pNW);
+			double width = pNE.distanceToAsDouble(pNW);
 			GeoPoint pSW = new GeoPoint(pSE.getLatitude(), pNW.getLongitude());
-			int height = pSW.distanceTo(pNW);
+			double height = pSW.distanceToAsDouble(pNW);
 			overlay.setDimensions((float)width, (float)height);
 		}
 		//TODO: else if size=4, nonrectangular quadrilateral
