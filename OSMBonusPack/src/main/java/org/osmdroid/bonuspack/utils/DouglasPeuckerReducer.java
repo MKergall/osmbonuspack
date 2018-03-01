@@ -9,8 +9,9 @@ import java.util.ArrayList;
  * From: http://www.phpriot.com/articles/reducing-map-path-douglas-peucker-algorithm/4<br>
  * Ported from PHP to Java. "marked" array added to optimize. 
  * @author M.Kergall
+ * @deprecated as the whole class has been moved in osmdroid (renamed PointReducer).
  */
-public class DouglasPeuckerReducer {
+@Deprecated public class DouglasPeuckerReducer {
 
     /**
      * Reduce the number of points in a shape using the Douglas-Peucker algorithm
