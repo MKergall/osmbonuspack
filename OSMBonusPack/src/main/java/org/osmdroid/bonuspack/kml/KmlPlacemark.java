@@ -16,7 +16,7 @@ import org.osmdroid.views.overlay.Polygon;
 import org.osmdroid.views.overlay.Polyline;
 
 import java.io.Writer;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -58,8 +58,8 @@ public class KmlPlacemark extends KmlFeature implements Cloneable, Parcelable {
 		mName = polygon.getTitle();
 		mDescription = polygon.getSnippet();
 		mGeometry = new KmlPolygon();
-		mGeometry.mCoordinates = (ArrayList<GeoPoint>)polygon.getPoints();
-		((KmlPolygon)mGeometry).mHoles = (ArrayList<ArrayList<GeoPoint>>)polygon.getHoles();
+		mGeometry.mCoordinates = polygon.getPoints();
+		((KmlPolygon)mGeometry).mHoles = polygon.getHoles();
 		mVisibility = polygon.isEnabled();
 		//Style:
 		Style style = new Style();
@@ -74,7 +74,7 @@ public class KmlPlacemark extends KmlFeature implements Cloneable, Parcelable {
 		mName = polyline.getTitle();
 		mDescription = polyline.getSnippet();
 		mGeometry = new KmlLineString();
-		mGeometry.mCoordinates = (ArrayList<GeoPoint>)polyline.getPoints();
+		mGeometry.mCoordinates = polyline.getPoints();
 		mVisibility = polyline.isEnabled();
 		//Style:
 		Style style = new Style();

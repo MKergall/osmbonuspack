@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * KML Geometry. This is an abstract class. 
@@ -29,7 +30,7 @@ public abstract class KmlGeometry implements Cloneable, Parcelable {
 	/** KML id attribute, if any. Null if none. */
 	public String mId;
 	/** coordinates of the geometry. If Point, one and only one entry. */
-	public ArrayList<GeoPoint> mCoordinates;
+	public List<GeoPoint> mCoordinates;
 	
 	//-----------------------------------------------------
 	// abstract methods
@@ -49,7 +50,7 @@ public abstract class KmlGeometry implements Cloneable, Parcelable {
 	 * @param coordinates
 	 * @return false if error
 	 */
-	public static boolean writeKMLCoordinates(Writer writer, ArrayList<GeoPoint> coordinates){
+	public static boolean writeKMLCoordinates(Writer writer, List<GeoPoint> coordinates){
 		try {
 			writer.write("<coordinates>");
 			for (GeoPoint coord:coordinates){
@@ -82,7 +83,7 @@ public abstract class KmlGeometry implements Cloneable, Parcelable {
 	 * @param coordinates
 	 * @return the GeoJSON array of Positions. 
 	 */
-	public static JsonArray geoJSONCoordinates(ArrayList<GeoPoint> coordinates){
+	public static JsonArray geoJSONCoordinates(List<GeoPoint> coordinates){
 		JsonArray json = new JsonArray();
 		Iterator<GeoPoint> it = coordinates.iterator();
 		while(it.hasNext()) {
@@ -92,8 +93,8 @@ public abstract class KmlGeometry implements Cloneable, Parcelable {
 		return json;
 	}
 	
-	public static ArrayList<GeoPoint> cloneArrayOfGeoPoint(ArrayList<GeoPoint> coords){
-		ArrayList<GeoPoint> result = new ArrayList<GeoPoint>(coords.size());
+	public static List<GeoPoint> cloneArrayOfGeoPoint(List<GeoPoint> coords){
+		List<GeoPoint> result = new ArrayList<>(coords.size());
 		for (GeoPoint p:coords)
 			result.add(p.clone());
 		return result;
@@ -108,10 +109,10 @@ public abstract class KmlGeometry implements Cloneable, Parcelable {
 	}
 	
 	/** parse a GeoJSON array of Positions: [ [lon, lat, alt],... [lon, lat, alt] ] */
-	public static ArrayList<GeoPoint> parseGeoJSONPositions(JsonArray json){
+	public static List<GeoPoint> parseGeoJSONPositions(JsonArray json){
 		if (json == null)
 			return null;
-		ArrayList<GeoPoint> coordinates = new  ArrayList<GeoPoint>(json.size());
+		List<GeoPoint> coordinates = new  ArrayList<>(json.size());
 		for (int i=0; i<json.size(); i++){
 			JsonArray position = json.get(i).getAsJsonArray();
 			GeoPoint p = KmlGeometry.parseGeoJSONPosition(position);

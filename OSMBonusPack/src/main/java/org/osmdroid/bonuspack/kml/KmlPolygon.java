@@ -17,6 +17,7 @@ import org.osmdroid.views.overlay.infowindow.BasicInfoWindow;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * KML and/or GeoJSON Polygon
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 public class KmlPolygon extends KmlGeometry {
 	
 	/** Polygon holes (can be null if none) */
-	public ArrayList<ArrayList<GeoPoint>> mHoles;
+	public List<List<GeoPoint>> mHoles;
 	
 	static int mDefaultLayoutResId = BonusPackHelper.UNDEFINED_RES_ID; 
 	
@@ -90,9 +91,9 @@ public class KmlPolygon extends KmlGeometry {
 		mCoordinates = KmlGeometry.parseGeoJSONPositions(rings.get(0).getAsJsonArray());
 		//next rings are the holes:
 		if (rings.size() > 1){
-			mHoles = new ArrayList<ArrayList<GeoPoint>>(rings.size()-1);
+			mHoles = new ArrayList<List<GeoPoint>>(rings.size()-1);
 			for (int i=1; i<rings.size(); i++){
-				ArrayList<GeoPoint> hole = KmlGeometry.parseGeoJSONPositions(rings.get(i).getAsJsonArray());
+				List<GeoPoint> hole = KmlGeometry.parseGeoJSONPositions(rings.get(i).getAsJsonArray());
 				mHoles.add(hole);
 			}
 		}
@@ -105,7 +106,7 @@ public class KmlPolygon extends KmlGeometry {
 			writeKMLCoordinates(writer, mCoordinates);
 			writer.write("</LinearRing>\n</outerBoundaryIs>\n");
 			if (mHoles != null){
-				for (ArrayList<GeoPoint> hole:mHoles){
+				for (List<GeoPoint> hole:mHoles){
 					writer.write("<innerBoundaryIs>\n<LinearRing>\n");
 					writeKMLCoordinates(writer, hole);
 					writer.write("</LinearRing>\n</innerBoundaryIs>\n");
@@ -123,7 +124,7 @@ public class KmlPolygon extends KmlGeometry {
 		JsonArray coords = new JsonArray();
 		coords.add(KmlGeometry.geoJSONCoordinates(mCoordinates));
 		if (mHoles != null) {
-			for (ArrayList<GeoPoint> hole:mHoles){
+			for (List<GeoPoint> hole:mHoles){
 				coords.add(KmlGeometry.geoJSONCoordinates(hole));
 			}
 		}
@@ -143,8 +144,8 @@ public class KmlPolygon extends KmlGeometry {
 	@Override public KmlPolygon clone(){
 		KmlPolygon kmlPolygon = (KmlPolygon)super.clone();
 		if (mHoles != null){
-			kmlPolygon.mHoles = new ArrayList<ArrayList<GeoPoint>>(mHoles.size());
-			for (ArrayList<GeoPoint> hole:mHoles){
+			kmlPolygon.mHoles = new ArrayList<>(mHoles.size());
+			for (List<GeoPoint> hole:mHoles){
 				kmlPolygon.mHoles.add(cloneArrayOfGeoPoint(hole));
 			}
 		}
@@ -161,7 +162,7 @@ public class KmlPolygon extends KmlGeometry {
 		super.writeToParcel(out, flags);
 		if (mHoles != null){
 			out.writeInt(mHoles.size());
-			for (ArrayList<GeoPoint> l:mHoles)
+			for (List<GeoPoint> l:mHoles)
 				out.writeList(l);
 		} else 
 			out.writeInt(0);
@@ -180,7 +181,7 @@ public class KmlPolygon extends KmlGeometry {
 		super(in);
 		int holes = in.readInt();
 		if (holes != 0){
-			mHoles = new ArrayList<ArrayList<GeoPoint>>(holes);
+			mHoles = new ArrayList<>(holes);
 			for (int i=0; i<holes; i++){
 				ArrayList<GeoPoint> l = in.readArrayList(GeoPoint.class.getClassLoader());
 				mHoles.add(l);

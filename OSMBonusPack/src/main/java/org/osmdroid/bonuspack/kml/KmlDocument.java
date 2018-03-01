@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipEntry;
@@ -158,7 +159,7 @@ public class KmlDocument implements Parcelable {
 	}
 	
 	/** KML coordinates are: lon,lat{,alt} tuples separated by separators (space, tab, cr). */
-	protected static ArrayList<GeoPoint> parseKmlCoordinates(String input){
+	protected static List<GeoPoint> parseKmlCoordinates(String input){
 		LinkedList<GeoPoint> tmpCoords = new LinkedList<GeoPoint>();
 		int i = 0;
 		int tupleStart = 0;
@@ -188,7 +189,7 @@ public class KmlDocument implements Parcelable {
 			}
 			i++;
 		}
-		ArrayList<GeoPoint> coordinates = new ArrayList<GeoPoint>(tmpCoords.size());
+		List<GeoPoint> coordinates = new ArrayList<>(tmpCoords.size());
 		coordinates.addAll(tmpCoords);
 		return coordinates;
 	}
@@ -373,9 +374,9 @@ public class KmlDocument implements Parcelable {
 		private StringBuilder mStringBuilder = new StringBuilder(1024);
 		private KmlFeature mKmlCurrentFeature;
 		private KmlGroundOverlay mKmlCurrentGroundOverlay; //if GroundOverlay, pointer to mKmlCurrentFeature
-		private ArrayList<KmlFeature> mKmlFeatureStack;
+		private List<KmlFeature> mKmlFeatureStack;
 		private KmlGeometry mKmlCurrentGeometry;
-		private ArrayList<KmlGeometry> mKmlGeometryStack;
+		private List<KmlGeometry> mKmlGeometryStack;
 		public KmlFolder mKmlRoot;
 		Style mCurrentStyle;
 		String mCurrentStyleId;
@@ -393,9 +394,9 @@ public class KmlDocument implements Parcelable {
 			mFile = file;
 			mKMZFile = kmzContainer;
 			mKmlRoot = new KmlFolder();
-			mKmlFeatureStack = new ArrayList<KmlFeature>();
+			mKmlFeatureStack = new ArrayList<>();
 			mKmlFeatureStack.add(mKmlRoot);
-			mKmlGeometryStack = new ArrayList<KmlGeometry>();
+			mKmlGeometryStack = new ArrayList<>();
 			mIsNetworkLink = false;
 			mIsInnerBoundary = false;
 		}
@@ -858,8 +859,8 @@ public class KmlDocument implements Parcelable {
 						} else { //inside a Polygon innerBoundaryIs element: new hole
 							KmlPolygon polygon = (KmlPolygon) mKmlCurrentGeometry;
 							if (polygon.mHoles == null)
-								polygon.mHoles = new ArrayList<ArrayList<GeoPoint>>();
-							ArrayList<GeoPoint> hole = parseKmlCoordinates(mStringBuilder.toString());
+								polygon.mHoles = new ArrayList<>();
+							List<GeoPoint> hole = parseKmlCoordinates(mStringBuilder.toString());
 							polygon.mHoles.add(hole);
 						}
 					}
