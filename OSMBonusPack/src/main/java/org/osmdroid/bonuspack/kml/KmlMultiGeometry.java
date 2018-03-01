@@ -18,6 +18,7 @@ import org.osmdroid.views.overlay.Overlay;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * KML MultiGeometry and/or GeoJSON GeometryCollection. 
@@ -47,7 +48,7 @@ public class KmlMultiGeometry extends KmlGeometry implements Cloneable, Parcelab
 	        }
 		} else if ("MultiPoint".equals(type)){
 			JsonArray coordinates = json.get("coordinates").getAsJsonArray();
-			ArrayList<GeoPoint> positions = parseGeoJSONPositions(coordinates);
+			List<GeoPoint> positions = parseGeoJSONPositions(coordinates);
 			for (GeoPoint p:positions){
 				KmlPoint kmlPoint = new KmlPoint(p);
 				mItems.add(kmlPoint);

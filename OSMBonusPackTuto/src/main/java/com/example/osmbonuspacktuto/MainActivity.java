@@ -78,7 +78,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		//Introduction
 		super.onCreate(savedInstanceState);
 
-		boolean hwAccelerationOK = org.osmdroid.bonuspack.overlays.Polygon.SDKsupportsPathOp();
+		boolean hwAccelerationOK = true; //org.osmdroid.bonuspack.overlays.Polygon.SDKsupportsPathOp();
 		Configuration.getInstance().setMapViewHardwareAccelerated(hwAccelerationOK);
 		LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = inflater.inflate(R.layout.main, null);
