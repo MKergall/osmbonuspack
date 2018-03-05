@@ -8,8 +8,8 @@ android {
         applicationId "com.osmnavigator"
         minSdkVersion 10
         targetSdkVersion 23
-        versionCode 18
-        versionName "1.8"
+        versionCode 19
+        versionName "1.9"
     }
     buildTypes {
         release {
@@ -37,7 +37,8 @@ dependencies {
     //including using JitPack:
     //compile 'com.github.MKergall:osmbonuspack:6.5.1'
 
-    compile 'org.osmdroid:osmdroid-mapsforge:5.5:release@aar'
-    compile 'org.mapsforge:mapsforge-map-android:0.6.1'
-    compile 'org.mapsforge:mapsforge-map:0.6.1'
+    compile 'org.osmdroid:osmdroid-mapsforge:6.0.1@aar'
+    compile 'org.mapsforge:mapsforge-map-android:0.8.0'
+    compile 'org.mapsforge:mapsforge-map:0.8.0'
+    compile 'org.mapsforge:mapsforge-themes:0.8.0'
 }

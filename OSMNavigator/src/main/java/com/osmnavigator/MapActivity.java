@@ -46,6 +46,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
+import org.mapsforge.map.android.rendertheme.AssetsRenderTheme;
 import org.mapsforge.map.rendertheme.ExternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
 import org.osmdroid.api.IMapController;
@@ -60,7 +61,7 @@ import org.osmdroid.bonuspack.kml.LineStyle;
 import org.osmdroid.bonuspack.kml.Style;
 import org.osmdroid.bonuspack.location.FlickrPOIProvider;
 import org.osmdroid.bonuspack.location.GeoNamesPOIProvider;
-import org.osmdroid.bonuspack.location.GeocoderMapzen;
+import org.osmdroid.bonuspack.location.GeocoderNominatim;
 import org.osmdroid.bonuspack.location.OverpassAPIProvider;
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.bonuspack.location.PicasaPOIProvider;
@@ -186,6 +187,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		Configuration.getInstance().setOsmdroidTileCache(new File(Environment.getExternalStorageDirectory(), "osmdroid/tiles"));
 
 		//Configuration.getInstance().setMapViewHardwareAccelerated(true);
+		MapsForgeTileSource.createInstance(getApplication());
 
 		LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = inflater.inflate(R.layout.main, null);
@@ -614,7 +616,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	 * Reverse Geocoding
      */
     public String getAddress(GeoPoint p){
-		GeocoderMapzen geocoder = new GeocoderMapzen(mapzenApiKey);
+		GeocoderNominatim geocoder = new GeocoderNominatim(mapzenApiKey);
 		String theAddress;
 		try {
 			double dLatitude = p.getLatitude();
@@ -648,7 +650,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		protected List<Address> doInBackground(Object... params) {
 			String locationAddress = (String)params[0];
 			mIndex = (Integer)params[1];
-			GeocoderMapzen geocoder = new GeocoderMapzen(mapzenApiKey);
+			GeocoderNominatim geocoder = new GeocoderNominatim(mapzenApiKey);
 			//geocoder.setOptions(true); //ask for enclosing polygon (if any)
 			try {
 				BoundingBox viewbox = map.getBoundingBox();
@@ -1555,11 +1557,13 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			e.printStackTrace();
 		}
 
-		if (AndroidGraphicFactory.INSTANCE == null)
-			AndroidGraphicFactory.createInstance(this.getApplication());
 		MapsForgeTileSource source = MapsForgeTileSource.createFromFiles(listOfFiles, theme, "rendertheme-v4");
-		MapsForgeTileProvider mfProvider = new MapsForgeTileProvider(new SimpleRegisterReceiver(this), source);
+		MapsForgeTileProvider mfProvider = new MapsForgeTileProvider(new SimpleRegisterReceiver(this), source, null);
 		map.setTileProvider(mfProvider);
+		/*
+		map.getController().setZoom((double)source.getMinimumZoomLevel());
+		map.zoomToBoundingBox(source.getBoundsOsmdroid(), true);
+		*/
 		return true;
 	}
 
