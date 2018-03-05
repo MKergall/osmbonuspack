@@ -64,6 +64,8 @@ public class KmlLineString extends KmlGeometry {
 		lineStringOverlay.setTitle(kmlPlacemark.mName);
 		lineStringOverlay.setSnippet(kmlPlacemark.mDescription);
 		lineStringOverlay.setSubDescription(kmlPlacemark.getExtendedDataAsText());
+		lineStringOverlay.setRelatedObject(this);
+		lineStringOverlay.setId(mId);
 		if (styler != null)
 			styler.onLineString(lineStringOverlay, kmlPlacemark, this);
 		else {

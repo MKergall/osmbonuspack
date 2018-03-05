@@ -75,6 +75,8 @@ public class KmlPolygon extends KmlGeometry {
 		polygonOverlay.setTitle(kmlPlacemark.mName);
 		polygonOverlay.setSnippet(kmlPlacemark.mDescription);
 		polygonOverlay.setSubDescription(kmlPlacemark.getExtendedDataAsText());
+		polygonOverlay.setRelatedObject(this);
+		polygonOverlay.setId(mId);
 		if (styler == null)
 			applyDefaultStyling(polygonOverlay, defaultStyle, kmlPlacemark, kmlDocument, map);
 		else

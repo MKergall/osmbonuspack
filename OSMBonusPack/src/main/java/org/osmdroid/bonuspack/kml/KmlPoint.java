@@ -93,6 +93,7 @@ public class KmlPoint extends KmlGeometry implements Parcelable, Cloneable {
 		marker.setPosition(getPosition());
 		//keep the link from the marker to the KML feature:
 		marker.setRelatedObject(this);
+		marker.setId(mId);
 		if (styler == null){
 			applyDefaultStyling(marker, defaultStyle, kmlPlacemark, kmlDocument, map);
 		} else
