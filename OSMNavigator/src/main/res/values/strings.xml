@@ -55,7 +55,7 @@
 	<string name="menu_pois">Features list</string>
 	<string name="menu_cache">Cache Manager</string>
 	<string name="menu_download_view_area">Download view area</string>
-	<string name="menu_clear_view_area">Clear view area</string>
+	<string name="menu_clear_view_area">Clear cache</string>
 	<string name="menu_cache_usage">Cache usage</string>
 	<string name="menu_tile">Tile Provider</string>
 	<string name="menu_route">Route Provider</string>

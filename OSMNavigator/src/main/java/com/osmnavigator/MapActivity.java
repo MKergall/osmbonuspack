@@ -79,6 +79,8 @@ import org.osmdroid.mapsforge.MapsForgeTileSource;
 import org.osmdroid.tileprovider.MapTileProviderBase;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.cachemanager.CacheManager;
+import org.osmdroid.tileprovider.modules.IFilesystemCache;
+import org.osmdroid.tileprovider.modules.SqlTileWriter;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.MapBoxTileSource;
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
@@ -209,11 +211,15 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 
 		String tileProviderName = prefs.getString("TILE_PROVIDER", "Mapnik");
 		mNightMode = prefs.getBoolean("NIGHT_MODE", false);
-		try {
-			ITileSource tileSource = TileSourceFactory.getTileSource(tileProviderName);
-			map.setTileSource(tileSource);
-		} catch (IllegalArgumentException e) {
-			map.setTileSource(TileSourceFactory.MAPNIK);
+		if ("rendertheme-v4".equals(tileProviderName)) {
+			setMapsForgeTileProvider();
+		} else {
+			try {
+				ITileSource tileSource = TileSourceFactory.getTileSource(tileProviderName);
+				map.setTileSource(tileSource);
+			} catch (IllegalArgumentException e) {
+				map.setTileSource(TileSourceFactory.MAPNIK);
+			}
 		}
 		if (mNightMode)
 			map.getOverlayManager().getTilesOverlay().setColorFilter(TilesOverlay.INVERT_COLORS);
@@ -742,11 +748,10 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	}
 
 	//Async task to reverse-geocode the marker position in a separate thread:
-	private class ReverseGeocodingTask extends AsyncTask<Object, Void, String> {
+	private class ReverseGeocodingTask extends AsyncTask<Marker, Void, String> {
 		Marker marker;
-		protected String doInBackground(Object... params) {
-			marker = (Marker)params[0];
-			return getAddress(marker.getPosition());
+		protected String doInBackground(Marker... params) {
+			return getAddress(params[0].getPosition());
 		}
 		protected void onPostExecute(String result) {
 			marker.setSnippet(result);
@@ -947,7 +952,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	/**
 	 * Async task to get the road in a separate thread.
 	 */
-	private class UpdateRoadTask extends AsyncTask<Object, Void, Road[]> {
+	private class UpdateRoadTask extends AsyncTask<ArrayList<GeoPoint>, Void, Road[]> {
 
 		private final Context mContext;
 
@@ -955,9 +960,8 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			this.mContext = context;
 		}
 
-		protected Road[] doInBackground(Object... params) {
-			@SuppressWarnings("unchecked")
-			ArrayList<GeoPoint> waypoints = (ArrayList<GeoPoint>)params[0];
+		protected Road[] doInBackground(ArrayList<GeoPoint>... params) {
+			ArrayList<GeoPoint> waypoints = params[0];
 			RoadManager roadManager;
 			Locale locale = Locale.getDefault();
 			switch (mWhichRouteProvider){
@@ -1106,11 +1110,11 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		return map.get(humanReadableFeature.toLowerCase(Locale.getDefault()));
 	}
 
-	private class POILoadingTask extends AsyncTask<Object, Void, ArrayList<POI>> {
+	private class POILoadingTask extends AsyncTask<String, Void, ArrayList<POI>> {
 		String mFeatureTag;
 		String message;
-		protected ArrayList<POI> doInBackground(Object... params) {
-			mFeatureTag = (String)params[0];
+		protected ArrayList<POI> doInBackground(String... params) {
+			mFeatureTag = params[0];
 			BoundingBox bb = map.getBoundingBox();
 			if (mFeatureTag == null || mFeatureTag.equals("")){
 				return null;
@@ -1383,10 +1387,10 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	}
 
 	//Async task to reverse-geocode the KML point in a separate thread:
-	private class KMLGeocodingTask extends AsyncTask<Object, Void, String> {
+	private class KMLGeocodingTask extends AsyncTask<KmlPlacemark, Void, String> {
 		KmlPlacemark kmlPoint;
-		protected String doInBackground(Object... params) {
-			kmlPoint = (KmlPlacemark)params[0];
+		protected String doInBackground(KmlPlacemark... params) {
+			kmlPoint = params[0];
 			return getAddress(((KmlPoint) kmlPoint.mGeometry).getPosition());
 		}
 		protected void onPostExecute(String result) {
@@ -1399,7 +1403,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	void addKmlPoint(GeoPoint position){
 		KmlFeature kmlPoint = new KmlPlacemark(position);
 		mKmlDocument.mKmlRoot.add(kmlPoint);
-		new KMLGeocodingTask().execute(kmlPoint);
+		new KMLGeocodingTask().execute((KmlPlacemark)kmlPoint);
 		updateUIWithKml();
 	}
 
@@ -1567,6 +1571,22 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		return true;
 	}
 
+	private class CacheClearer extends AsyncTask<Void, Void, Boolean> {
+		protected Boolean doInBackground(Void... params) {
+			IFilesystemCache tileWriter = map.getTileProvider().getTileWriter();
+			if (tileWriter instanceof SqlTileWriter) {
+				return ((SqlTileWriter) tileWriter).purgeCache();
+			} else
+				return false;
+		}
+		protected void onPostExecute(Boolean result) {
+			if (result)
+				Toast.makeText(map.getContext(), "Cache Purge successful", Toast.LENGTH_SHORT).show();
+			else
+				Toast.makeText(map.getContext(), "Cache Purge failed", Toast.LENGTH_SHORT).show();
+		}
+	}
+
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		Intent myIntent;
 		switch (item.getItemId()) {
@@ -1654,11 +1674,11 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			mNightMode = false;
 			item.setChecked(true);
 			return true;
-			case R.id.menu_tile_mapnik_by_night:
+		case R.id.menu_tile_mapnik_by_night:
 			setStdTileProvider();
-				map.setTileSource(TileSourceFactory.MAPNIK);
-				map.getOverlayManager().getTilesOverlay().setColorFilter(TilesOverlay.INVERT_COLORS);
-				mNightMode = true;
+			map.setTileSource(TileSourceFactory.MAPNIK);
+			map.getOverlayManager().getTilesOverlay().setColorFilter(TilesOverlay.INVERT_COLORS);
+			mNightMode = true;
 			item.setChecked(true);
 			return true;
 		case R.id.menu_tile_mapbox_satellite:
@@ -1682,10 +1702,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			return true;
 			}
 		case R.id.menu_clear_view_area:{
-			CacheManager cacheManager = new CacheManager(map);
-			int zoomMin = map.getZoomLevel();
-			int zoomMax = map.getZoomLevel()+7;
-			cacheManager.cleanAreaAsync(this, map.getBoundingBox(), zoomMin, zoomMax);
+			new CacheClearer().execute();
 			return true;
 			}
 		case R.id.menu_cache_usage:{

@@ -54,7 +54,7 @@
 	<string name="menu_pois">Points d\'intérêt</string>
 	<string name="menu_cache">Gestion du Cache</string>
 	<string name="menu_download_view_area">Télécharger la vue</string>
-	<string name="menu_clear_view_area">Vider la vue du cache</string>
+	<string name="menu_clear_view_area">Vider le cache</string>
 	<string name="menu_cache_usage">Utilisation du cache</string>
 	<string name="menu_tile">Choix de la carte</string>
 	<string name="menu_route">Options sur les routes</string>
