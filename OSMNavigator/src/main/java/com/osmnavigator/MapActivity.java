@@ -751,7 +751,8 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	private class ReverseGeocodingTask extends AsyncTask<Marker, Void, String> {
 		Marker marker;
 		protected String doInBackground(Marker... params) {
-			return getAddress(params[0].getPosition());
+			marker = params[0];
+			return getAddress(marker.getPosition());
 		}
 		protected void onPostExecute(String result) {
 			marker.setSnippet(result);
