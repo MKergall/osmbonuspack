@@ -50,6 +50,7 @@ public class KmlPlacemark extends KmlFeature implements Cloneable, Parcelable {
 		mName = marker.getTitle();
 		mDescription = marker.getSnippet();
 		mVisibility = marker.isEnabled();
+		mId = marker.getId();
 		//TODO: Style / IconStyle => transparency, hotspot, bearing. 
 	}
 
@@ -72,6 +73,7 @@ public class KmlPlacemark extends KmlFeature implements Cloneable, Parcelable {
 		}
 		*/
 		mVisibility = polygon.isEnabled();
+		mId = polygon.getId();
 		//Style:
 		Style style = new Style();
 		style.mPolyStyle = new ColorStyle(polygon.getFillColor());
@@ -87,6 +89,7 @@ public class KmlPlacemark extends KmlFeature implements Cloneable, Parcelable {
 		mGeometry = new KmlLineString();
 		mGeometry.mCoordinates = (ArrayList<GeoPoint>)polyline.getPoints();
 		mVisibility = polyline.isEnabled();
+		mId = polyline.getId();
 		//Style:
 		Style style = new Style();
 		style.mLineStyle = new LineStyle(polyline.getColor(), polyline.getWidth());
