@@ -3,24 +3,27 @@ package org.osmdroid.bonuspack.overlays;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.view.MotionEvent;
 
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.Projection;
-import org.osmdroid.views.overlay.Overlay;
+import org.osmdroid.views.overlay.OverlayWithIW;
 
 /**
  * A ground overlay is an image that is fixed to a map. 
  * Mimics the GroundOverlay class from Google Maps Android API v2 as much as possible. Main differences:<br/>
  * - Doesn't support: Z-Index<br/>
  * - image is a standard Android BitmapDrawable, instead of the BitmapDescriptor introduced in Maps API. <br/>
+ * - supports onSingleTapConfirmed event
+ * - TODO: supports InfoWindow
  * 
  * @author M.Kergall
  * @see <a href="http://developer.android.com/reference/com/google/android/gms/maps/model/GroundOverlay.html">Google Maps GroundOverlay</a>
  *
  */
-public class GroundOverlay extends Overlay {
+public class GroundOverlay extends OverlayWithIW {
 
 	protected Drawable mImage;
 	protected GeoPoint mPosition;
@@ -29,6 +32,7 @@ public class GroundOverlay extends Overlay {
 	protected float mTransparency;
 	public final static float NO_DIMENSION = -1.0f;
 	protected Point mPositionPixels, mSouthEastPixels;
+	protected OnClickListener mOnClickListener;
 
 	public GroundOverlay() {
 		super();
@@ -137,6 +141,48 @@ public class GroundOverlay extends Overlay {
 		mImage.setAlpha(255-(int)(mTransparency*255));
 
 		drawAt(canvas, mImage, mPositionPixels.x, mPositionPixels.y, false, -mBearing);
+	}
+
+	public boolean contains(GeoPoint p){
+		BoundingBox bb = getBoundingBox();
+		return bb.contains(p);
+		//TODO handle bearing.
+	}
+
+	@Override public boolean onSingleTapConfirmed(final MotionEvent event, final MapView mapView) {
+		final Projection pj = mapView.getProjection();
+		GeoPoint eventPos = (GeoPoint) pj.fromPixels((int) event.getX(), (int) event.getY());
+		boolean touched = contains(eventPos);
+		if (touched) {
+			if (mOnClickListener == null) {
+				return onClickDefault(this, eventPos);
+			} else {
+				return mOnClickListener.onClick(this, eventPos);
+			}
+		} else
+			return touched;
+	}
+
+	//-- Events listener interfaces ------------------------------------
+
+	public interface OnClickListener {
+		abstract boolean onClick(GroundOverlay groundOverlay, GeoPoint eventPos);
+	}
+
+	/**
+	 * default behaviour when no click listener is set
+	 */
+	public boolean onClickDefault(GroundOverlay groundOverlay, GeoPoint eventPos) {
+		/*
+		groundOverlay.setInfoWindowLocation(eventPos);
+		groundOverlay.showInfoWindow();
+		*/
+		//By default, do nothing
+		return false;
+	}
+
+	public void setOnClickListener(OnClickListener listener) {
+		mOnClickListener = listener;
 	}
 
 }
