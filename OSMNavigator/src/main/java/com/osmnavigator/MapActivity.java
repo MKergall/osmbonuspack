@@ -45,8 +45,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
-import org.mapsforge.map.android.rendertheme.AssetsRenderTheme;
+
 import org.mapsforge.map.rendertheme.ExternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
 import org.osmdroid.api.IMapController;
@@ -67,6 +66,7 @@ import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.bonuspack.location.PicasaPOIProvider;
 import org.osmdroid.bonuspack.routing.GoogleRoadManager;
 import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
+import org.osmdroid.bonuspack.routing.MapQuestRoadManager;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
@@ -909,7 +909,8 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		@Override public boolean onClick(Polyline polyline, MapView mapView, GeoPoint eventPos){
 			int selectedRoad = (Integer)polyline.getRelatedObject();
 			selectRoad(selectedRoad);
-			polyline.showInfoWindow(eventPos);
+			polyline.setInfoWindowLocation(eventPos);
+			polyline.showInfoWindow();
 			return true;
 		}
 	}
@@ -968,6 +969,8 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			switch (mWhichRouteProvider){
 			case OSRM:
 				roadManager = new OSRMRoadManager(mContext);
+				// TEST TEST TEST of MapQuest API V2:
+				//roadManager = new MapQuestRoadManager("Fmjtd|luubn10zn9,8s=o5-90rnq6");
 				break;
 			case GRAPHHOPPER_FASTEST:
 				roadManager = new GraphHopperRoadManager(graphHopperApiKey, false);
