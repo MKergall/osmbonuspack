@@ -131,9 +131,9 @@ public class MapQuestRoadManager extends RoadManager {
             JSONObject jSummary = jGuidance.getJSONObject("summary");
             JSONObject jBoundingBox = jSummary.getJSONObject("boundingBox");
             road.mBoundingBox = new BoundingBox(jBoundingBox.getDouble("maxLat"),
-                    jBoundingBox.getDouble("minLng"),
+                    jBoundingBox.getDouble("maxLng"),
                     jBoundingBox.getDouble("minLat"),
-                    jBoundingBox.getDouble("maxLng"));
+                    jBoundingBox.getDouble("minLng"));
 
             road.mNodes = finalizeNodes(road.mNodes, links, road.mRouteHigh);
             road.mRouteHigh = finalizeRoadShape(road, links);
