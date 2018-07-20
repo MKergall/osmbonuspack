@@ -788,8 +788,6 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	/** Update (or create if null) a marker in itineraryMarkers. */
     public Marker updateItineraryMarker(Marker marker, GeoPoint p, int index,
     		int titleResId, int markerResId, int imageResId, String address) {
-		Drawable icon = ResourcesCompat.getDrawable(getResources(), markerResId, null);
-		String title = getResources().getString(titleResId);
 		if (marker == null){
 			marker = new Marker(map);
 			marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
@@ -798,9 +796,12 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			marker.setOnMarkerDragListener(mItineraryListener);
 			mItineraryMarkers.add(marker);
 		}
+		String title = getResources().getString(titleResId);
 		marker.setTitle(title);
 		marker.setPosition(p);
+		Drawable icon = ResourcesCompat.getDrawable(getResources(), markerResId, null);
 		marker.setIcon(icon);
+		marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM); //because bug in osmdroid 6.0.2
 		if (imageResId != -1)
 			marker.setImage(ResourcesCompat.getDrawable(getResources(), imageResId, null));
 		marker.setRelatedObject(index);
