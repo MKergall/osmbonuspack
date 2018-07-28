@@ -33,11 +33,11 @@ dependencies {
     //compile project(":OSMBonusPack")
 
     //including using JitPack:
-    compile 'com.github.MKergall:osmbonuspack:6.5.1'
+    compile 'com.github.MKergall:osmbonuspack:6.5.2'
 
     // including as local lib
     /*
-    compile(name: 'osmbonuspack_v6.5.1', ext: 'aar')
+    compile(name: 'osmbonuspack_v6.5.2', ext: 'aar')
     compile 'org.osmdroid:osmdroid-android:6.0.2'
     compile "com.android.support:support-v4:23.4.0"
     compile 'org.apache.commons:commons-lang3:3.3.4'
