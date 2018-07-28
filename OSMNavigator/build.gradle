@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '25.0.2'
 
     defaultConfig {
         applicationId "com.osmnavigator"
         minSdkVersion 10
         targetSdkVersion 23
-        versionCode 20
-        versionName "2.0"
+        versionCode 21
+        versionName "2.1"
     }
     buildTypes {
         release {
@@ -35,9 +35,9 @@ dependencies {
     compile project(":OSMBonusPack")
 
     //including using JitPack:
-    //compile 'com.github.MKergall:osmbonuspack:6.5.1'
+    //compile 'com.github.MKergall:osmbonuspack:6.5.2'
 
-    compile 'org.osmdroid:osmdroid-mapsforge:6.0.1@aar'
+    compile 'org.osmdroid:osmdroid-mapsforge:6.0.2@aar'
     compile 'org.mapsforge:mapsforge-map-android:0.8.0'
     compile 'org.mapsforge:mapsforge-map:0.8.0'
     compile 'org.mapsforge:mapsforge-themes:0.8.0'

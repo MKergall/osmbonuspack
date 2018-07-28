@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '25.0.2'
 
     defaultConfig {
         applicationId "com.example.osmbonuspacktuto"
@@ -38,7 +38,7 @@ dependencies {
     // including as local lib
     /*
     compile(name: 'osmbonuspack_v6.5.1', ext: 'aar')
-    compile 'org.osmdroid:osmdroid-android:6.0.1'
+    compile 'org.osmdroid:osmdroid-android:6.0.2'
     compile "com.android.support:support-v4:23.4.0"
     compile 'org.apache.commons:commons-lang3:3.3.4'
     compile 'com.google.code.gson:gson:2.8.0'
