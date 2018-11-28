@@ -83,7 +83,8 @@ public class GeoNamesPOIProvider {
 				JSONObject jPlace = jPlaceIds.getJSONObject(i);
 				POI poi = new POI(POI.POI_SERVICE_GEONAMES_WIKIPEDIA);
 				poi.mLocation = new GeoPoint(jPlace.getDouble("lat"), 
-						jPlace.getDouble("lng"));
+						jPlace.getDouble("lng"),
+						jPlace.optDouble("elevation", 0.0));
 				poi.mCategory = jPlace.optString("feature");
 				poi.mType = jPlace.getString("title");
 				poi.mDescription = jPlace.optString("summary");
