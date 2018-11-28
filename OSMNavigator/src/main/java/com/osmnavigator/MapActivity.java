@@ -45,7 +45,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.mapsforge.map.rendertheme.ExternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
 import org.osmdroid.api.IMapController;
@@ -60,6 +59,7 @@ import org.osmdroid.bonuspack.kml.LineStyle;
 import org.osmdroid.bonuspack.kml.Style;
 import org.osmdroid.bonuspack.location.FlickrPOIProvider;
 import org.osmdroid.bonuspack.location.GeoNamesPOIProvider;
+//import org.osmdroid.bonuspack.location.GeocoderGraphHopper;
 import org.osmdroid.bonuspack.location.GeocoderNominatim;
 import org.osmdroid.bonuspack.location.OverpassAPIProvider;
 import org.osmdroid.bonuspack.location.POI;
@@ -622,7 +622,8 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	 * Reverse Geocoding
      */
     public String getAddress(GeoPoint p){
-		GeocoderNominatim geocoder = new GeocoderNominatim(mapzenApiKey);
+		GeocoderNominatim geocoder = new GeocoderNominatim(userAgent);
+		//GeocoderGraphHopper geocoder = new GeocoderGraphHopper(Locale.getDefault(), graphHopperApiKey);
 		String theAddress;
 		try {
 			double dLatitude = p.getLatitude();
@@ -656,8 +657,9 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		protected List<Address> doInBackground(Object... params) {
 			String locationAddress = (String)params[0];
 			mIndex = (Integer)params[1];
-			GeocoderNominatim geocoder = new GeocoderNominatim(mapzenApiKey);
-			//geocoder.setOptions(true); //ask for enclosing polygon (if any)
+			GeocoderNominatim geocoder = new GeocoderNominatim(userAgent);
+			geocoder.setOptions(true); //ask for enclosing polygon (if any)
+			//GeocoderGraphHopper geocoder = new GeocoderGraphHopper(Locale.getDefault(), graphHopperApiKey);
 			try {
 				BoundingBox viewbox = map.getBoundingBox();
 				List<Address> foundAdresses = geocoder.getFromLocationName(locationAddress, 1,
@@ -801,7 +803,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		marker.setPosition(p);
 		Drawable icon = ResourcesCompat.getDrawable(getResources(), markerResId, null);
 		marker.setIcon(icon);
-		marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM); //because bug in osmdroid 6.0.2
+		marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
 		if (imageResId != -1)
 			marker.setImage(ResourcesCompat.getDrawable(getResources(), imageResId, null));
 		marker.setRelatedObject(index);
@@ -885,6 +887,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 				Drawable image = ResourcesCompat.getDrawable(getResources(), iconId, null);
 				nodeMarker.setImage(image);
     		}
+			nodeMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
     		mRoadNodeMarkers.add(nodeMarker);
     	}
     	iconIds.recycle();

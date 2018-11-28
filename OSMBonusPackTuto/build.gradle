@@ -30,10 +30,10 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     //including when part of the same project
-    //compile project(":OSMBonusPack")
+    compile project(":OSMBonusPack")
 
     //including using JitPack:
-    compile 'com.github.MKergall:osmbonuspack:6.5.2'
+    //compile 'com.github.MKergall:osmbonuspack:6.5.2'
 
     // including as local lib
     /*
