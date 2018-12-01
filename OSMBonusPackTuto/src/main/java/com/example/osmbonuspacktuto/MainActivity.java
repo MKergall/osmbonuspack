@@ -131,6 +131,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 			Marker nodeMarker = new Marker(map);
 			nodeMarker.setPosition(node.mLocation);
 			nodeMarker.setIcon(nodeIcon);
+			nodeMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
 
 			//4. Filling the bubbles
 			nodeMarker.setTitle("Step " + i);
@@ -186,6 +187,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 				poiMarker.setSnippet(poi.mDescription);
 				poiMarker.setPosition(poi.mLocation);
 				poiMarker.setIcon(poiIcon);
+				poiMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
 				if (poi.mThumbnail != null) {
 					poiMarker.setImage(new BitmapDrawable(getResources(), poi.mThumbnail));
 				}

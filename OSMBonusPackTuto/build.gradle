@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '25.0.2'
+    compileSdkVersion 26
+    buildToolsVersion '26.0.3'
 
     defaultConfig {
         applicationId "com.example.osmbonuspacktuto"
-        minSdkVersion 10
-        targetSdkVersion 22 //the limit to avoid implementing new permissions granting.
+        minSdkVersion 16
+        targetSdkVersion 26 //22 = the limit to avoid implementing new permissions granting.
         versionCode 1
         versionName "1.0"
     }
