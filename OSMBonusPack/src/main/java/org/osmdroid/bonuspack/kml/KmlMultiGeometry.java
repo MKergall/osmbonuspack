@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 /**
  * KML MultiGeometry and/or GeoJSON GeometryCollection. 
- * It can also parse GeoJSON MultiPoint. 
+ * It can also parse GeoJSON MultiPoint, MultiLineString and MultiPolygon.
  * @author M.Kergall
  */
 public class KmlMultiGeometry extends KmlGeometry implements Cloneable, Parcelable {
@@ -51,6 +51,20 @@ public class KmlMultiGeometry extends KmlGeometry implements Cloneable, Parcelab
 			for (GeoPoint p:positions){
 				KmlPoint kmlPoint = new KmlPoint(p);
 				mItems.add(kmlPoint);
+			}
+		} else if ("MultiLineString".equals(type)){
+			JsonArray lineStrings = json.get("coordinates").getAsJsonArray();
+			for (JsonElement lineStringE:lineStrings){
+				JsonArray lineStringA = (JsonArray)lineStringE;
+				KmlLineString lineString = new KmlLineString(lineStringA);
+				mItems.add(lineString);
+			}
+		} else if ("MultiPolygon".equals(type)){
+			JsonArray polygonsA = json.get("coordinates").getAsJsonArray();
+			for (JsonElement polygonE:polygonsA){
+				JsonArray polygonA = (JsonArray)polygonE;
+				KmlPolygon polygon = new KmlPolygon(polygonA);
+				mItems.add(polygon);
 			}
 		}
 	}

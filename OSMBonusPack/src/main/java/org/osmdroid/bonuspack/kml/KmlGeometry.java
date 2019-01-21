@@ -135,7 +135,8 @@ public abstract class KmlGeometry implements Cloneable, Parcelable {
 			return new KmlLineString(json);
 		} else if ("Polygon".equals(type)){
 			return new KmlPolygon(json);
-		} else if ("GeometryCollection".equals(type) || "MultiPoint".equals(type)){
+		} else if ("GeometryCollection".equals(type)
+				|| "MultiPoint".equals(type) || "MultiLineString".equals(type) || "MultiPolygon".equals(type)){
 			return new KmlMultiGeometry(json);
 		} else 
 			return null;

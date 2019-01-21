@@ -83,11 +83,11 @@ public class KmlPolygon extends KmlGeometry {
 			styler.onPolygon(polygonOverlay, kmlPlacemark, this);
 		return polygonOverlay;
 	}
-	
-	/** GeoJSON constructor */
-	public KmlPolygon(JsonObject json){
+
+
+	/** GeoJSON constructor, from array of rings */
+	protected KmlPolygon(JsonArray rings){
 		this();
-		JsonArray rings = json.get("coordinates").getAsJsonArray();
 		//ring #0 is the polygon border:
 		mCoordinates = KmlGeometry.parseGeoJSONPositions(rings.get(0).getAsJsonArray());
 		//next rings are the holes:
@@ -98,6 +98,11 @@ public class KmlPolygon extends KmlGeometry {
 				mHoles.add(hole);
 			}
 		}
+	}
+
+	/** GeoJSON constructor, from full GeoJSON Polygon object */
+	public KmlPolygon(JsonObject json){
+		this(json.get("coordinates").getAsJsonArray());
 	}
 	
 	@Override public void saveAsKML(Writer writer){

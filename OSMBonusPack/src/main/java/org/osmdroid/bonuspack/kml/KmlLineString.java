@@ -7,12 +7,14 @@ import com.google.gson.JsonObject;
 import org.osmdroid.bonuspack.kml.KmlFeature.Styler;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.util.BoundingBox;
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.infowindow.BasicInfoWindow;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 
 /**
  * KML and/or GeoJSON LineString
@@ -24,11 +26,16 @@ public class KmlLineString extends KmlGeometry {
 	public KmlLineString(){
 		super();
 	}
-	
-	public KmlLineString(JsonObject json){
+
+	/** GeoJSON constructor, from GeoJSON array of coordinates */
+	protected KmlLineString(JsonArray coordinates){
 		this();
-		JsonArray coordinates = json.get("coordinates").getAsJsonArray();
 		mCoordinates = KmlGeometry.parseGeoJSONPositions(coordinates);
+	}
+
+	/** GeoJSON constructor, from full GeoJSON LineString object */
+	public KmlLineString(JsonObject json){
+		this(json.get("coordinates").getAsJsonArray());
 	}
 	
 	public void applyDefaultStyling(Polyline lineStringOverlay, Style defaultStyle, KmlPlacemark kmlPlacemark,
