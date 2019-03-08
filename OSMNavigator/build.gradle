@@ -35,7 +35,7 @@ dependencies {
     compile project(":OSMBonusPack")
 
     //including using JitPack:
-    compile 'com.github.MKergall:osmbonuspack:6.5.3'
+    //compile 'com.github.MKergall:osmbonuspack:6.5.3'
 
     compile 'org.osmdroid:osmdroid-mapsforge:6.0.3@aar'
     compile 'org.mapsforge:mapsforge-map-android:0.8.0'

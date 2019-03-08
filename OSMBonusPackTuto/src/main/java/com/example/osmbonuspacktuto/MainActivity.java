@@ -42,6 +42,7 @@ import org.osmdroid.config.Configuration;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.MapEventsOverlay;
@@ -77,17 +78,11 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 
 		//Introduction
 		super.onCreate(savedInstanceState);
-
-		/*
-		boolean hwAccelerationOK = true; //org.osmdroid.bonuspack.overlays.Polygon.SDKsupportsPathOp();
-		Configuration.getInstance().setMapViewHardwareAccelerated(hwAccelerationOK);
-		LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View v = inflater.inflate(R.layout.main, null);
-		*/
+		Configuration.getInstance().setUserAgentValue("OBP_Tuto/1.0");
 
 		setContentView(R.layout.main);
 		map = (MapView) findViewById(R.id.map);
-		map.setBuiltInZoomControls(true);
+		map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT);
 		map.setMultiTouchControls(true);
 		GeoPoint startPoint = new GeoPoint(48.13, -1.63);
 		IMapController mapController = map.getController();

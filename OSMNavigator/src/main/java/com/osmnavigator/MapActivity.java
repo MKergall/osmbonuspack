@@ -91,6 +91,7 @@ import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.NetworkLocationIgnorer;
 import org.osmdroid.util.TileSystem;
+import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.MapEventsOverlay;
@@ -175,7 +176,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	OnlineTileSourceBase MAPBOXSATELLITELABELLED;
 	boolean mNightMode;
 
-	static final String userAgent = "OsmNavigator/1.0";
+	static final String userAgent = "OsmNavigator/2.2";
 
 	static String graphHopperApiKey;
 	static String flickrApiKey;
@@ -187,6 +188,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 
 		Configuration.getInstance().setOsmdroidBasePath(new File(Environment.getExternalStorageDirectory(), "osmdroid"));
 		Configuration.getInstance().setOsmdroidTileCache(new File(Environment.getExternalStorageDirectory(), "osmdroid/tiles"));
+		Configuration.getInstance().setUserAgentValue(userAgent);
 
 		//Configuration.getInstance().setMapViewHardwareAccelerated(true);
 		MapsForgeTileSource.createInstance(getApplication());
@@ -225,7 +227,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			map.getOverlayManager().getTilesOverlay().setColorFilter(TilesOverlay.INVERT_COLORS);
 
 		map.setTilesScaledToDpi(true);
-		map.setBuiltInZoomControls(true);
+		map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT);
 		map.setMultiTouchControls(true);
 		map.setMinZoomLevel(1.0);
 		map.setMaxZoomLevel(21.0);
