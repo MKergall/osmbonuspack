@@ -120,16 +120,12 @@ public class GroundOverlay extends OverlayWithIW {
 		mHeight = (float)pSouth.distanceToAsDouble(pNorth);
 	}
 
-	@Override public void draw(Canvas canvas, MapView mapView, boolean shadow) {
-		if (shadow)
-			return;
+	@Override public void draw(Canvas canvas, Projection pj) {
 		if (mImage == null)
 			return;
 
 		computeHeight();
-		
-		final Projection pj = mapView.getProjection();
-		
+
 		pj.toPixels(mPosition, mPositionPixels);
 		GeoPoint pEast = mPosition.destinationPoint(mWidth/2, 90.0f);
 		GeoPoint pSouthEast = pEast.destinationPoint(mHeight/2, -180.0f);

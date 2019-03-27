@@ -30,11 +30,11 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     //including when part of the same project
-    //compile project(":OSMBonusPack")
+    compile project(":OSMBonusPack")
     compile "com.android.support:support-v4:26.1.0"
 
     //including using JitPack:
-    compile 'com.github.MKergall:osmbonuspack:6.5.3'
+    //compile 'com.github.MKergall:osmbonuspack:6.6.0'
 
     // including as local lib
     /*
