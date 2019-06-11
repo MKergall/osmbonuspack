@@ -28,7 +28,7 @@ import java.util.HashMap;
  */
 public class OSRMRoadManager extends RoadManager {
 
-	static final String SERVICE = "http://router.project-osrm.org/route/v1/driving/";
+	static final String SERVICE = "https://router.project-osrm.org/route/v1/driving/";
 	private final Context mContext;
 	protected String mServiceUrl;
 	protected String mUserAgent;
@@ -188,7 +188,6 @@ public class OSRMRoadManager extends RoadManager {
 	protected Road[] getRoads(ArrayList<GeoPoint> waypoints, boolean getAlternate) {
 		String url = getUrl(waypoints, getAlternate);
 		Log.d(BonusPackHelper.LOG_TAG, "OSRMRoadManager.getRoads:" + url);
-		//url = "http://comob.free.fr/osrm_sample.json"; //DEBUG - waiting for OSRM V5 live
 		String jString = BonusPackHelper.requestStringFromUrl(url, mUserAgent);
 		if (jString == null) {
 			Log.e(BonusPackHelper.LOG_TAG, "OSRMRoadManager::getRoad: request failed.");
