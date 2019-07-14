@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.view.MotionEvent;
 
 import org.osmdroid.bonuspack.R;
 import org.osmdroid.util.BoundingBox;
@@ -37,6 +38,7 @@ public class RadiusMarkerClusterer extends MarkerClusterer {
     protected double mRadiusInMeters;
     protected Paint mTextPaint;
     private ArrayList<Marker> mClonedMarkers;
+    protected boolean mAnimated;
 
     /** cluster icon anchor */
     public float mAnchorU = Marker.ANCHOR_CENTER, mAnchorV = Marker.ANCHOR_CENTER;
@@ -54,6 +56,7 @@ public class RadiusMarkerClusterer extends MarkerClusterer {
         Drawable clusterIconD = ctx.getResources().getDrawable(R.drawable.marker_cluster);
         Bitmap clusterIcon = ((BitmapDrawable) clusterIconD).getBitmap();
         setIcon(clusterIcon);
+        mAnimated = true;
     }
 
     /** If you want to change the default text paint (color, size, font) */
@@ -160,6 +163,27 @@ public class RadiusMarkerClusterer extends MarkerClusterer {
         double metersInPixel = diagonalInMeters / diagonalInPixels;
 
         mRadiusInMeters = mRadiusInPixels * metersInPixel;
+    }
+
+    public void setAnimation(boolean animate){
+        mAnimated = animate;
+    }
+
+    public void zoomOnCluster(MapView mapView, StaticCluster cluster){
+        BoundingBox bb = cluster.getBoundingBox();
+        bb.increaseByScale(0.15f);
+        mapView.zoomToBoundingBox(bb, true);
+    }
+
+    @Override public boolean onSingleTapConfirmed(final MotionEvent event, final MapView mapView){
+        for (final StaticCluster cluster : reversedClusters()) {
+            if (cluster.getMarker().onSingleTapConfirmed(event, mapView)) {
+                if (mAnimated && cluster.getSize() > 1)
+                    zoomOnCluster(mapView, cluster);
+                return true;
+            }
+        }
+        return false;
     }
 
 }

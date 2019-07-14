@@ -1,5 +1,6 @@
 package org.osmdroid.bonuspack.clustering;
 
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Marker;
 
@@ -46,5 +47,21 @@ public class StaticCluster {
 	/** @return the Marker to be displayed for this cluster */
 	public Marker getMarker(){
 		return mMarker;
+	}
+
+	public BoundingBox getBoundingBox(){
+		if (mItems.size()==0)
+			return null;
+		GeoPoint p = getItem(0).getPosition();
+		BoundingBox bb = new BoundingBox(p.getLatitude(), p.getLongitude(), p.getLatitude(), p.getLongitude());
+		for (int i=1; i<getSize(); i++) {
+			p = getItem(i).getPosition();
+            double minLat = Math.min(bb.getLatSouth(), p.getLatitude());
+            double minLon = Math.min(bb.getLonWest(), p.getLongitude());
+            double maxLat = Math.max(bb.getLatNorth(), p.getLatitude());
+            double maxLon = Math.max(bb.getLonEast(), p.getLongitude());
+            bb.set(maxLat, maxLon, minLat, minLon);
+		}
+		return bb;
 	}
 }
