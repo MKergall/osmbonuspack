@@ -97,11 +97,17 @@ public class GeocoderNominatim {
 			gAddress.setAddressLine(addressIndex++, jAddress.get("road").getAsString());
 			gAddress.setThoroughfare(jAddress.get("road").getAsString());
 		}
+
+		if (jAddress.has("house_number")){
+			gAddress.setSubThoroughfare(jAddress.get("house_number").getAsString());
+		}
+
 		if (jAddress.has("suburb")){
 			//gAddress.setAddressLine(addressIndex++, jAddress.getString("suburb"));
 				//not kept => often introduce "noise" in the address.
 			gAddress.setSubLocality(jAddress.get("suburb").getAsString());
 		}
+
 		if (jAddress.has("postcode")){
 			gAddress.setAddressLine(addressIndex++, jAddress.get("postcode").getAsString());
 			gAddress.setPostalCode(jAddress.get("postcode").getAsString());
