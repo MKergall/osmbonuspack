@@ -319,7 +319,7 @@ public class KmlDocument implements Parcelable {
 	protected enum KmlKeywords {Document, Folder, NetworkLink, GroundOverlay, Placemark, Point, LineString, gx_Track,
 		Polygon, innerBoundaryIs, MultiGeometry, Style, StyleMap, LineStyle, PolyStyle, IconStyle, hotSpot,
 		Data, SimpleData, name, description, visibility, open, coordinates, gx_coord, when, styleUrl, key, color,
-		colorMode, width, scale, heading, href, north, south, east, west, rotation, LatLonBox, value, id}
+		colorMode, width, scale, heading, href, north, south, east, west, rotation, LatLonBox, gx_LatLonQuad, value, id}
 
 	protected static HashMap<String, KmlKeywords> KEYWORDS_DICTIONARY;
 	static {
@@ -427,82 +427,6 @@ public class KmlDocument implements Parcelable {
 				Log.e(BonusPackHelper.LOG_TAG, "Error reading NetworkLink:"+href);
 			}
 		}
-
-		/*
-		public void startElementOld(String uri, String localName, String name,
-				Attributes attributes) throws SAXException {
-			if (name.equals("Document")) {
-				mKmlCurrentFeature = mKmlRoot; //If there is a Document, it will be the root. 
-				mKmlCurrentFeature.mId = attributes.getValue("id");
-			} else if (name.equals("Folder")) {
-				mKmlCurrentFeature = new KmlFolder();
-				mKmlCurrentFeature.mId = attributes.getValue("id");
-				mKmlFeatureStack.add(mKmlCurrentFeature); //push on stack
-			} else if (name.equals("NetworkLink")) {
-				mKmlCurrentFeature = new KmlFolder();
-				mKmlCurrentFeature.mId = attributes.getValue("id");
-				mKmlFeatureStack.add(mKmlCurrentFeature); //push on stack
-				mIsNetworkLink = true;
-			} else if (name.equals("GroundOverlay")) {
-				mKmlCurrentGroundOverlay = new KmlGroundOverlay();
-				mKmlCurrentFeature = mKmlCurrentGroundOverlay;
-				mKmlCurrentFeature.mId = attributes.getValue("id");
-				mKmlFeatureStack.add(mKmlCurrentFeature); //push on stack
-			} else if (name.equals("Placemark")) {
-				mKmlCurrentFeature = new KmlPlacemark();
-				mKmlCurrentFeature.mId = attributes.getValue("id");
-				mKmlFeatureStack.add(mKmlCurrentFeature); //push on Feature stack
-			} else if (name.equals("Point")) {
-				mKmlCurrentGeometry = new KmlPoint();
-				mKmlGeometryStack.add(mKmlCurrentGeometry); //push on Geometry stack
-			} else if (name.equals("LineString")) {
-				mKmlCurrentGeometry = new KmlLineString();
-				mKmlGeometryStack.add(mKmlCurrentGeometry);
-			} else if (name.equals("gx:Track")) {
-				mKmlCurrentGeometry = new KmlTrack();
-				mKmlGeometryStack.add(mKmlCurrentGeometry);
-			} else if (name.equals("Polygon")) {
-				mKmlCurrentGeometry = new KmlPolygon();
-				mKmlGeometryStack.add(mKmlCurrentGeometry);
-			} else if (name.equals("innerBoundaryIs")) {
-				mIsInnerBoundary = true;
-			} else if (name.equals("MultiGeometry")) {
-				mKmlCurrentGeometry = new KmlMultiGeometry();
-				mKmlGeometryStack.add(mKmlCurrentGeometry);
-			} else if (name.equals("Style")) {
-				mCurrentStyle = new Style();
-				mCurrentStyleId = attributes.getValue("id");
-			} else if (name.equals("StyleMap")) {
-				mCurrentStyleMap = new StyleMap();
-				mCurrentStyleId = attributes.getValue("id");
-			} else if (name.equals("LineStyle")) {
-				mCurrentStyle.mLineStyle = new LineStyle();
-				mColorStyle = mCurrentStyle.mLineStyle;
-			} else if (name.equals("PolyStyle")) {
-				mCurrentStyle.mPolyStyle = new ColorStyle();
-				mColorStyle = mCurrentStyle.mPolyStyle;
-			} else if (name.equals("IconStyle")) {
-				mCurrentStyle.mIconStyle = new IconStyle();
-				mColorStyle = mCurrentStyle.mIconStyle;
-			} else if (name.equals("hotSpot")) {
-				if (mCurrentStyle != null && mColorStyle != null && mColorStyle instanceof IconStyle){
-					mCurrentStyle.mIconStyle.mHotSpot = new HotSpot(
-							Float.parseFloat(attributes.getValue("x")),
-							Float.parseFloat(attributes.getValue("y")),
-							attributes.getValue("xunits"),
-							attributes.getValue("yunits")
-					);
-					//if ("fraction".equals(attributes.getValue("xunits")))
-					//	mCurrentStyle.mIconStyle.mHotSpotX = Float.parseFloat(attributes.getValue("x"));
-					//if ("fraction".equals(attributes.getValue("yunits")))
-					//	mCurrentStyle.mIconStyle.mHotSpotY = Float.parseFloat(attributes.getValue("y"));
-				}
-			} else if (name.equals("Data") || name.equals("SimpleData")) {
-				mDataName = attributes.getValue("name");
-			}
-			mStringBuilder.setLength(0);
-		}
-		*/
 
 		public void startElement(String uri, String localName, String name,
 								 Attributes attributes) throws SAXException {
@@ -627,161 +551,6 @@ public class KmlDocument implements Parcelable {
 				throws SAXException {
 			mStringBuilder.append(ch, start, length);
 		}
-		/*
-		public void endElementOld(String uri, String localName, String name)
-				throws SAXException {
-			if (name.equals("Document")) {
-				//Document is the root, nothing to do. 
-			} else if (name.equals("Folder") || name.equals("Placemark")
-					|| name.equals("NetworkLink") || name.equals("GroundOverlay")) {
-				//this was a Feature:
-				KmlFolder parent = (KmlFolder)mKmlFeatureStack.get(mKmlFeatureStack.size()-2); //get parent
-				parent.add(mKmlCurrentFeature); //add current in its parent
-				mKmlFeatureStack.remove(mKmlFeatureStack.size()-1); //pop current from stack
-				mKmlCurrentFeature = mKmlFeatureStack.get(mKmlFeatureStack.size()-1); //set current to top of stack
-				if (name.equals("NetworkLink"))
-					mIsNetworkLink = false;
-				else if (name.equals("GroundOverlay"))
-					mKmlCurrentGroundOverlay = null;
-			} else if (name.equals("innerBoundaryIs")) {
-				mIsInnerBoundary = false;
-			} else if (name.equals("Point") || name.equals("LineString") || name.equals("Polygon")
-					|| name.equals("MultiGeometry") || name.equals("gx:Track")) {
-				//this was a Geometry:
-				if (mKmlGeometryStack.size() == 1){
-					//no MultiGeometry parent: add this Geometry in the current Feature:
-					((KmlPlacemark)mKmlCurrentFeature).mGeometry = mKmlCurrentGeometry;
-					mKmlGeometryStack.remove(mKmlGeometryStack.size()-1); //pop current from stack
-					mKmlCurrentGeometry = null;
-				} else {
-					KmlMultiGeometry parent = (KmlMultiGeometry)mKmlGeometryStack.get(mKmlGeometryStack.size()-2); //get parent
-					parent.addItem(mKmlCurrentGeometry); //add current in its parent
-					mKmlGeometryStack.remove(mKmlGeometryStack.size()-1); //pop current from stack
-					mKmlCurrentGeometry = mKmlGeometryStack.get(mKmlGeometryStack.size()-1); //set current to top of stack
-				}
-			} else if (name.equals("name")) {
-				mKmlCurrentFeature.mName = mStringBuilder.toString();
-			} else if (name.equals("description")) {
-				mKmlCurrentFeature.mDescription = mStringBuilder.toString();
-			} else if (name.equals("visibility")) {
-				mKmlCurrentFeature.mVisibility = ("1".equals(mStringBuilder.toString()));
-			} else if (name.equals("open")) {
-				mKmlCurrentFeature.mOpen = ("1".equals(mStringBuilder.toString()));
-			} else if (name.equals("coordinates")) {
-				if (mKmlCurrentFeature instanceof KmlPlacemark) {
-					if (!mIsInnerBoundary) {
-						mKmlCurrentGeometry.mCoordinates = parseKmlCoordinates(mStringBuilder.toString());
-					} else { //inside a Polygon innerBoundaryIs element: new hole
-						KmlPolygon polygon = (KmlPolygon) mKmlCurrentGeometry;
-						if (polygon.mHoles == null)
-							polygon.mHoles = new ArrayList<ArrayList<GeoPoint>>();
-						ArrayList<GeoPoint> hole = parseKmlCoordinates(mStringBuilder.toString());
-						polygon.mHoles.add(hole);
-					}
-				}
-			} else if (name.equals("gx:coord")) {
-				if (mKmlCurrentGeometry != null && mKmlCurrentGeometry instanceof KmlTrack)
-					((KmlTrack) mKmlCurrentGeometry).addGxCoord(mStringBuilder.toString());
-			} else if (name.equals("when")) {
-				if (mKmlCurrentGeometry != null && mKmlCurrentGeometry instanceof KmlTrack)
-					((KmlTrack) mKmlCurrentGeometry).addWhen(mStringBuilder.toString());
-			} else if (name.equals("styleUrl")) {
-				String styleUrl;
-				if (mStringBuilder.charAt(0) == '#')
-					styleUrl = mStringBuilder.substring(1); //remove the #
-				else //external url: keep as is:
-					styleUrl = mStringBuilder.toString();
-				
-				if (mCurrentStyleMap != null){
-					mCurrentStyleMap.setPair(mCurrentStyleKey, styleUrl);
-				} else if (mKmlCurrentFeature != null){
-					mKmlCurrentFeature.mStyle = styleUrl;
-				}
-			} else if (name.equals("key")) {
-				mCurrentStyleKey = mStringBuilder.toString();
-			} else if (name.equals("color")) {
-				if (mCurrentStyle != null) {
-					if (mColorStyle != null)
-						mColorStyle.mColor = ColorStyle.parseKMLColor(mStringBuilder.toString());
-				} else if (mKmlCurrentGroundOverlay != null){
-					mKmlCurrentGroundOverlay.mColor = ColorStyle.parseKMLColor(mStringBuilder.toString());
-				}
-			} else if (name.equals("colorMode")) {
-				if (mCurrentStyle != null && mColorStyle != null)
-					mColorStyle.mColorMode = (mStringBuilder.toString().equals("random")?ColorStyle.MODE_RANDOM:ColorStyle.MODE_NORMAL);
-			} else if (name.equals("width")) {
-				if (mCurrentStyle != null && mColorStyle != null && mColorStyle instanceof LineStyle)
-					mCurrentStyle.mLineStyle.mWidth = Float.parseFloat(mStringBuilder.toString());
-			} else if (name.equals("scale")) {
-				if (mCurrentStyle != null && mColorStyle != null && mColorStyle instanceof IconStyle){
-					mCurrentStyle.mIconStyle.mScale = Float.parseFloat(mStringBuilder.toString());
-				}
-			} else if (name.equals("heading")) {
-				if (mCurrentStyle != null && mColorStyle != null && mColorStyle instanceof IconStyle){
-					mCurrentStyle.mIconStyle.mHeading = Float.parseFloat(mStringBuilder.toString());
-				}
-			} else if (name.equals("href")) {
-				if (mCurrentStyle != null && mColorStyle != null && mColorStyle instanceof IconStyle) {
-					//href of an Icon in an IconStyle:
-					String href = mStringBuilder.toString();
-					mCurrentStyle.setIcon(href, mFile, mKMZFile);
-				} else if (mIsNetworkLink) {
-					//href of a NetworkLink:
-					String href = mStringBuilder.toString();
-					loadNetworkLink(href, mKMZFile);
-				} else if (mKmlCurrentGroundOverlay != null) {
-					//href of a GroundOverlay Icon:
-					mKmlCurrentGroundOverlay.setIcon(mStringBuilder.toString(), mFile, mKMZFile);
-				}
-			} else if (name.equals("LineStyle")) {
-				mColorStyle = null;
-			} else if (name.equals("PolyStyle")) {
-				mColorStyle = null;
-			} else if (name.equals("IconStyle")) {
-				mColorStyle = null;
-			} else if (name.equals("Style")) {
-				if (mCurrentStyleId != null)
-					putStyle(mCurrentStyleId, mCurrentStyle);
-				else {
-					mCurrentStyleId = addStyle(mCurrentStyle);
-				}
-				if (mKmlCurrentFeature != null && mKmlCurrentFeature != mKmlRoot){
-					//this is an inline style. Set its style id to the KmlObject container:
-					mKmlCurrentFeature.mStyle = mCurrentStyleId;
-				}
-				mCurrentStyle = null;
-				mCurrentStyleId = null;
-			} else if (name.equals("StyleMap")) {
-				if (mCurrentStyleId != null)
-					putStyle(mCurrentStyleId, mCurrentStyleMap);
-				//TODO: inline StyleMap ???
-				mCurrentStyleMap = null;
-				mCurrentStyleId = null;
-				mCurrentStyleKey = null;
-			} else if (name.equals("north")) {
-				mNorth = Double.parseDouble(mStringBuilder.toString());
-			} else if (name.equals("south")) {
-				mSouth = Double.parseDouble(mStringBuilder.toString());
-			} else if (name.equals("east")) {
-				mEast = Double.parseDouble(mStringBuilder.toString());
-			} else if (name.equals("west")) {
-				mWest = Double.parseDouble(mStringBuilder.toString());
-			} else if (name.equals("rotation")) {
-				mKmlCurrentGroundOverlay.mRotation = Float.parseFloat(mStringBuilder.toString());
-			} else if (name.equals("LatLonBox")) {
-				if (mKmlCurrentGroundOverlay != null){
-					mKmlCurrentGroundOverlay.setLatLonBox(mNorth, mSouth, mEast, mWest);
-				}
-			} else if (name.equals("SimpleData")) {
-				//We don't check the schema from SchemaData. We just pick the name and the value from SimpleData:
-				mKmlCurrentFeature.setExtendedData(mDataName, mStringBuilder.toString());
-				mDataName = null;
-			} else if (name.equals("value")) {
-				mKmlCurrentFeature.setExtendedData(mDataName, mStringBuilder.toString());
-				mDataName = null;
-			}
-		}
-		*/
 
 		public void endElement(String uri, String localName, String name)
 				throws SAXException {
@@ -862,6 +631,9 @@ public class KmlDocument implements Parcelable {
 							ArrayList<GeoPoint> hole = parseKmlCoordinates(mStringBuilder.toString());
 							polygon.mHoles.add(hole);
 						}
+					} else if (mKmlCurrentGroundOverlay != null) {
+						//gx:LatLonQuad coordinates:
+						mKmlCurrentGroundOverlay.setLatLonQuad(parseKmlCoordinates(mStringBuilder.toString()));
 					}
 					break;
 				}
