@@ -171,7 +171,7 @@ public class RadiusMarkerClusterer extends MarkerClusterer {
 
     public void zoomOnCluster(MapView mapView, StaticCluster cluster){
         BoundingBox bb = cluster.getBoundingBox();
-        bb.increaseByScale(0.15f);
+        bb = bb.increaseByScale(1.15f);
         mapView.zoomToBoundingBox(bb, true);
     }
 

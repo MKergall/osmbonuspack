@@ -93,6 +93,13 @@ public abstract class MarkerClusterer extends Overlay {
 	public ArrayList<Marker> getItems(){
 		return mItems;
 	}
+
+	protected void hideInfoWindows(){
+		for (Marker m : mItems){
+			if (m.isInfoWindowShown())
+				m.closeInfoWindow();
+		}
+	}
 	
 	@Override public void draw(Canvas canvas, MapView mapView, boolean shadow) {
 		if (shadow)
@@ -100,6 +107,7 @@ public abstract class MarkerClusterer extends Overlay {
 		//if zoom has changed and mapView is now stable, rebuild clusters:
 		int zoomLevel = mapView.getZoomLevel();
 		if (zoomLevel != mLastZoomLevel && !mapView.isAnimating()){
+			hideInfoWindows();
         	mClusters = clusterer(mapView);
         	renderer(mClusters, canvas, mapView);
 			mLastZoomLevel = zoomLevel;
