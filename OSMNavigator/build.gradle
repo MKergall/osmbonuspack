@@ -37,9 +37,9 @@ dependencies {
     //including using JitPack:
     //compile 'com.github.MKergall:osmbonuspack:6.5.3'
 
-    compile 'org.osmdroid:osmdroid-mapsforge:6.1.0@aar'
-    compile 'org.mapsforge:mapsforge-map-android:0.10.0'
-    compile 'org.mapsforge:mapsforge-map:0.10.0'
-    compile 'org.mapsforge:mapsforge-themes:0.10.0'
+    compile 'org.osmdroid:osmdroid-mapsforge:6.1.2@aar'
+    compile 'org.mapsforge:mapsforge-map-android:0.11.0'
+    compile 'org.mapsforge:mapsforge-map:0.11.0'
+    compile 'org.mapsforge:mapsforge-themes:0.11.0'
     compile "com.android.support:support-v4:26.1.0"
 }

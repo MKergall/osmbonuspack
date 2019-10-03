@@ -30,15 +30,15 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     //including when part of the same project
-    //compile project(":OSMBonusPack")
+    compile project(":OSMBonusPack")
     compile "com.android.support:support-v4:26.1.0"
 
     //including using JitPack:
-    compile 'com.github.MKergall:osmbonuspack:6.6.0'
+    //compile 'com.github.MKergall:osmbonuspack:6.7.0'
 
     // including as local lib
     /*
-    compile(name: 'osmbonuspack_v6.6.0', ext: 'aar')
+    compile(name: 'osmbonuspack_v6.7.0', ext: 'aar')
     compile 'org.osmdroid:osmdroid-android:6.1.0'
     compile 'org.apache.commons:commons-lang3:3.3.4'
     compile 'com.google.code.gson:gson:2.8.5'

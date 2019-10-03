@@ -420,6 +420,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		circle.setTitle("Centered on " + p.getLatitude() + "," + p.getLongitude());
 
 		//18. Using GroundOverlay
+		/*
 		GroundOverlay myGroundOverlay = new GroundOverlay();
 		myGroundOverlay.setPosition(p);
 		Drawable d = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_launcher, null);
@@ -429,6 +430,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		myGroundOverlay.setBearing(mGroundOverlayBearing);
 		mGroundOverlayBearing += 20.0f;
 		map.getOverlays().add(myGroundOverlay);
+		*/
 
 		/*
 		Drawable d = ResourcesCompat.getDrawable(getResources(), R.drawable.bonuspack_bubble_black, null);

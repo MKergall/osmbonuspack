@@ -100,7 +100,7 @@ public abstract class MarkerClusterer extends Overlay {
 				m.closeInfoWindow();
 		}
 	}
-	
+
 	@Override public void draw(Canvas canvas, MapView mapView, boolean shadow) {
 		if (shadow)
 			return;
