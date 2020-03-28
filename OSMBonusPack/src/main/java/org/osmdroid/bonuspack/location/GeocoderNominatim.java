@@ -189,7 +189,7 @@ public class GeocoderNominatim {
 	 */
 	public List<Address> getFromLocation(double latitude, double longitude, int maxResults) 
 	throws IOException {
-		String url = mServiceUrl + "reverse?";
+		String url = mServiceUrl + "reverse.php?";
 		if (mKey != null)
 			url += "key=" + mKey + "&";
 		url += "format=json"
@@ -225,7 +225,7 @@ public class GeocoderNominatim {
 			double upperRightLatitude, double upperRightLongitude,
 			boolean bounded)
 	throws IOException {
-		String url = mServiceUrl + "search?";
+		String url = mServiceUrl + "search.php?";
 		if (mKey != null)
 			url += "key=" + mKey + "&";
 		url += "format=json"
