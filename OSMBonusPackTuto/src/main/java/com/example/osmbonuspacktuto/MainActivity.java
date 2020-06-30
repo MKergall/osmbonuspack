@@ -1,8 +1,10 @@
 package com.example.osmbonuspacktuto;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,6 +14,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,6 +60,9 @@ import org.osmdroid.views.overlay.infowindow.InfoWindow;
 import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This is the implementation of OSMBonusPack tutorials.
@@ -237,6 +244,8 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		//16. Handling Map events
 		MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(this);
 		map.getOverlays().add(0, mapEventsOverlay); //inserted at the "bottom" of all overlays
+
+		checkPermissions();
 	}
 
 	//--- Stuff for setting the mapview on a box at startup:
@@ -454,6 +463,46 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 
 		map.invalidate();
 		return true;
+	}
+
+	final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
+
+	void checkPermissions() {
+		List<String> permissions = new ArrayList<>();
+		String message = "Application permissions:";
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+			permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+			message += "\nLocation to show user location.";
+		}
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+			permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+			message += "\nStorage access to store map tiles.";
+		}
+		if (!permissions.isEmpty()) {
+			Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+			String[] params = permissions.toArray(new String[permissions.size()]);
+			ActivityCompat.requestPermissions(this, params, REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+		} // else: We already have permissions, so handle as normal
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+		switch (requestCode) {
+			case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
+				Map<String, Integer> perms = new HashMap<>();
+				// Initial
+				perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+				// Fill with results
+				for (int i = 0; i < permissions.length; i++)
+					perms.put(permissions[i], grantResults[i]);
+				// Check for WRITE_EXTERNAL_STORAGE
+				Boolean storage = perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+				if (!storage) {
+					// Permission Denied
+					Toast.makeText(this, "Storage permission is required to store map tiles to reduce data usage and for offline usage.", Toast.LENGTH_LONG).show();
+				} // else: permission was granted, yay!
+			}
+		}
 	}
 
 }
