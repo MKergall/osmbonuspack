@@ -27,9 +27,6 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
-    //including when part of the same project
     compile project(":OSMBonusPack")
     compile "com.android.support:support-v4:26.1.0"
 

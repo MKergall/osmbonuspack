@@ -16,6 +16,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    lintOptions {
+        disable 'MissingTranslation'
+    }
+
 }
 
 repositories {
@@ -26,8 +31,6 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
     compile 'org.osmdroid:osmdroid-android:6.1.4'
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'com.google.code.gson:gson:2.8.5'
