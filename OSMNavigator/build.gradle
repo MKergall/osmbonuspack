@@ -35,8 +35,8 @@ dependencies {
     //implementation 'com.github.MKergall:osmbonuspack:6.5.3'
 
     implementation 'org.osmdroid:osmdroid-mapsforge:6.1.4@aar'
-    implementation 'org.mapsforge:mapsforge-map-android:0.11.0'
-    implementation 'org.mapsforge:mapsforge-map:0.11.0'
-    implementation 'org.mapsforge:mapsforge-themes:0.11.0'
+    implementation 'org.mapsforge:mapsforge-map-android:0.13.0'
+    implementation 'org.mapsforge:mapsforge-map:0.13.0'
+    implementation 'org.mapsforge:mapsforge-themes:0.13.0'
     implementation "com.android.support:support-v4:28.0.0"
 }
