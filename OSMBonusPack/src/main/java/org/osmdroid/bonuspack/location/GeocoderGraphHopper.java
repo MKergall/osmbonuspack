@@ -12,7 +12,6 @@ import com.google.gson.JsonSyntaxException;
 
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.util.BoundingBox;
-import org.osmdroid.util.GeoPoint;
 
 import java.io.IOException;
 import java.net.URLEncoder;
