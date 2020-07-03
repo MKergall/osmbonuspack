@@ -27,7 +27,7 @@ repositories {
 
 dependencies {
     implementation project(":OSMBonusPack")
-    implementation "com.android.support:support-v4:28.0.0"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     //including using JitPack:
     //implementation 'com.github.MKergall:osmbonuspack:6.7.0'
