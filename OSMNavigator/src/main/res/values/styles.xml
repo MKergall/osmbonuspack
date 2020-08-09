@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- completely inefficient attempts to fix issue #392 -->
+    <style name="MyAppTheme" parent="android:Theme.NoTitleBar">
+        <item name="android:actionMenuTextAppearance">@style/MenuTextAppearance</item>
+    </style>
+    <style name="MenuTextAppearance">
+        <item name="android:textColor">#ffffff</item>
+    </style>
+</resources>
