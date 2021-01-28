@@ -19,7 +19,7 @@ import java.util.ArrayList;
  */
 public class MapQuestRoadManager extends RoadManager {
 
-    static final String MAPQUEST_GUIDANCE_SERVICE = "http://open.mapquestapi.com/guidance/v2/route?";
+    static final String MAPQUEST_GUIDANCE_SERVICE = "https://open.mapquestapi.com/guidance/v2/route?";
     protected String mApiKey;
 
     /**
