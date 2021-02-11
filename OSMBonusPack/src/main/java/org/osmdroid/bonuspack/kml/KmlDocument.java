@@ -434,6 +434,8 @@ public class KmlDocument implements Parcelable {
 			if (element != null) {
 				switch (element) {
 					case Document: {
+						//TODO Issue #397 :
+						// if (on a déjà un Document) {qu'est-ce qu'on fait ?...}
 						mKmlCurrentFeature = mKmlRoot; //If there is a Document, it will be the root.
 						mKmlCurrentFeature.mId = attributes.getValue("id");
 						break;
