@@ -32,8 +32,8 @@ public class NominatimPOIProvider {
 		 * nearlat & nearlon = ???<br>
 		 * routewidth. routewidth/69 and routewidth/30 ???<br>
 */
-	public static final String NOMINATIM_POI_SERVICE = "http://nominatim.openstreetmap.org/";
-	public static final String MAPQUEST_POI_SERVICE = "http://open.mapquestapi.com/nominatim/v1/";
+	public static final String NOMINATIM_POI_SERVICE = "https://nominatim.openstreetmap.org/";
+	public static final String MAPQUEST_POI_SERVICE = "https://open.mapquestapi.com/nominatim/v1/";
 	protected String mService;
 	protected String mUserAgent;
 	

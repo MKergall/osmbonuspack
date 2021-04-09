@@ -418,10 +418,10 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		//Toast.makeText(this, "Long press", Toast.LENGTH_SHORT).show();
 		//17. Using Polygon, defined as a circle:
 		Polygon circle = new Polygon();
-		circle.setPoints(Polygon.pointsAsCircle(p, 2000.0));
-		circle.setFillColor(0x12121212);
-		circle.setStrokeColor(Color.RED);
-		circle.setStrokeWidth(2);
+		circle.setPoints(Polygon.pointsAsCircle(p, 10000.0));
+		circle.getFillPaint().setColor(0x12121212);
+		circle.getOutlinePaint().setColor(Color.RED);
+		circle.getOutlinePaint().setStrokeWidth(2);
 		map.getOverlays().add(circle);
 		circle.setInfoWindow(new BasicInfoWindow(org.osmdroid.bonuspack.R.layout.bonuspack_bubble, map));
 		circle.setTitle("Centered on " + p.getLatitude() + "," + p.getLongitude());

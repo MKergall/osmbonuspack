@@ -40,8 +40,8 @@ import java.util.Set;
  */
 public class OverpassAPIProvider {
 
-	public static final String OVERPASS_API_DE_SERVICE = "http://overpass-api.de/api/interpreter";
-	public static final String OVERPASS_API_SERVICE = "http://api.openstreetmap.fr/oapi/interpreter";
+	public static final String OVERPASS_API_DE_SERVICE = "https://overpass-api.de/api/interpreter";
+	public static final String OVERPASS_API_SERVICE = "https://api.openstreetmap.fr/oapi/interpreter";
 	protected String mService;
 	
 	public OverpassAPIProvider(){
