@@ -31,8 +31,8 @@ import java.util.Locale;
  * @author M.Kergall
  */
 public class GeocoderNominatim {
-	public static final String NOMINATIM_SERVICE_URL = "http://nominatim.openstreetmap.org/";
-	public static final String MAPQUEST_SERVICE_URL = "http://open.mapquestapi.com/nominatim/v1/";
+	public static final String NOMINATIM_SERVICE_URL = "https://nominatim.openstreetmap.org/";
+	public static final String MAPQUEST_SERVICE_URL = "https://open.mapquestapi.com/nominatim/v1/";
 	
 	protected Locale mLocale;
 	protected String mServiceUrl, mKey;
