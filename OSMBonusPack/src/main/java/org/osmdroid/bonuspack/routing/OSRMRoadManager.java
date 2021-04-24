@@ -28,9 +28,13 @@ import java.util.HashMap;
  */
 public class OSRMRoadManager extends RoadManager {
 
-	static final String SERVICE = "https://router.project-osrm.org/route/v1/driving/";
+	static final String DEFAULT_SERVICE = "https://routing.openstreetmap.de/";
+	public static final String MEAN_BY_CAR = "routed-car/route/v1/driving/";
+	public static final String MEAN_BY_BIKE = "routed-bike/route/v1/driving/";
+	public static final String MEAN_BY_FOOT = "routed-foot/route/v1/driving/";
 	private final Context mContext;
 	protected String mServiceUrl;
+	protected String mMeanUrl;
 	protected String mUserAgent;
 
 	/**
@@ -113,11 +117,12 @@ public class OSRMRoadManager extends RoadManager {
 		DIRECTIONS.put(34, R.string.osmbonuspack_directions_34);
 	}
 
-	public OSRMRoadManager(Context context){
+	public OSRMRoadManager(Context context, String userAgent){
 		super();
 		mContext = context;
-		mServiceUrl = SERVICE;
-		mUserAgent = BonusPackHelper.DEFAULT_USER_AGENT; //set user agent to the default one. 
+		mUserAgent = userAgent;
+		mServiceUrl = DEFAULT_SERVICE;
+		mMeanUrl = MEAN_BY_CAR;
 	}
 	
 	/** allows to request on an other site than OSRM demo site */
@@ -125,15 +130,13 @@ public class OSRMRoadManager extends RoadManager {
 		mServiceUrl = serviceUrl;
 	}
 
-	/** allows to send to OSRM service a user agent specific to the app, 
-	 * instead of the default user agent of OSMBonusPack lib. 
-	 */
-	public void setUserAgent(String userAgent){
-		mUserAgent = userAgent;
+	/** to switch to another mean of transportation */
+	public void setMean(String meanUrl){
+		mMeanUrl = meanUrl;
 	}
-	
+
 	protected String getUrl(ArrayList<GeoPoint> waypoints, boolean getAlternate) {
-		StringBuilder urlString = new StringBuilder(mServiceUrl);
+		StringBuilder urlString = new StringBuilder(mServiceUrl+mMeanUrl);
 		for (int i=0; i<waypoints.size(); i++){
 			GeoPoint p = waypoints.get(i);
 			if (i>0)

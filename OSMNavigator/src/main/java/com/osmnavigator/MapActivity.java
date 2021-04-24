@@ -175,7 +175,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	OnlineTileSourceBase MAPBOXSATELLITELABELLED;
 	boolean mNightMode;
 
-	static final String userAgent = "OsmNavigator/2.2";
+	static final String userAgent = "OsmNavigator/2.3";
 
 	static String graphHopperApiKey;
 	static String flickrApiKey;
@@ -973,9 +973,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			Locale locale = Locale.getDefault();
 			switch (mWhichRouteProvider){
 			case OSRM:
-				roadManager = new OSRMRoadManager(mContext);
-				// TEST TEST TEST of MapQuest API V2:
-				//roadManager = new MapQuestRoadManager("Fmjtd|luubn10zn9,8s=o5-90rnq6");
+				roadManager = new OSRMRoadManager(mContext, userAgent);
 				break;
 			case GRAPHHOPPER_FASTEST:
 				roadManager = new GraphHopperRoadManager(graphHopperApiKey, false);

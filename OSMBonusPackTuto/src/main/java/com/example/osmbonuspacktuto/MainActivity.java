@@ -107,10 +107,9 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		map.getOverlays().add(startMarker);
 
 		//1. "Hello, Routing World"
-		RoadManager roadManager = new OSRMRoadManager(this);
+		RoadManager roadManager = new OSRMRoadManager(this, "OBP_Tuto/1.0");
 		//2. Playing with the RoadManager
-		//roadManager roadManager = new MapQuestRoadManager("YOUR_API_KEY");
-		//roadManager.addRequestOption("routeType=bicycle");
+		//((OSRMRoadManager)roadManager).setMean(OSRMRoadManager.MEAN_BY_BIKE);
 		ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
 		waypoints.add(startPoint);
 		GeoPoint endPoint = new GeoPoint(48.4, -1.9);
