@@ -26,11 +26,11 @@ repositories {
 }
 
 dependencies {
-    implementation project(":OSMBonusPack")
+    //implementation project(":OSMBonusPack")
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     //including using JitPack:
-    //implementation 'com.github.MKergall:osmbonuspack:6.7.0'
+    implementation 'com.github.MKergall:osmbonuspack:6.7.0'
 
     // including as local lib
     /*
