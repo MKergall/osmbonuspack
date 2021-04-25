@@ -309,7 +309,11 @@ public class FriendsManager {
         for (Friend friend : mFriends) {
             //MarkerLabeled marker = new MarkerLabeled(map);
             Marker marker = new Marker(mMap);
-            marker.setPosition(friend.mPosition);
+            try {
+                marker.setPosition(friend.mPosition);
+            } catch (Exception IllegalArgumentException) {
+                marker.setPosition(new GeoPoint(0.0,0.0,0.0));
+            }
             marker.setTitle(friend.mNickName);
             marker.setSnippet(friend.mMessage);
             if (friend.mOnline) {

@@ -40,6 +40,7 @@ import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.bonuspack.routing.RoadNode;
+import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.util.BoundingBox;
@@ -169,8 +170,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 		RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(this);
 		//end of 10.
 		//11.1 Customizing the clusters design
-		Drawable clusterIconD = ResourcesCompat.getDrawable(getResources(), R.drawable.marker_poi_cluster, null);
-		Bitmap clusterIcon = ((BitmapDrawable) clusterIconD).getBitmap();
+		Bitmap clusterIcon = BonusPackHelper.getBitmapFromVectorDrawable(this, R.drawable.marker_poi_cluster);
 		poiMarkers.setIcon(clusterIcon);
 		poiMarkers.getTextPaint().setTextSize(12 * getResources().getDisplayMetrics().density);
 		poiMarkers.mAnchorV = Marker.ANCHOR_BOTTOM;

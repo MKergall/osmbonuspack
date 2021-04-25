@@ -27,4 +27,5 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.8.1'
     api 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.okhttp3:okhttp:4.7.2'
+    implementation 'androidx.core:core:1.2.0'
 }

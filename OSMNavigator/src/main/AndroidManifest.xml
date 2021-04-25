@@ -11,13 +11,14 @@
     <application
         android:icon="@drawable/icon"
         android:label="@string/app_name"
+        android:usesCleartextTraffic="true"
         android:largeHeap="true">
 
         <!-- IMPORTANT - these API keys and accounts have been provided EXCLUSIVELY to OSMNavigator application.
             Developers of other applications must request their own API key from the corresponding service provider. -->
         <meta-data
             android:name="MAPBOX_MAPID"
-            android:value="mapbox.streets-satellite"/>
+            android:value="mapbox.satellite"/>
         <meta-data
             android:name="MAPBOX_ACCESS_TOKEN"
             android:value="pk.eyJ1IjoibWtlciIsImEiOiJjaWh0bGtyZDIwMDM4dzFrcDlmOTFlbm8zIn0.gHt6BSiGpb19TqUEjD8bxw"/>

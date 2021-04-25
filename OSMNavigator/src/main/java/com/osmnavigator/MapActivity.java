@@ -25,11 +25,14 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
+
 import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -175,7 +178,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	OnlineTileSourceBase MAPBOXSATELLITELABELLED;
 	boolean mNightMode;
 
-	static final String userAgent = "OsmNavigator/2.3";
+	static final String userAgent = "OsmNavigator/2.4";
 
 	static String graphHopperApiKey;
 	static String flickrApiKey;
@@ -376,8 +379,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		});
 		//POI markers:
 		mPoiMarkers = new RadiusMarkerClusterer(this);
-		Drawable clusterIconD = ResourcesCompat.getDrawable(getResources(), R.drawable.marker_poi_cluster, null);
-		Bitmap clusterIcon = ((BitmapDrawable)clusterIconD).getBitmap();
+		Bitmap clusterIcon = BonusPackHelper.getBitmapFromVectorDrawable(this, R.drawable.marker_poi_cluster);
 		mPoiMarkers.setIcon(clusterIcon);
 		mPoiMarkers.mAnchorV = Marker.ANCHOR_BOTTOM;
 		mPoiMarkers.mTextAnchorU = 0.70f;
