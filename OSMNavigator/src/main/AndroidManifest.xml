@@ -18,7 +18,7 @@
             Developers of other applications must request their own API key from the corresponding service provider. -->
         <meta-data
             android:name="MAPBOX_MAPID"
-            android:value="mapbox.satellite"/>
+            android:value="satellite-streets-v11"/>
         <meta-data
             android:name="MAPBOX_ACCESS_TOKEN"
             android:value="pk.eyJ1IjoibWtlciIsImEiOiJjaWh0bGtyZDIwMDM4dzFrcDlmOTFlbm8zIn0.gHt6BSiGpb19TqUEjD8bxw"/>

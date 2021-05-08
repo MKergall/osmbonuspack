@@ -91,6 +91,7 @@ import org.osmdroid.tileprovider.util.ManifestUtil;
 import org.osmdroid.tileprovider.util.SimpleRegisterReceiver;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.util.MapTileIndex;
 import org.osmdroid.util.NetworkLocationIgnorer;
 import org.osmdroid.util.TileSystem;
 import org.osmdroid.views.CustomZoomButtonsController;
@@ -201,7 +202,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 
 		SharedPreferences prefs = getSharedPreferences("OSMNAVIGATOR", MODE_PRIVATE);
 
-		MAPBOXSATELLITELABELLED = new MapBoxTileSource("MapBoxSatelliteLabelled", 1, 19, 256, ".png");
+		MAPBOXSATELLITELABELLED = new MapBoxTileSourceFixed("MapBoxSatelliteLabelled", 1, 19, 256);
 		((MapBoxTileSource) MAPBOXSATELLITELABELLED).retrieveAccessToken(this);
 		((MapBoxTileSource) MAPBOXSATELLITELABELLED).retrieveMapBoxMapId(this);
 		TileSourceFactory.addTileSource(MAPBOXSATELLITELABELLED);
@@ -1865,6 +1866,28 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 				break;
 			default:
 				break;
+		}
+	}
+
+	//waiting for osmdroid #1718 to be fixed:
+	class MapBoxTileSourceFixed extends MapBoxTileSource {
+		MapBoxTileSourceFixed(String name, int zoomMinLevel, int zoomMaxLevel, int tileSizePixels) {
+			super(name, zoomMinLevel, zoomMaxLevel, tileSizePixels, "");
+		}
+
+		@Override public String getTileURLString(final long pMapTileIndex) {
+			StringBuilder url = new StringBuilder("https://api.mapbox.com/styles/v1/mapbox/");
+			url.append(getMapBoxMapId());
+			url.append("/tiles/");
+			url.append(MapTileIndex.getZoom(pMapTileIndex));
+			url.append("/");
+			url.append(MapTileIndex.getX(pMapTileIndex));
+			url.append("/");
+			url.append(MapTileIndex.getY(pMapTileIndex));
+			//url.append("@2x"); //for high-res
+			url.append("?access_token=").append(getAccessToken());
+			String res = url.toString();
+			return res;
 		}
 	}
 
