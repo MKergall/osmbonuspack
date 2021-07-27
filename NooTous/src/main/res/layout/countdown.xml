@@ -7,6 +7,18 @@
     tools:context=".Countdown">
 
     <TextView
+        android:id="@+id/textview_groupname"
+        android:text="-"
+        android:textSize="32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/textview_countdown"
+        />
+
+    <TextView
         android:id="@+id/textview_countdown"
         android:text="-"
         android:textSize="48dp"
@@ -14,7 +26,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/textview_groupname"
         app:layout_constraintBottom_toBottomOf="parent"
         />
 

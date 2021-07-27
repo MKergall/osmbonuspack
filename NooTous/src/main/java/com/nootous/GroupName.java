@@ -35,7 +35,7 @@ public class GroupName extends Fragment {
         String groupName = mActivity.getSharedPreferences("NOOTOUS", mActivity.MODE_PRIVATE).getString("GROUP_NAME", "");
         binding.groupName.setText(groupName);
 
-        binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
+        binding.buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
                 String groupName = binding.groupName.getText().toString();
                 SharedPreferences prefs = getActivity().getSharedPreferences("NOOTOUS", getActivity().MODE_PRIVATE);

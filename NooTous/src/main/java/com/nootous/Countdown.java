@@ -1,6 +1,11 @@
 package com.nootous;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,9 +14,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -24,23 +32,41 @@ import com.nootous.databinding.CountdownBinding;
 
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.util.NetworkLocationIgnorer;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
-public class Countdown extends Fragment {
+public class Countdown extends Fragment implements LocationListener {
 
     private CountdownBinding binding;
     private boolean mIsSharing;
     private int mCountdown;
     private float mAzimuthAngleSpeed = 0.0f;
     private Activity mActivity;
+    protected LocationManager mLocationManager;
 
-    @Override public View onCreateView(
+    @Override
+    public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState
     ) {
         mActivity = getActivity();
+        checkPermissions();
+
+        mLocationManager = (LocationManager)mActivity.getSystemService(mActivity.LOCATION_SERVICE);
+        Location location = null;
+        if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location == null)
+                location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        }
+        if (location != null) {
+            //location known:
+            onLocationChanged(location);
+        }
+
         binding = CountdownBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -51,6 +77,7 @@ public class Countdown extends Fragment {
         String groupName = mActivity.getSharedPreferences("NOOTOUS", mActivity.MODE_PRIVATE).getString("GROUP_NAME", "");
         String message = "";
         new StartSharingTask().execute(nickname, groupName, message);
+        binding.textviewGroupname.setText(groupName);
     }
 
     @Override public void onDestroyView() {
@@ -59,12 +86,25 @@ public class Countdown extends Fragment {
         binding = null;
     }
 
+    final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
+
+    void checkPermissions() {
+        List<String> permissions = new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+        if (!permissions.isEmpty()) {
+            String[] params = permissions.toArray(new String[permissions.size()]);
+            ActivityCompat.requestPermissions(mActivity, params, REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+        } // else: We already have permissions, so handle as normal
+    }
+
     //--------------------------------------------
 
     protected static final String NAV_SERVER_URL = "http://comob.free.fr/sharing/";
 
     public String getUniqueId() {
-        return Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+        return Settings.Secure.getString(mActivity.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
     String callStartSharing(String nickname, String group, String message) {
@@ -96,11 +136,13 @@ public class Countdown extends Fragment {
     }
 
     private class StartSharingTask extends AsyncTask<String, Void, String> {
-        @Override protected String doInBackground(String... params) {
+        @Override
+        protected String doInBackground(String... params) {
             return callStartSharing(params[0], params[1], params[2]);
         }
 
-        @Override protected void onPostExecute(String error) {
+        @Override
+        protected void onPostExecute(String error) {
             if (error == null) {
                 startSharingTimer();
                 mIsSharing = true;
@@ -132,7 +174,7 @@ public class Countdown extends Fragment {
     }
 
     String callUpdateSharing() {
-        GeoPoint myPosition = null; //mActivity.myLocationOverlay.getLocation();
+        GeoPoint myPosition = mCurrentLocation;
         int hasLocation = (myPosition != null ? 1 : 0);
         if (myPosition == null)
             myPosition = new GeoPoint(0.0, 0.0);
@@ -161,7 +203,7 @@ public class Countdown extends Fragment {
                 return jResult.get("error").getAsString();
             }
             JsonArray jFriends = jResult.get("people").getAsJsonArray();
-            mCountdown = jFriends.size()+1;//+1 because myself is not listed in friends
+            mCountdown = jFriends.size() + 1;//+1 because myself is not listed in friends
         } catch (JsonSyntaxException e) {
             return "Technical error with the server";
         }
@@ -169,11 +211,13 @@ public class Countdown extends Fragment {
     }
 
     private class UpdateSharingTask extends AsyncTask<Void, Void, String> {
-        @Override protected String doInBackground(Void... params) {
+        @Override
+        protected String doInBackground(Void... params) {
             return callUpdateSharing();
         }
 
-        @Override protected void onPostExecute(String error) {
+        @Override
+        protected void onPostExecute(String error) {
             if (error == null) {
                 binding.textviewCountdown.setText(String.valueOf(mCountdown));
             } else
@@ -209,7 +253,8 @@ public class Countdown extends Fragment {
 
     private class StopSharingTask extends AsyncTask<Void, Void, String> {
         @Override protected String doInBackground(Void... params) {
-            return callStopSharing();
+            //return callStopSharing();
+            return null;
         }
 
         @Override protected void onPostExecute(String error) {
@@ -220,4 +265,38 @@ public class Countdown extends Fragment {
                 Toast.makeText(mActivity.getApplicationContext(), error, Toast.LENGTH_SHORT).show();
         }
     }
+
+    //------------ LocationListener implementation
+    private final NetworkLocationIgnorer mIgnorer = new NetworkLocationIgnorer();
+    long mLastTime = 0; // milliseconds
+    double mSpeed = 0.0; // km/h
+    GeoPoint mCurrentLocation = null;
+
+    @Override public void onLocationChanged(final Location pLoc) {
+        long currentTime = System.currentTimeMillis();
+        if (mIgnorer.shouldIgnore(pLoc.getProvider(), currentTime))
+            return;
+        double dT = currentTime - mLastTime;
+        if (dT < 100.0) {
+            return;
+        }
+        mLastTime = currentTime;
+
+        mCurrentLocation = new GeoPoint(pLoc);
+
+        if (pLoc.getProvider().equals(LocationManager.GPS_PROVIDER)) {
+            mSpeed = pLoc.getSpeed() * 3.6;
+            long speedInt = Math.round(mSpeed);
+            if (mSpeed >= 0.1) {
+                mAzimuthAngleSpeed = pLoc.getBearing();
+            }
+        }
+    }
+
+    @Override public void onProviderDisabled(String provider) {}
+
+    @Override public void onProviderEnabled(String provider) {}
+
+    @Override public void onStatusChanged(String provider, int status, Bundle extras) {}
+
 }
