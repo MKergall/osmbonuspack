@@ -180,7 +180,7 @@ public class Countdown extends Fragment implements LocationListener {
             myPosition = new GeoPoint(0.0, 0.0);
         String url = null;
         try {
-            url = NAV_SERVER_URL + "jupdate.php?"
+            url = NAV_SERVER_URL + "nupdate.php?"
                     + "user_id=" + URLEncoder.encode(getUniqueId(), "UTF-8")
                     + "&has_location=" + hasLocation
                     + "&lat=" + myPosition.getLatitude()
@@ -202,8 +202,7 @@ public class Countdown extends Fragment implements LocationListener {
             if (!"ok".equals(answer)) {
                 return jResult.get("error").getAsString();
             }
-            JsonArray jFriends = jResult.get("people").getAsJsonArray();
-            mCountdown = jFriends.size() + 1;//+1 because myself is not listed in friends
+            mCountdown = jResult.get("countdown").getAsInt();
         } catch (JsonSyntaxException e) {
             return "Technical error with the server";
         }
