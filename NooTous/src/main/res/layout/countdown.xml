@@ -7,6 +7,16 @@
     tools:context=".Countdown">
 
     <TextView
+        android:id="@+id/timer"
+        android:text="-"
+        android:textSize="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <TextView
         android:id="@+id/textview_groupname"
         android:text="-"
         android:textSize="32dp"

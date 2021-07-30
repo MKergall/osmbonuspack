@@ -8,22 +8,20 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -41,7 +39,7 @@ import java.util.List;
 
 public class Countdown extends Fragment implements LocationListener {
 
-    private CountdownBinding binding;
+    private CountdownBinding mBinding;
     private boolean mIsSharing;
     private int mCountdown;
     private float mAzimuthAngleSpeed = 0.0f;
@@ -55,6 +53,7 @@ public class Countdown extends Fragment implements LocationListener {
         mActivity = getActivity();
         checkPermissions();
 
+        //Get initial location:
         mLocationManager = (LocationManager)mActivity.getSystemService(mActivity.LOCATION_SERVICE);
         Location location = null;
         if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -67,8 +66,8 @@ public class Countdown extends Fragment implements LocationListener {
             onLocationChanged(location);
         }
 
-        binding = CountdownBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        mBinding = CountdownBinding.inflate(inflater, container, false);
+        return mBinding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -77,13 +76,14 @@ public class Countdown extends Fragment implements LocationListener {
         String groupName = mActivity.getSharedPreferences("NOOTOUS", mActivity.MODE_PRIVATE).getString("GROUP_NAME", "");
         String message = "";
         new StartSharingTask().execute(nickname, groupName, message);
-        binding.textviewGroupname.setText(groupName);
+
+        mBinding.textviewGroupname.setText(groupName);
     }
 
     @Override public void onDestroyView() {
         new StopSharingTask().execute();
         super.onDestroyView();
-        binding = null;
+        mBinding = null;
     }
 
     final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
@@ -107,6 +107,7 @@ public class Countdown extends Fragment implements LocationListener {
         return Settings.Secure.getString(mActivity.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
+    //Start Sharing
     String callStartSharing(String nickname, String group, String message) {
         String url = null;
         try {
@@ -152,13 +153,15 @@ public class Countdown extends Fragment implements LocationListener {
         }
     }
 
-    private static final int SHARING_INTERVAL = 30 * 1000; //every 30 sec
+    //Update Sharing
+    private static final int TICK_INTERVAL = 1000; //one tick every second
+    private static final int SHARING_INTERVAL = 30; //update every 30 sec
     private Handler mSharingHandler;
     private Runnable mSharingRunnable = new Runnable() {
         @Override
         public void run() {
             new UpdateSharingTask().execute();
-            mSharingHandler.postDelayed(this, SHARING_INTERVAL);
+            mSharingHandler.postDelayed(this, TICK_INTERVAL);
         }
     };
 
@@ -209,21 +212,31 @@ public class Countdown extends Fragment implements LocationListener {
         return null;
     }
 
+    int mTick = 0;
+
     private class UpdateSharingTask extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... params) {
-            return callUpdateSharing();
+            if (mTick == 0) {
+                mTick = SHARING_INTERVAL;
+                return callUpdateSharing();
+            } else {
+                mTick--;
+                return null;
+            }
         }
 
         @Override
         protected void onPostExecute(String error) {
+            mBinding.timer.setText(String.valueOf(mTick));
             if (error == null) {
-                binding.textviewCountdown.setText(String.valueOf(mCountdown));
+                mBinding.textviewCountdown.setText(String.valueOf(mCountdown));
             } else
                 Toast.makeText(mActivity.getApplicationContext(), error, Toast.LENGTH_SHORT).show();
         }
     }
 
+    //Stop Sharing
     String callStopSharing() {
         String url = null;
         try {
@@ -268,7 +281,7 @@ public class Countdown extends Fragment implements LocationListener {
     //------------ LocationListener implementation
     private final NetworkLocationIgnorer mIgnorer = new NetworkLocationIgnorer();
     long mLastTime = 0; // milliseconds
-    double mSpeed = 0.0; // km/h
+    //double mSpeed = 0.0; // km/h
     GeoPoint mCurrentLocation = null;
 
     @Override public void onLocationChanged(final Location pLoc) {
@@ -284,11 +297,8 @@ public class Countdown extends Fragment implements LocationListener {
         mCurrentLocation = new GeoPoint(pLoc);
 
         if (pLoc.getProvider().equals(LocationManager.GPS_PROVIDER)) {
-            mSpeed = pLoc.getSpeed() * 3.6;
-            long speedInt = Math.round(mSpeed);
-            if (mSpeed >= 0.1) {
-                mAzimuthAngleSpeed = pLoc.getBearing();
-            }
+            //mSpeed = pLoc.getSpeed() * 3.6;
+            mAzimuthAngleSpeed = pLoc.getBearing();
         }
     }
 
