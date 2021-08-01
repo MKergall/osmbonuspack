@@ -20,6 +20,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
+import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -46,7 +47,7 @@ public class FriendsManager {
     private Button mFriendsButton;
     private static ArrayList<Friend> mFriends; //
     private boolean mIsSharing;
-    private FolderOverlay mFriendsMarkers; //
+    private RadiusMarkerClusterer mFriendsMarkers; //
     private boolean mRecordTracks;
 
     public FriendsManager(MapActivity activity, MapView map) {
@@ -60,7 +61,7 @@ public class FriendsManager {
     }
 
     public void onCreate(Bundle savedInstanceState) {
-        mFriendsMarkers = new FolderOverlay();
+        mFriendsMarkers = new RadiusMarkerClusterer(mActivity);
         mMap.getOverlays().add(mFriendsMarkers);
         if (savedInstanceState != null) {
             //STATIC mFriends = savedInstanceState.getParcelable("friends");
@@ -172,8 +173,7 @@ public class FriendsManager {
             return "Technical error with the server";
         }
         try {
-            JsonParser parser = new JsonParser();
-            JsonElement json = parser.parse(result);
+            JsonElement json = JsonParser.parseString(result);
             JsonObject jResult = json.getAsJsonObject();
             String answer = jResult.get("answer").getAsString();
             if (!"ok".equals(answer)) {
@@ -200,13 +200,19 @@ public class FriendsManager {
         }
     }
 
-    private static final int SHARING_INTERVAL = 20 * 1000; //every 20 sec
+    private static final long SHARING_INTERVAL_SHORT = 20 * 1000; //every 20 sec
+    private static final long SHARING_INTERVAL_LONG = 60 * 1000; //every minute
     private Handler mSharingHandler;
+
     private Runnable mSharingRunnable = new Runnable() {
         @Override
         public void run() {
             new UpdateSharingTask().execute();
-            mSharingHandler.postDelayed(this, SHARING_INTERVAL);
+            //adjust update frequency to the size of the group:
+            int n = (mFriends == null ? 0 : mFriends.size());
+            long sharingInterval = (n<100 ? SHARING_INTERVAL_SHORT : SHARING_INTERVAL_LONG);
+            //request next update:
+            mSharingHandler.postDelayed(this, sharingInterval);
         }
     };
 
@@ -244,8 +250,7 @@ public class FriendsManager {
             return "Technical error with the server";
         }
         try {
-            JsonParser parser = new JsonParser();
-            JsonElement json = parser.parse(result);
+            JsonElement json = JsonParser.parseString(result);
             JsonObject jResult = json.getAsJsonObject();
             String answer = jResult.get("answer").getAsString();
             if (!"ok".equals(answer)) {
@@ -264,15 +269,12 @@ public class FriendsManager {
         return null;
     }
 
-    int getOpenedInfoWindow(FolderOverlay folder) {
-        List<Overlay> items = mFriendsMarkers.getItems();
+    int getOpenedInfoWindow(RadiusMarkerClusterer folder) {
+        ArrayList<Marker> items = mFriendsMarkers.getItems();
         for (int i = 0; i < items.size(); i++) {
-            Overlay overlay = items.get(i);
-            if (overlay instanceof Marker) {
-                Marker m = (Marker) overlay;
-                if (m.isInfoWindowShown())
+            Marker m = items.get(i);
+            if (m.isInfoWindowShown())
                     return i;
-            }
         }
         return -1;
     }
@@ -298,7 +300,7 @@ public class FriendsManager {
             openedFriendId = openedFriend.mId;
         }
 
-        mFriendsMarkers.closeAllInfoWindows();
+        //mFriendsMarkers.closeAllInfoWindows(); TODO
         mFriendsMarkers.getItems().clear();
         if (mFriends == null) {
             mMap.invalidate();
@@ -382,8 +384,7 @@ public class FriendsManager {
             return "Technical error with the server";
         }
         try {
-            JsonParser parser = new JsonParser();
-            JsonElement json = parser.parse(result);
+            JsonElement json = JsonParser.parseString(result);
             JsonObject jResult = json.getAsJsonObject();
             String answer = jResult.get("answer").getAsString();
             if (!"ok".equals(answer)) {

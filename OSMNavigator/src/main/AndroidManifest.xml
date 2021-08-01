@@ -12,6 +12,7 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true"
         android:largeHeap="true">
 
         <!-- IMPORTANT - these API keys and accounts have been provided EXCLUSIVELY to OSMNavigator application.
