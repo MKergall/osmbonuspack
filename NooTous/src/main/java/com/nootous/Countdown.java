@@ -123,8 +123,7 @@ public class Countdown extends Fragment implements LocationListener {
             return "Technical error with the server";
         }
         try {
-            JsonParser parser = new JsonParser();
-            JsonElement json = parser.parse(result);
+            JsonElement json = JsonParser.parseString(result);
             JsonObject jResult = json.getAsJsonObject();
             String answer = jResult.get("answer").getAsString();
             if (!"ok".equals(answer)) {
@@ -198,8 +197,7 @@ public class Countdown extends Fragment implements LocationListener {
             return "Technical error with the server";
         }
         try {
-            JsonParser parser = new JsonParser();
-            JsonElement json = parser.parse(result);
+            JsonElement json = JsonParser.parseString(result);
             JsonObject jResult = json.getAsJsonObject();
             String answer = jResult.get("answer").getAsString();
             if (!"ok".equals(answer)) {
@@ -250,8 +248,7 @@ public class Countdown extends Fragment implements LocationListener {
             return "Technical error with the server";
         }
         try {
-            JsonParser parser = new JsonParser();
-            JsonElement json = parser.parse(result);
+            JsonElement json = JsonParser.parseString(result);
             JsonObject jResult = json.getAsJsonObject();
             String answer = jResult.get("answer").getAsString();
             if (!"ok".equals(answer)) {
