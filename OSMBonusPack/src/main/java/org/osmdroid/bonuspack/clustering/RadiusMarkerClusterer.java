@@ -39,6 +39,7 @@ public class RadiusMarkerClusterer extends MarkerClusterer {
     protected Paint mTextPaint;
     private ArrayList<Marker> mClonedMarkers;
     protected boolean mAnimated;
+    int mDensityDpi;
 
     /** cluster icon anchor */
     public float mAnchorU = Marker.ANCHOR_CENTER, mAnchorV = Marker.ANCHOR_CENTER;
@@ -57,6 +58,7 @@ public class RadiusMarkerClusterer extends MarkerClusterer {
         Bitmap clusterIcon = ((BitmapDrawable) clusterIconD).getBitmap();
         setIcon(clusterIcon);
         mAnimated = true;
+        mDensityDpi = ctx.getResources().getDisplayMetrics().densityDpi;
     }
 
     /** If you want to change the default text paint (color, size, font) */
@@ -122,7 +124,8 @@ public class RadiusMarkerClusterer extends MarkerClusterer {
         m.setInfoWindow(null);
         m.setAnchor(mAnchorU, mAnchorV);
 
-        Bitmap finalIcon = Bitmap.createBitmap(mClusterIcon.getWidth(), mClusterIcon.getHeight(), mClusterIcon.getConfig());
+        Bitmap finalIcon = Bitmap.createBitmap(mClusterIcon.getScaledWidth(mDensityDpi),
+                mClusterIcon.getScaledHeight(mDensityDpi), mClusterIcon.getConfig());
         Canvas iconCanvas = new Canvas(finalIcon);
         iconCanvas.drawBitmap(mClusterIcon, 0, 0, null);
         String text = "" + cluster.getSize();
