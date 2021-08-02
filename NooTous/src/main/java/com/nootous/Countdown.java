@@ -34,6 +34,8 @@ import org.osmdroid.util.NetworkLocationIgnorer;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -228,7 +230,10 @@ public class Countdown extends Fragment implements LocationListener {
         protected void onPostExecute(String error) {
             mBinding.timer.setText(String.valueOf(mTick));
             if (error == null) {
-                mBinding.textviewCountdown.setText(String.valueOf(mCountdown));
+                DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
+                DecimalFormat formatter = new DecimalFormat("###,###,###", symbols);
+                String countdown = formatter.format(mCountdown);
+                mBinding.textviewCountdown.setText(countdown);
             } else
                 Toast.makeText(mActivity.getApplicationContext(), error, Toast.LENGTH_SHORT).show();
         }
