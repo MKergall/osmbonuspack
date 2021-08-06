@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">NooTous</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="first_fragment_label">Nombre del evento</string>
+    <string name="second_fragment_label">Cuenta</string>
+    <string name="next">Próximo</string>
+    <string name="hello_first_fragment">Nombre del evento :</string>
+    <string name="group_name">Nombre del evento</string>
+</resources>

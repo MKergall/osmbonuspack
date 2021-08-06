@@ -2,15 +2,19 @@ package com.nootous;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.provider.Settings;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +26,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -47,6 +52,7 @@ public class Countdown extends Fragment implements LocationListener {
     private float mAzimuthAngleSpeed = 0.0f;
     private Activity mActivity;
     protected LocationManager mLocationManager;
+    ArrayList<Partner> mPartners;
 
     @Override
     public View onCreateView(
@@ -79,7 +85,17 @@ public class Countdown extends Fragment implements LocationListener {
         String message = "";
         new StartSharingTask().execute(nickname, groupName, message);
 
-        mBinding.textviewGroupname.setText(groupName);
+        mBinding.groupname.setText(groupName);
+
+        mBinding.partner.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                if (mPartners.size()>0) {
+                    String url = mPartners.get(0).url;
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(browserIntent);
+                }
+            };
+        });
     }
 
     @Override public void onDestroyView() {
@@ -102,6 +118,10 @@ public class Countdown extends Fragment implements LocationListener {
     }
 
     //--------------------------------------------
+
+    class Partner {
+        String name, url;
+    }
 
     protected static final String NAV_SERVER_URL = "http://comob.free.fr/sharing/";
 
@@ -131,6 +151,15 @@ public class Countdown extends Fragment implements LocationListener {
             if (!"ok".equals(answer)) {
                 return jResult.get("error").getAsString();
             }
+            JsonArray jPartners = jResult.get("partners").getAsJsonArray();
+            mPartners = new ArrayList(jPartners.size());
+            for (JsonElement jPartner:jPartners){
+                Partner partner = new Partner();
+                JsonObject jPO = jPartner.getAsJsonObject();
+                partner.name = jPO.get("name").getAsString();
+                partner.url = jPO.get("url").getAsString();
+                mPartners.add(partner);
+            }
         } catch (JsonSyntaxException e) {
             return "Technical error with the server";
         }
@@ -146,6 +175,11 @@ public class Countdown extends Fragment implements LocationListener {
         @Override
         protected void onPostExecute(String error) {
             if (error == null) {
+                if (mPartners.size()>0) {
+                    SpannableString content = new SpannableString(mPartners.get(0).name);
+                    content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                    mBinding.partner.setText(content);
+                }
                 startSharingTimer();
                 mIsSharing = true;
             } else {
@@ -233,7 +267,7 @@ public class Countdown extends Fragment implements LocationListener {
                 DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
                 DecimalFormat formatter = new DecimalFormat("###,###,###", symbols);
                 String countdown = formatter.format(mCountdown);
-                mBinding.textviewCountdown.setText(countdown);
+                mBinding.countdown.setText(countdown);
             } else
                 Toast.makeText(mActivity.getApplicationContext(), error, Toast.LENGTH_SHORT).show();
         }
