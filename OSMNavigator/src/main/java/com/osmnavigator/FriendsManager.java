@@ -144,7 +144,7 @@ public class FriendsManager {
 
     //--------------------------------------------
 
-    protected static final String NAV_SERVER_URL = "http://comob.free.fr/sharing/";
+    protected static final String NAV_SERVER_URL = "https://comob.org/sharing/";
 
     public String getUniqueId() {
         return Settings.Secure.getString(mActivity.getContentResolver(), Settings.Secure.ANDROID_ID);
