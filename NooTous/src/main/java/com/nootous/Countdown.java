@@ -49,6 +49,7 @@ public class Countdown extends Fragment implements LocationListener {
     private CountdownBinding mBinding;
     private boolean mIsSharing;
     private int mCountdown;
+    private String mMessage;
     private float mAzimuthAngleSpeed = 0.0f;
     private Activity mActivity;
     protected LocationManager mLocationManager;
@@ -123,7 +124,7 @@ public class Countdown extends Fragment implements LocationListener {
         String name, url;
     }
 
-    protected static final String NAV_SERVER_URL = "http://comob.free.fr/sharing/";
+    protected static final String NAV_SERVER_URL = "https://comob.org/sharing/";
 
     public String getUniqueId() {
         return Settings.Secure.getString(mActivity.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -240,6 +241,7 @@ public class Countdown extends Fragment implements LocationListener {
                 return jResult.get("error").getAsString();
             }
             mCountdown = jResult.get("countdown").getAsInt();
+            mMessage = jResult.get("message").getAsString();
         } catch (JsonSyntaxException e) {
             return "Technical error with the server";
         }
@@ -268,40 +270,19 @@ public class Countdown extends Fragment implements LocationListener {
                 DecimalFormat formatter = new DecimalFormat("###,###,###", symbols);
                 String countdown = formatter.format(mCountdown);
                 mBinding.countdown.setText(countdown);
+                mBinding.message.setText(mMessage);
+                if (mMessage.isEmpty())
+                    mBinding.pancarte.setVisibility(View.INVISIBLE);
+                else
+                    mBinding.pancarte.setVisibility(View.VISIBLE);
             } else
                 Toast.makeText(mActivity.getApplicationContext(), error, Toast.LENGTH_SHORT).show();
         }
     }
 
     //Stop Sharing
-    String callStopSharing() {
-        String url = null;
-        try {
-            url = NAV_SERVER_URL + "jstop.php?"
-                    + "user_id=" + URLEncoder.encode(getUniqueId(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            return "Technical error with the server";
-        }
-        String result = BonusPackHelper.requestStringFromUrl(url);
-        if (result == null) {
-            return "Technical error with the server";
-        }
-        try {
-            JsonElement json = JsonParser.parseString(result);
-            JsonObject jResult = json.getAsJsonObject();
-            String answer = jResult.get("answer").getAsString();
-            if (!"ok".equals(answer)) {
-                return jResult.get("error").getAsString();
-            }
-        } catch (JsonSyntaxException e) {
-            return "Technical error with the server";
-        }
-        return null;
-    }
-
     private class StopSharingTask extends AsyncTask<Void, Void, String> {
         @Override protected String doInBackground(Void... params) {
-            //return callStopSharing();
             return null;
         }
 
