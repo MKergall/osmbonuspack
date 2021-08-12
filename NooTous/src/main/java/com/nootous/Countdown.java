@@ -47,7 +47,6 @@ import java.util.List;
 public class Countdown extends Fragment implements LocationListener {
 
     private CountdownBinding mBinding;
-    private boolean mIsSharing;
     private int mCountdown;
     private String mMessage;
     private float mAzimuthAngleSpeed = 0.0f;
@@ -100,7 +99,7 @@ public class Countdown extends Fragment implements LocationListener {
     }
 
     @Override public void onDestroyView() {
-        new StopSharingTask().execute();
+        stopSharingTimer();
         super.onDestroyView();
         mBinding = null;
     }
@@ -175,6 +174,7 @@ public class Countdown extends Fragment implements LocationListener {
 
         @Override
         protected void onPostExecute(String error) {
+            if (mBinding == null) return;
             if (error == null) {
                 if (mPartners.size()>0) {
                     SpannableString content = new SpannableString(mPartners.get(0).name);
@@ -182,7 +182,6 @@ public class Countdown extends Fragment implements LocationListener {
                     mBinding.partner.setText(content);
                 }
                 startSharingTimer();
-                mIsSharing = true;
             } else {
                 Toast.makeText(mActivity.getApplicationContext(), error, Toast.LENGTH_SHORT).show();
             }
@@ -264,6 +263,9 @@ public class Countdown extends Fragment implements LocationListener {
 
         @Override
         protected void onPostExecute(String error) {
+            if (mBinding == null)
+                //too late, not on this fragment anymore
+                return;
             mBinding.timer.setText(String.valueOf(mTick));
             if (error == null) {
                 DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
@@ -275,21 +277,6 @@ public class Countdown extends Fragment implements LocationListener {
                     mBinding.pancarte.setVisibility(View.INVISIBLE);
                 else
                     mBinding.pancarte.setVisibility(View.VISIBLE);
-            } else
-                Toast.makeText(mActivity.getApplicationContext(), error, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    //Stop Sharing
-    private class StopSharingTask extends AsyncTask<Void, Void, String> {
-        @Override protected String doInBackground(Void... params) {
-            return null;
-        }
-
-        @Override protected void onPostExecute(String error) {
-            if (error == null) {
-                stopSharingTimer();
-                mIsSharing = false;
             } else
                 Toast.makeText(mActivity.getApplicationContext(), error, Toast.LENGTH_SHORT).show();
         }
