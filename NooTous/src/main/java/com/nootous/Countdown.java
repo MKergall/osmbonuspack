@@ -3,6 +3,7 @@ package com.nootous;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -25,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -33,6 +35,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.nootous.databinding.CountdownBinding;
 
+import org.osmdroid.bonuspack.sharing.Friends;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.NetworkLocationIgnorer;
@@ -50,15 +53,15 @@ public class Countdown extends Fragment implements LocationListener {
     private int mCountdown;
     private String mMessage;
     private float mAzimuthAngleSpeed = 0.0f;
-    private Activity mActivity;
+    private MainActivity mActivity;
     protected LocationManager mLocationManager;
-    ArrayList<Partner> mPartners;
+    protected Friends mFriends;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState
     ) {
-        mActivity = getActivity();
+        mActivity = (MainActivity)getActivity();
         checkPermissions();
 
         //Get initial location:
@@ -73,6 +76,8 @@ public class Countdown extends Fragment implements LocationListener {
             //location known:
             onLocationChanged(location);
         }
+
+        mFriends = new Friends();
 
         mBinding = CountdownBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
@@ -89,19 +94,28 @@ public class Countdown extends Fragment implements LocationListener {
 
         mBinding.partner.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                if (mPartners.size()>0) {
-                    String url = mPartners.get(0).url;
+                if (mFriends.partners.size()>0) {
+                    String url = mFriends.partners.get(0).url;
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     startActivity(browserIntent);
                 }
             };
         });
+
+        mBinding.buttonMap.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                NavHostFragment.findNavController(Countdown.this)
+                        .navigate(R.id.action_CountFragment_to_MapFragment);
+            }
+        });
+
     }
 
     @Override public void onDestroyView() {
         stopSharingTimer();
         super.onDestroyView();
         mBinding = null;
+        mActivity = null;
     }
 
     final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
@@ -119,65 +133,18 @@ public class Countdown extends Fragment implements LocationListener {
 
     //--------------------------------------------
 
-    class Partner {
-        String name, url;
-    }
-
-    protected static final String NAV_SERVER_URL = "https://comob.org/sharing/";
-
-    public String getUniqueId() {
-        return Settings.Secure.getString(mActivity.getContentResolver(), Settings.Secure.ANDROID_ID);
-    }
-
-    //Start Sharing
-    String callStartSharing(String nickname, String group, String message) {
-        String url = null;
-        try {
-            url = NAV_SERVER_URL + "jstart.php?"
-                    + "nickname=" + URLEncoder.encode(nickname, "UTF-8")
-                    + "&group_id=" + URLEncoder.encode(group, "UTF-8")
-                    + "&user_id=" + URLEncoder.encode(getUniqueId(), "UTF-8")
-                    + "&message=" + URLEncoder.encode(message, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-        }
-        String result = BonusPackHelper.requestStringFromUrl(url);
-        if (result == null) {
-            return "Technical error with the server";
-        }
-        try {
-            JsonElement json = JsonParser.parseString(result);
-            JsonObject jResult = json.getAsJsonObject();
-            String answer = jResult.get("answer").getAsString();
-            if (!"ok".equals(answer)) {
-                return jResult.get("error").getAsString();
-            }
-            JsonArray jPartners = jResult.get("partners").getAsJsonArray();
-            mPartners = new ArrayList(jPartners.size());
-            for (JsonElement jPartner:jPartners){
-                Partner partner = new Partner();
-                JsonObject jPO = jPartner.getAsJsonObject();
-                partner.name = jPO.get("name").getAsString();
-                partner.url = jPO.get("url").getAsString();
-                mPartners.add(partner);
-            }
-        } catch (JsonSyntaxException e) {
-            return "Technical error with the server";
-        }
-        return null;
-    }
-
     private class StartSharingTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
-            return callStartSharing(params[0], params[1], params[2]);
+            return mFriends.callStartSharing(mActivity.getUniqueId(), params[0], params[1], params[2]);
         }
 
         @Override
         protected void onPostExecute(String error) {
             if (mBinding == null) return;
             if (error == null) {
-                if (mPartners.size()>0) {
-                    SpannableString content = new SpannableString(mPartners.get(0).name);
+                if (mFriends.partners.size()>0) {
+                    SpannableString content = new SpannableString(mFriends.partners.get(0).name);
                     content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
                     mBinding.partner.setText(content);
                 }
@@ -212,14 +179,14 @@ public class Countdown extends Fragment implements LocationListener {
     }
 
     String callUpdateSharing() {
-        GeoPoint myPosition = mCurrentLocation;
+        GeoPoint myPosition = mActivity.mCurrentLocation;
         int hasLocation = (myPosition != null ? 1 : 0);
         if (myPosition == null)
             myPosition = new GeoPoint(0.0, 0.0);
         String url = null;
         try {
-            url = NAV_SERVER_URL + "nupdate.php?"
-                    + "user_id=" + URLEncoder.encode(getUniqueId(), "UTF-8")
+            url = Friends.NAV_SERVER_URL + "nupdate.php?"
+                    + "user_id=" + URLEncoder.encode(mActivity.getUniqueId(), "UTF-8")
                     + "&has_location=" + hasLocation
                     + "&lat=" + myPosition.getLatitude()
                     + "&lon=" + myPosition.getLongitude()
@@ -286,7 +253,6 @@ public class Countdown extends Fragment implements LocationListener {
     private final NetworkLocationIgnorer mIgnorer = new NetworkLocationIgnorer();
     long mLastTime = 0; // milliseconds
     //double mSpeed = 0.0; // km/h
-    GeoPoint mCurrentLocation = null;
 
     @Override public void onLocationChanged(final Location pLoc) {
         long currentTime = System.currentTimeMillis();
@@ -298,7 +264,7 @@ public class Countdown extends Fragment implements LocationListener {
         }
         mLastTime = currentTime;
 
-        mCurrentLocation = new GeoPoint(pLoc);
+        mActivity.mCurrentLocation = new GeoPoint(pLoc);
 
         if (pLoc.getProvider().equals(LocationManager.GPS_PROVIDER)) {
             //mSpeed = pLoc.getSpeed() * 3.6;

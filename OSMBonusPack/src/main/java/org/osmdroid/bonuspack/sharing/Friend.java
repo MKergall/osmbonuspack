@@ -1,4 +1,4 @@
-package com.osmnavigator;
+package org.osmdroid.bonuspack.sharing;
 
 import com.google.gson.JsonObject;
 
@@ -19,7 +19,7 @@ public class Friend {
     public boolean mOnline;
     public String mMessage;
 
-    Friend(JsonObject joUser) {
+    public Friend(JsonObject joUser) {
         mId = joUser.get("id").getAsString();
         mNickName = joUser.get("nickname").getAsString();
         mHasLocation = (joUser.get("has_location").getAsInt() == 1);

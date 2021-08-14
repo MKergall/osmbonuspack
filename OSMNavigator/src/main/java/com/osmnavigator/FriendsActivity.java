@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.osmdroid.bonuspack.sharing.Friend;
+
 import java.util.ArrayList;
 
 /**

@@ -5,6 +5,10 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.view.MotionEvent;
 
+import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.bonuspack.kml.KmlFeature;
+import org.osmdroid.util.BoundingBox;
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
@@ -166,4 +170,23 @@ public abstract class MarkerClusterer extends Overlay {
 		}
 		return false;
 	}
+
+	@Override public BoundingBox getBounds(){
+		if (mItems.size() == 0)
+				return null;
+		double minLat = Double.MAX_VALUE;
+		double minLon = Double.MAX_VALUE;
+		double maxLat = -Double.MAX_VALUE;
+		double maxLon = -Double.MAX_VALUE;
+		for (final Marker item : mItems) {
+			final double latitude = item.getPosition().getLatitude();
+			final double longitude = item.getPosition().getLongitude();
+			minLat = Math.min(minLat, latitude);
+			minLon = Math.min(minLon, longitude);
+			maxLat = Math.max(maxLat, latitude);
+			maxLon = Math.max(maxLon, longitude);
+		}
+		return new BoundingBox(maxLat, maxLon, minLat, minLon);
+	}
+
 }

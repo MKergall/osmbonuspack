@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,14 +36,13 @@ import static android.widget.Toast.makeText;
 public class GroupName extends Fragment {
 
     private GroupNameBinding mBinding;
-    private Activity mActivity;
-    String[] mTrends;
+    private MainActivity mActivity;
     GetTrendTask mGetTrendTask;
 
     @Override public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        mActivity = getActivity();
+        mActivity = (MainActivity)getActivity();
         mBinding = GroupNameBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
     }
@@ -51,10 +51,9 @@ public class GroupName extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         String groupName = mActivity.getSharedPreferences("NOOTOUS", mActivity.MODE_PRIVATE).getString("GROUP_NAME", "#");
         mBinding.groupName.setText(groupName);
-        //mBinding.groupName.setThreshold(1);
         mBinding.groupName.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View view) {
-                if (mTrends != null && mTrends.length > 0)
+                if (mActivity.mTrends != null && mActivity.mTrends.length > 0)
                     mBinding.groupName.showDropDown();
             }
         });
@@ -67,18 +66,21 @@ public class GroupName extends Fragment {
                 ed.putString("GROUP_NAME", groupName);
                 ed.apply();
                 NavHostFragment.findNavController(GroupName.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
+                        .navigate(R.id.action_GroupFragment_to_CountFragment);
             }
         });
 
-        mGetTrendTask = new GetTrendTask();
-        mGetTrendTask.execute();
+        if (mActivity.mTrends == null) {
+            mGetTrendTask = new GetTrendTask();
+            mGetTrendTask.execute();
+        }
     }
 
     @Override public void onDestroyView() {
         mGetTrendTask.cancel(true);
         super.onDestroyView();
         mBinding = null;
+        mActivity = null;
     }
 
     //------------- Trends
@@ -90,6 +92,7 @@ public class GroupName extends Fragment {
         if (result == null) {
             return "Technical error with the server";
         }
+        Log.d(BonusPackHelper.LOG_TAG, "getTrends:" + url);
         try {
             JsonElement json = JsonParser.parseString(result);
             JsonObject jResult = json.getAsJsonObject();
@@ -98,12 +101,12 @@ public class GroupName extends Fragment {
                 return jResult.get("error").getAsString();
             }
             JsonArray jTrends = jResult.get("trends").getAsJsonArray();
-            mTrends = new String[jTrends.size()];
+            mActivity.mTrends = new String[jTrends.size()];
             int i = 0;
             for (JsonElement jPartner:jTrends){
                 JsonObject jPO = jPartner.getAsJsonObject();
                 String trend = jPO.get("group_id").getAsString();
-                mTrends[i] = trend;
+                mActivity.mTrends[i] = trend;
                 i++;
             }
         } catch (JsonSyntaxException e) {
@@ -119,9 +122,9 @@ public class GroupName extends Fragment {
 
         @Override protected void onPostExecute(String error) {
             if (error == null) {
-                if (mTrends.length > 0) {
+                if (mActivity.mTrends.length > 0) {
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                            (mActivity, android.R.layout.simple_list_item_1, mTrends);
+                            (mActivity, android.R.layout.simple_list_item_1, mActivity.mTrends);
                     mBinding.groupName.setAdapter(adapter);
                 }
             } else {
