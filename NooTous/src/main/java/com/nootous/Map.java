@@ -23,7 +23,6 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.mylocation.DirectedLocationOverlay;
 
-import java.util.ArrayList;
 
 public class Map extends Fragment {
 
@@ -64,6 +63,7 @@ public class Map extends Fragment {
         myLocationOverlay = new DirectedLocationOverlay(mActivity);
         if (mActivity.mCurrentLocation != null){
             myLocationOverlay.setLocation(mActivity.mCurrentLocation);
+            myLocationOverlay.setBearing(mActivity.mAzimuthAngleSpeed);
         } else {
             myLocationOverlay.setEnabled(false);
         }
@@ -117,7 +117,7 @@ public class Map extends Fragment {
     private class UpdateSharingTask extends AsyncTask<Void, Void, String> {
         @Override protected String doInBackground(Void... params) {
             GeoPoint myPosition = mActivity.mCurrentLocation;
-            return mFriends.callUpdateSharing(mActivity.getUniqueId(), myPosition, 0.0);
+            return mFriends.callUpdateSharing(mActivity.getUniqueId(), myPosition, mActivity.mAzimuthAngleSpeed);
         }
 
         @Override protected void onPostExecute(String error) {

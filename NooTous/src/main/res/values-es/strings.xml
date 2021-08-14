@@ -3,6 +3,7 @@
     <string name="action_settings">Ajustes</string>
     <string name="group_fragment_label">Nombre del evento</string>
     <string name="count_fragment_label">Cuenta</string>
+    <string name="map_fragment_label">Mapa</string>
     <string name="next">Próximo</string>
     <string name="hello_first_fragment">Nombre del evento :</string>
     <string name="group_name">Nombre del evento</string>

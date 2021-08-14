@@ -22,23 +22,13 @@
         android:textSize="32dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintVertical_bias="0.1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/countdown" />
 
-    <TextView
-        android:id="@+id/countdown"
-        android:text="-"
-        android:textSize="48dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/groupname"
-        app:layout_constraintBottom_toBottomOf="@id/message" />
-
-    <ImageView
+    <RelativeLayout
         android:id="@+id/pancarte"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,20 +37,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/countdown"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:srcCompat="@drawable/pancarte" />
+        android:background="@drawable/pancarte">
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:textSize="24dp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
 
     <TextView
-        android:id="@+id/message"
+        android:id="@+id/countdown"
+        android:text="-"
+        android:textSize="48dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:textSize="28dp"
-        android:textStyle="bold"
-        android:gravity="center"
-        app:layout_constraintTop_toTopOf="@id/countdown"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/groupname"
+        app:layout_constraintBottom_toBottomOf="@id/pancarte"/>
 
     <TextView
         android:id="@+id/partner"

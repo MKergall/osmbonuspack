@@ -52,7 +52,6 @@ public class Countdown extends Fragment implements LocationListener {
     private CountdownBinding mBinding;
     private int mCountdown;
     private String mMessage;
-    private float mAzimuthAngleSpeed = 0.0f;
     private MainActivity mActivity;
     protected LocationManager mLocationManager;
     protected Friends mFriends;
@@ -190,7 +189,7 @@ public class Countdown extends Fragment implements LocationListener {
                     + "&has_location=" + hasLocation
                     + "&lat=" + myPosition.getLatitude()
                     + "&lon=" + myPosition.getLongitude()
-                    + "&bearing=" + mAzimuthAngleSpeed;
+                    + "&bearing=" + mActivity.mAzimuthAngleSpeed;
         } catch (UnsupportedEncodingException e) {
             return "Technical error with the server";
         }
@@ -268,7 +267,7 @@ public class Countdown extends Fragment implements LocationListener {
 
         if (pLoc.getProvider().equals(LocationManager.GPS_PROVIDER)) {
             //mSpeed = pLoc.getSpeed() * 3.6;
-            mAzimuthAngleSpeed = pLoc.getBearing();
+            mActivity.mAzimuthAngleSpeed = pLoc.getBearing();
         }
     }
 
