@@ -174,8 +174,11 @@ public class RadiusMarkerClusterer extends MarkerClusterer {
 
     public void zoomOnCluster(MapView mapView, StaticCluster cluster){
         BoundingBox bb = cluster.getBoundingBox();
-        bb = bb.increaseByScale(1.15f);
-        mapView.zoomToBoundingBox(bb, true);
+        if (bb.getLatNorth()!=bb.getLatSouth() || bb.getLonEast()!=bb.getLonWest()) {
+            bb = bb.increaseByScale(1.15f);
+            mapView.zoomToBoundingBox(bb, true);
+        } else //all points exactly at the same place:
+            mapView.setExpectedCenter(bb.getCenterWithDateLine());
     }
 
     @Override public boolean onSingleTapConfirmed(final MotionEvent event, final MapView mapView){

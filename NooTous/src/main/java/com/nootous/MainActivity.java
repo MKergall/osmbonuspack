@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         mTrends = null;
     }
 
-    public Geopoint getBlurredLocation(){
+    public GeoPoint getBlurredLocation(){
 	  if (mCurrentLocation == null)
 		return new GeoPoint(0.0, 0.0);
 	  else

@@ -50,7 +50,7 @@ public class StaticCluster {
 	}
 
 	public BoundingBox getBoundingBox(){
-		if (mItems.size()==0)
+		if (getSize()==0)
 			return null;
 		GeoPoint p = getItem(0).getPosition();
 		BoundingBox bb = new BoundingBox(p.getLatitude(), p.getLongitude(), p.getLatitude(), p.getLongitude());

@@ -12,13 +12,16 @@ import androidx.fragment.app.Fragment;
 import com.nootous.databinding.MapBinding;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
+import org.osmdroid.bonuspack.kml.KmlDocument;
 import org.osmdroid.bonuspack.sharing.Friend;
 import org.osmdroid.bonuspack.sharing.Friends;
+import org.osmdroid.bonuspack.sharing.Partner;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.mylocation.DirectedLocationOverlay;
@@ -48,6 +51,10 @@ public class Map extends Fragment {
         mMap = (MapView) mActivity.findViewById(R.id.map);
         mMap.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT);
         mMap.setMultiTouchControls(true);
+        mMap.setMinZoomLevel(4.0);
+        mMap.setMaxZoomLevel(21.0);
+        mMap.setVerticalMapRepetitionEnabled(false);
+
         GeoPoint startPoint;
         if (mActivity.mCurrentLocation != null)
             startPoint = mActivity.mCurrentLocation;
@@ -57,10 +64,10 @@ public class Map extends Fragment {
         mapController.setZoom(8.0);
         mapController.setCenter(startPoint);
 
+        loadAndDisplayKMLContent();
+
         mFriendsMarkers = new RadiusMarkerClusterer(mActivity);
         mMap.getOverlays().add(mFriendsMarkers);
-
-	loadAndDisplayKmlContent();
 
         myLocationOverlay = new DirectedLocationOverlay(mActivity);
         if (mActivity.mCurrentLocation != null){
@@ -90,21 +97,21 @@ public class Map extends Fragment {
 
     void loadAndDisplayKMLContent() {
         Partner partner = mActivity.mPartner;
-	if (partner == null || partner.kmlUrl == null || String.isEmpty(partner.kmlUrl))
-		return;
+        if (partner == null || partner.kmlUrl == null || partner.kmlUrl.isEmpty())
+		    return;
         new LoadKMLTask().execute();
     }
 
     private class LoadKMLTask extends AsyncTask<Void, Void, Boolean> {
-        @Override protected String doInBackground(Void... params) {
+        @Override protected Boolean doInBackground(Void... params) {
             mKmlDocument = new KmlDocument();
-            return mKmlDocument.parseUrl(mActivity.mPartner.kmlUrl);
+            return mKmlDocument.parseKMLUrl(mActivity.mPartner.kmlUrl);
         }
 
-        @Override protected void onPostExecute(Boolean error) {
-            if (!error) {
-	            FolderOverlay kmlOverlay = (FolderOverlay)mKmlDocument.mKmlRoot.buildOverlay(mMap, null, null, kmlDocument);
-        	    mMap.getOverlays().add(kmlOverlay);
+        @Override protected void onPostExecute(Boolean result) {
+            if (result) {
+	            FolderOverlay kmlOverlay = (FolderOverlay)mKmlDocument.mKmlRoot.buildOverlay(mMap, null, null, mKmlDocument);
+        	    mMap.getOverlays().add(0, kmlOverlay); //0=under others
             }
         }
     }
