@@ -19,6 +19,7 @@ import com.google.gson.JsonSyntaxException;
 import com.nootous.databinding.ActivityGroupBinding;
 
 import org.osmdroid.bonuspack.sharing.Friends;
+import org.osmdroid.bonuspack.sharing.Partner;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.util.GeoPoint;
 
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     //data common to all fragments:
     public String[] mTrends;
+    public Partner mPartner;
 
     public GeoPoint mCurrentLocation = null;
     public float mAzimuthAngleSpeed = 0.0f;
@@ -46,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-	mBlurredDistance = Math.random()*250.0;
-	mBlurredBearing = Math.random()*360.0;
+	mBlurredDistance = 100.0 + Math.random()*100.0; //offset by 100 to 200 meters
+	mBlurredBearing = Math.random()*360.0; //in any direction
     }
 
     @Override public boolean onSupportNavigateUp() {
