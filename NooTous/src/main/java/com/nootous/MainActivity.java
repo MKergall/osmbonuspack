@@ -29,8 +29,10 @@ public class MainActivity extends AppCompatActivity {
 
     //data common to all fragments:
     public String[] mTrends;
+
     public GeoPoint mCurrentLocation = null;
     public float mAzimuthAngleSpeed = 0.0f;
+    protected double mBlurredDistance, mBlurredBearing; //to blur a little bit my position
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_group);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+
+	mBlurredDistance = Math.random()*250.0;
+	mBlurredBearing = Math.random()*360.0;
     }
 
     @Override public boolean onSupportNavigateUp() {
@@ -51,9 +56,18 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+    //----------------------
+
     @Override protected void onDestroy() {
         super.onDestroy();
         mTrends = null;
+    }
+
+    public Geopoint getBlurredLocation(){
+	  if (mCurrentLocation == null)
+		return new GeoPoint(0.0, 0.0);
+	  else
+		return mCurrentLocation.destinationPoint(mBlurredDistance, mBlurredBearing);
     }
 
     public String getUniqueId() {
