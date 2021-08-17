@@ -178,17 +178,15 @@ public class Countdown extends Fragment implements LocationListener {
     }
 
     String callUpdateSharing() {
-        GeoPoint myPosition = mActivity.mCurrentLocation;
-        int hasLocation = (myPosition != null ? 1 : 0);
-        if (myPosition == null)
-            myPosition = new GeoPoint(0.0, 0.0);
+	int hasLocation = (mActivity.mCurrentLocation == null ? 0 : 1);
+	GeoPoint myBlurredPosition = mActivity.getBlurredLocation();
         String url = null;
         try {
             url = Friends.NAV_SERVER_URL + "nupdate.php?"
                     + "user_id=" + URLEncoder.encode(mActivity.getUniqueId(), "UTF-8")
                     + "&has_location=" + hasLocation
-                    + "&lat=" + myPosition.getLatitude()
-                    + "&lon=" + myPosition.getLongitude()
+                    + "&lat=" + myBlurredPosition.getLatitude()
+                    + "&lon=" + myBlurredPosition.getLongitude()
                     + "&bearing=" + mActivity.mAzimuthAngleSpeed;
         } catch (UnsupportedEncodingException e) {
             return "Technical error with the server";
