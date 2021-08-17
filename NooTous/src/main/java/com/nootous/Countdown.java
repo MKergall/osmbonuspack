@@ -93,8 +93,8 @@ public class Countdown extends Fragment implements LocationListener {
 
         mBinding.partner.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                if (mFriends.partners.size()>0) {
-                    String url = mFriends.partners.get(0).url;
+                if (mActivity.mPartner != null && !String.isEmpty(mActivity.mPartner.url)) {
+                    String url = mActivity.mPartner.url;
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     startActivity(browserIntent);
                 }
@@ -143,10 +143,12 @@ public class Countdown extends Fragment implements LocationListener {
             if (mBinding == null) return;
             if (error == null) {
                 if (mFriends.partners.size()>0) {
-                    SpannableString content = new SpannableString(mFriends.partners.get(0).name);
+                    mActivity.mPartner = mFriends.partners.get(0);
+                    SpannableString content = new SpannableString(mActivity.mPartner.name);
                     content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
                     mBinding.partner.setText(content);
-                }
+                } else
+                    mActivity.mPartner = null;
                 startSharingTimer();
             } else {
                 Toast.makeText(mActivity.getApplicationContext(), error, Toast.LENGTH_SHORT).show();
