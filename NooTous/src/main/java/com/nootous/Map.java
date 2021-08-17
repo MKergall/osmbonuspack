@@ -60,6 +60,8 @@ public class Map extends Fragment {
         mFriendsMarkers = new RadiusMarkerClusterer(mActivity);
         mMap.getOverlays().add(mFriendsMarkers);
 
+	loadAndDisplayKmlContent();
+
         myLocationOverlay = new DirectedLocationOverlay(mActivity);
         if (mActivity.mCurrentLocation != null){
             myLocationOverlay.setLocation(mActivity.mCurrentLocation);
@@ -82,7 +84,32 @@ public class Map extends Fragment {
         mActivity = null;
     }
 
-    //------------
+    //------------ KML
+
+    KmlDocument mKmlDocument;
+
+    void loadAndDisplayKMLContent() {
+        Partner partner = mActivity.mPartner;
+	if (partner == null || partner.kmlUrl == null || String.isEmpty(partner.kmlUrl))
+		return;
+        new LoadKMLTask().execute();
+    }
+
+    private class LoadKMLTask extends AsyncTask<Void, Void, Boolean> {
+        @Override protected String doInBackground(Void... params) {
+            mKmlDocument = new KmlDocument();
+            return mKmlDocument.parseUrl(mActivity.mPartner.kmlUrl);
+        }
+
+        @Override protected void onPostExecute(Boolean error) {
+            if (!error) {
+	            FolderOverlay kmlOverlay = (FolderOverlay)mKmlDocument.mKmlRoot.buildOverlay(mMap, null, null, kmlDocument);
+        	    mMap.getOverlays().add(kmlOverlay);
+            }
+        }
+    }
+
+    //------------ Friends
 
     void updateUIWithFriendsMarkers() {
         mFriendsMarkers.getItems().clear();
@@ -116,8 +143,8 @@ public class Map extends Fragment {
 
     private class UpdateSharingTask extends AsyncTask<Void, Void, String> {
         @Override protected String doInBackground(Void... params) {
-            GeoPoint myPosition = mActivity.mCurrentLocation;
-            return mFriends.callUpdateSharing(mActivity.getUniqueId(), myPosition, mActivity.mAzimuthAngleSpeed);
+            GeoPoint myBlurredPosition = mActivity.getBlurredLocation();
+            return mFriends.callUpdateSharing(mActivity.getUniqueId(), myBlurredPosition, mActivity.mAzimuthAngleSpeed);
         }
 
         @Override protected void onPostExecute(String error) {
