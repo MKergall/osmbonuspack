@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import com.nootous.databinding.GroupNameBinding;
 
+import java.util.ArrayList;
+
 public class GroupName extends Fragment {
 
     private GroupNameBinding mBinding;
@@ -30,9 +32,12 @@ public class GroupName extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         String groupName = mActivity.getSharedPreferences("NOOTOUS", mActivity.MODE_PRIVATE).getString("GROUP_NAME", "#");
         mBinding.groupName.setText(groupName);
-        mBinding.groupName.setOnClickListener(new OnClickListener() {
+        mBinding.groupName.setThreshold(1);
+
+        mBinding.trends.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View view) {
                 if (mActivity.mTrends != null && mActivity.mTrends.length > 0)
                     mBinding.groupName.showDropDown();
@@ -65,6 +70,12 @@ public class GroupName extends Fragment {
     }
 
     //------------- Trends
+    /*
+    public class Trend {
+        public String name;
+        public int count;
+    }
+    */
 
     private class GetTrendTask extends AsyncTask<String, Void, String> {
         @Override protected String doInBackground(String... params) {

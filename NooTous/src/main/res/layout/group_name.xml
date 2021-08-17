@@ -30,12 +30,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textview_first" />
 
-    <!-- Button
+    <ImageButton
         android:id="@+id/trends"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBaseline_toBaselineOf="@id/group_name"
-        app:layout_constraintLeft_toRightOf="@id/group_name" / -->
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/trends_button"
+        android:background="@android:color/transparent"
+        android:contentDescription="trends"
+        app:layout_constraintBottom_toBottomOf="@+id/group_name"
+        app:layout_constraintStart_toEndOf="@+id/group_name" />
 
     <Button
         android:id="@+id/button_next"
