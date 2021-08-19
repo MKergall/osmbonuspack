@@ -53,7 +53,7 @@ public class FriendsManager {
         mActivity = activity;
         mMap = map;
         mRecordTracks = false;
-        mFriends = new Friends();
+        mFriends = new Friends(BuildConfig.APPLICATION_ID+"/"+BuildConfig.VERSION_NAME);
     }
 
     public static ArrayList<Friend> getFriends(){
@@ -68,7 +68,7 @@ public class FriendsManager {
             mIsSharing = savedInstanceState.getBoolean("is_sharing");
             updateUIWithFriendsMarkers();
         } else {
-            mFriends = new Friends();
+            mFriends = new Friends(BuildConfig.APPLICATION_ID+"/"+BuildConfig.VERSION_NAME);
             mIsSharing = false;
         }
         mFriendsButton = (Button) mActivity.findViewById(R.id.buttonFriends);

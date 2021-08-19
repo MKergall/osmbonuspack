@@ -81,7 +81,7 @@ public class Map extends Fragment {
         ScaleBarOverlay scaleBarOverlay = new ScaleBarOverlay(mMap);
         mMap.getOverlays().add(scaleBarOverlay);
 
-        mFriends = new Friends();
+        mFriends = new Friends(BuildConfig.APPLICATION_ID+"/"+BuildConfig.VERSION_NAME);
         new UpdateSharingTask().execute();
     }
 

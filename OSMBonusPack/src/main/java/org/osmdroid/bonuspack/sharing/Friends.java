@@ -20,6 +20,11 @@ public class Friends {
     public ArrayList<Friend> friendsList;
     public ArrayList<Partner> partners;
     public static final String NAV_SERVER_URL = "https://comob.org/sharing/";
+    protected String mUserAgent;
+
+    public Friends(String userAgent){
+        mUserAgent = userAgent;
+    }
 
     public Friend get(int index){
         return friendsList.get(index);
@@ -62,7 +67,7 @@ public class Friends {
 		nameValuePairs.add(new BasicNameValuePair("message", message));
 		String result = BonusPackHelper.requestStringFromPost(url, nameValuePairs);
 		*/
-        String result = BonusPackHelper.requestStringFromUrl(url);
+        String result = BonusPackHelper.requestStringFromUrl(url, mUserAgent);
         if (result == null) {
             return "Technical error with the server";
         }
@@ -103,7 +108,7 @@ public class Friends {
             return "Technical error with the server";
         }
         Log.d(BonusPackHelper.LOG_TAG, "callUpdateSharing:" + url);
-        String result = BonusPackHelper.requestStringFromUrl(url);
+        String result = BonusPackHelper.requestStringFromUrl(url, mUserAgent);
         if (result == null) {
             return "Technical error with the server";
         }
@@ -136,7 +141,7 @@ public class Friends {
         } catch (UnsupportedEncodingException e) {
             return "Technical error with the server";
         }
-        String result = BonusPackHelper.requestStringFromUrl(url);
+        String result = BonusPackHelper.requestStringFromUrl(url, mUserAgent);
         if (result == null) {
             return "Technical error with the server";
         }

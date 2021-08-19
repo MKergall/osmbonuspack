@@ -67,7 +67,7 @@ public class Countdown extends Fragment implements LocationListener {
             onLocationChanged(location);
         }
 
-        mFriends = new Friends();
+        mFriends = new Friends(BuildConfig.APPLICATION_ID+"/"+BuildConfig.VERSION_NAME);
 
         mBinding = CountdownBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
