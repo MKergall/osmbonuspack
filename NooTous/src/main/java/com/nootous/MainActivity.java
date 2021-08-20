@@ -3,25 +3,23 @@ package com.nootous;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.nootous.databinding.ActivityGroupBinding;
-
 import org.osmdroid.bonuspack.sharing.Friends;
 import org.osmdroid.bonuspack.sharing.Partner;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.util.GeoPoint;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityGroupBinding mBinding;
 
     //data common to all fragments:
-    public String[] mTrends;
+    public List<Trend> mTrends = new ArrayList<>(0);
     public Partner mPartner;
 
     public GeoPoint mCurrentLocation = null;
@@ -76,32 +74,4 @@ public class MainActivity extends AppCompatActivity {
         return Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
-    String getTrends() {
-        String url = Friends.NAV_SERVER_URL + "jtrends.php";
-        String result = BonusPackHelper.requestStringFromUrl(url);
-        if (result == null) {
-            return "Technical error with the server";
-        }
-        Log.d(BonusPackHelper.LOG_TAG, "getTrends:" + url);
-        try {
-            JsonElement json = JsonParser.parseString(result);
-            JsonObject jResult = json.getAsJsonObject();
-            String answer = jResult.get("answer").getAsString();
-            if (!"ok".equals(answer)) {
-                return jResult.get("error").getAsString();
-            }
-            JsonArray jTrends = jResult.get("trends").getAsJsonArray();
-            mTrends = new String[jTrends.size()];
-            int i = 0;
-            for (JsonElement jPartner:jTrends){
-                JsonObject jPO = jPartner.getAsJsonObject();
-                String trend = jPO.get("group_id").getAsString();
-                mTrends[i] = trend;
-                i++;
-            }
-        } catch (JsonSyntaxException e) {
-            return "Technical error with the server";
-        }
-        return null;
-    }
 }

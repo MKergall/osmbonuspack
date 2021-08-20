@@ -25,6 +25,7 @@
         android:hint="@string/group_name"
         android:imeOptions="actionDone"
         android:singleLine="true"
+        android:completionThreshold="1"
         app:layout_constraintBottom_toTopOf="@id/button_next"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
