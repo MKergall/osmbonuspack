@@ -7,9 +7,9 @@ import android.util.Log;
 
 import org.osmdroid.bonuspack.R;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
-import org.osmdroid.bonuspack.utils.DouglasPeuckerReducer;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.util.PointReducer;
 
 import java.util.ArrayList;
 
@@ -91,7 +91,7 @@ public class Road  implements Parcelable {
 		if (mRouteLow == null){
 			//Simplify the route (divide number of points by around 10):
 			int n = mRouteHigh.size();
-			mRouteLow = DouglasPeuckerReducer.reduceWithTolerance(mRouteHigh, 1500.0);
+			mRouteLow = PointReducer.reduceWithTolerance(mRouteHigh, 1500.0);
 			Log.d(BonusPackHelper.LOG_TAG, "Road reduced from "+n+" to "+mRouteLow.size()+ " points");
 		}
 		return mRouteLow;

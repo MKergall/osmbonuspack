@@ -179,7 +179,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	OnlineTileSourceBase MAPBOXSATELLITELABELLED;
 	boolean mNightMode;
 
-	static final String userAgent = "OsmNavigator/2.4";
+	static final String userAgent = BuildConfig.APPLICATION_ID+"/"+BuildConfig.VERSION_NAME;
 
 	static String graphHopperApiKey;
 	static String flickrApiKey;
