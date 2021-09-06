@@ -3,9 +3,15 @@ package com.nootous;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.google.gson.JsonArray;
@@ -29,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     //data common to all fragments:
     public List<Trend> mTrends = new ArrayList<>(0);
     public Partner mPartner;
-
     public GeoPoint mCurrentLocation = null;
     public float mAzimuthAngleSpeed = 0.0f;
     protected double mBlurredDistance, mBlurredBearing; //to blur a little bit my position
@@ -46,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-	mBlurredDistance = 100.0 + Math.random()*100.0; //offset by 100 to 200 meters
-	mBlurredBearing = Math.random()*360.0; //in any direction
+        mBlurredDistance = 100.0 + Math.random()*100.0; //offset by 100 to 200 meters
+	    mBlurredBearing = Math.random()*360.0; //in any direction
     }
 
     @Override public boolean onSupportNavigateUp() {
@@ -55,6 +60,23 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+    /*
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_group, menu);
+        return true;
+    }
+
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_my_message:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    */
 
     //----------------------
 

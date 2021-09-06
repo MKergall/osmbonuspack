@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.DisplayMetrics;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
@@ -89,6 +90,8 @@ public class BonusPackHelper {
 			if (d != null)
 				bitmap = ((BitmapDrawable)d).getBitmap();
 			*/
+			//assume downloaded images are all designed for "medium" density screens:
+			bitmap.setDensity(DisplayMetrics.DENSITY_MEDIUM);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

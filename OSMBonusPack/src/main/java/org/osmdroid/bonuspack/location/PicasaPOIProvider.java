@@ -20,11 +20,12 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 /**
- * POI Provider using Picasa service. 
+ * POI Provider using Picasa service.
+ * Deprecated - we should move to Google Photos APIs
  * @see <a href="https://developers.google.com/picasa-web/docs/2.0/reference">Picasa API</a>
  * @author M.Kergall
  */
-public class PicasaPOIProvider {
+@Deprecated public class PicasaPOIProvider {
 	
 	String mAccessToken;
 	

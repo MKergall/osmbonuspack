@@ -7,8 +7,8 @@ android {
         applicationId "com.osmnavigator"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 25
-        versionName "2.5"
+        versionCode 26
+        versionName "2.6"
     }
     buildTypes {
         release {
@@ -25,7 +25,7 @@ dependencies {
     implementation project(":OSMBonusPack")
 
     //including using JitPack:
-    //implementation 'com.github.MKergall:osmbonuspack:6.7.0'
+    //implementation 'com.github.MKergall:osmbonuspack:6.8.0'
 
     implementation 'org.osmdroid:osmdroid-mapsforge:6.1.6@aar'
     implementation 'org.mapsforge:mapsforge-map-android:0.13.0'

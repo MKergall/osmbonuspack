@@ -110,31 +110,6 @@ public class GeoNamesPOIProvider {
 		}
 	}
 
-	//XML parsing seems 2 times slower than JSON parsing
-	public ArrayList<POI> getThemXML(String fullUrl){
-		Log.d(BonusPackHelper.LOG_TAG, "GeoNamesPOIProvider:get:"+fullUrl);
-		HttpConnection connection = new HttpConnection();
-		connection.doGet(fullUrl);
-		InputStream stream = connection.getStream();
-		if (stream == null){
-			return null;
-		}
-		GeoNamesXMLHandler handler = new GeoNamesXMLHandler();
-		try {
-			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-			parser.parse(stream, handler);
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		connection.close();
-		Log.d(BonusPackHelper.LOG_TAG, "done");
-		return handler.mPOIs;
-	}
-	
 	/**
 	 * @param position
 	 * @param maxResults
@@ -156,57 +131,4 @@ public class GeoNamesPOIProvider {
 		String url = getUrlInside(boundingBox, maxResults);
 		return getThem(url);
 	}
-}
-
-class GeoNamesXMLHandler extends DefaultHandler {
-	
-	private String mString;
-	double mLat, mLng;
-	POI mPOI;
-	ArrayList<POI> mPOIs;
-	
-	public GeoNamesXMLHandler() {
-		mPOIs = new ArrayList<POI>();
-	}
-	
-	@Override public void startElement(String uri, String localName, String name,
-			Attributes attributes) throws SAXException {
-		if (localName.equals("entry")){
-			mPOI = new POI(POI.POI_SERVICE_GEONAMES_WIKIPEDIA);
-		}
-		mString = new String();
-	}
-	
-	@Override public void characters(char[] ch, int start, int length)
-	throws SAXException {
-		String chars = new String(ch, start, length);
-		mString = mString.concat(chars);
-	}
-
-	@Override public void endElement(String uri, String localName, String name)
-	throws SAXException {
-		if (localName.equals("lat")) {
-			mLat = Double.parseDouble(mString);
-		} else if (localName.equals("lng")) {
-			mLng = Double.parseDouble(mString);
-		} else if (localName.equals("feature")){
-			mPOI.mCategory = mString;
-		} else if (localName.equals("title")){
-			mPOI.mType = mString;
-		} else if (localName.equals("summary")){
-			mPOI.mDescription = mString;
-		} else if (localName.equals("thumbnailImg")){
-			if (mString != null && !mString.equals(""))
-				mPOI.mThumbnailPath = mString;
-		} else if (localName.equals("wikipediaUrl")){
-			if (mString != null && !mString.equals(""))
-				mPOI.mUrl = "http://" + mString;
-		} else if (localName.equals("rank")){
-			mPOI.mRank = Integer.parseInt(mString);
-		} else if (localName.equals("entry")) {
-			mPOI.mLocation = new GeoPoint(mLat, mLng);
-			mPOIs.add(mPOI);
-		}
-	}
-
 }

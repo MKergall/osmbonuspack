@@ -58,6 +58,13 @@ public class GroupName extends Fragment {
             }
         });
 
+        mBinding.buttonMessage.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View view) {
+                NavHostFragment.findNavController(GroupName.this)
+                        .navigate(R.id.action_GroupFragment_to_MessageFragment);
+            }
+        });
+
         if (mActivity.mTrends.size()==0) {
             mBinding.trends.setVisibility(View.INVISIBLE);
             //load only if not already loaded - test is not perfect...
@@ -74,7 +81,8 @@ public class GroupName extends Fragment {
     }
 
     @Override public void onDestroyView() {
-        mGetTrendTask.cancel(true);
+        //if (mGetTrendTask!=null)
+        //    mGetTrendTask.cancel(true);
         super.onDestroyView();
         mBinding = null;
         mActivity = null;
@@ -163,9 +171,10 @@ public class GroupName extends Fragment {
         @Override protected void onPostExecute(String error) {
             if (error == null) {
                 //ready to use:
-                mBinding.trends.setVisibility(View.VISIBLE);
+                if (mBinding != null)
+                    mBinding.trends.setVisibility(View.VISIBLE);
             } else {
-                Toast.makeText(mActivity.getApplicationContext(), error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
             }
         }
     }

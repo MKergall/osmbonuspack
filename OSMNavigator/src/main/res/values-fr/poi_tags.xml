@@ -147,7 +147,5 @@
 		<item>Zoo</item>
 		<!-- Non-Nominatim tags, for other services: -->
 		<item>wikipedia</item>
-		<item>flickr</item>
-		<item>picasa</item>
 	</string-array>
 </resources>

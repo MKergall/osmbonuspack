@@ -1,5 +1,7 @@
 package com.nootous;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,19 +43,21 @@ public class Map extends Fragment {
             Bundle savedInstanceState) {
         mActivity = (MainActivity)getActivity();
         mBinding = MapBinding.inflate(inflater, container, false);
-        return mBinding.getRoot();
-    }
-
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID+"/"+BuildConfig.VERSION_NAME);
-        mMap = (MapView) mActivity.findViewById(R.id.map);
+        mMap = (MapView) mBinding.map;
+        mMap.setTilesScaledToDpi(true);
         mMap.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT);
         mMap.setMultiTouchControls(true);
         mMap.setMinZoomLevel(4.0);
         mMap.setMaxZoomLevel(21.0);
         mMap.setVerticalMapRepetitionEnabled(false);
+
+        return mBinding.getRoot();
+    }
+
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         GeoPoint startPoint;
         if (mActivity.mCurrentLocation != null)
@@ -124,7 +128,7 @@ public class Map extends Fragment {
             mMap.invalidate();
             return;
         }
-        Drawable icon = mActivity.getResources().getDrawable(R.drawable.marker_friend_off);
+        Drawable icon = getResources().getDrawable(R.drawable.marker_friend_off);
         for (Friend friend : mFriends.friendsList) {
             if (!friend.mHasLocation ||
                     (friend.mPosition.getLatitude() == 0.0 && friend.mPosition.getLongitude() == 0.0))
@@ -138,7 +142,8 @@ public class Map extends Fragment {
             }
             marker.setTitle(friend.mNickName);
             marker.setSnippet(friend.mMessage);
-            marker.setIcon(icon); //((BitmapDrawable) iconOnline).getBitmap());
+            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            marker.setIcon(icon);
             //marker.setRelatedObject(friend);
             mFriendsMarkers.add(marker);
         }
@@ -158,7 +163,7 @@ public class Map extends Fragment {
             if (error == null) {
                 updateUIWithFriendsMarkers();
             } else
-                Toast.makeText(mActivity.getApplicationContext(), error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
         }
     }
 }

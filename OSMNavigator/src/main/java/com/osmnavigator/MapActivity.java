@@ -24,6 +24,7 @@ import android.location.Address;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
+import android.provider.Settings;
 import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -427,6 +429,20 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
 
 	void checkPermissions() {
+		//the mess to cover MANAGE_EXTERNAL_STORAGE on Android 11+:
+		if (Build.VERSION.SDK_INT>=30) {
+			if (!Environment.isExternalStorageManager()) {
+				try {
+					Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
+					Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri);
+					startActivity(intent);
+				} catch (Exception ex) {
+					Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+					startActivity(intent);
+				}
+			}
+		}
+
 		List<String> permissions = new ArrayList<>();
 		String message = "Application permissions:";
 		if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -1133,26 +1149,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 				//Get POI inside the bounding box of the current map view:
 				ArrayList<POI> pois = poiProvider.getPOIInside(bb, 30);
 				return pois;
-			} else if (mFeatureTag.equals("flickr")){
-				FlickrPOIProvider poiProvider = new FlickrPOIProvider(flickrApiKey);
-				ArrayList<POI> pois = poiProvider.getPOIInside(bb, 30);
-				return pois;
-			} else if (mFeatureTag.startsWith("picasa")){
-				PicasaPOIProvider poiProvider = new PicasaPOIProvider(null);
-				//allow to search for keywords among picasa photos:
-				String q = mFeatureTag.substring("picasa".length());
-				ArrayList<POI> pois = poiProvider.getPOIInside(bb, 50, q);
-				return pois;
 			} else {
-				/*
-				NominatimPOIProvider poiProvider = new NominatimPOIProvider();
-				ArrayList<POI> pois;
-				if (mRoad == null){
-					pois = poiProvider.getPOIInside(map.getBoundingBox(), mFeatureTag, 100);
-				} else {
-					pois = poiProvider.getPOIAlong(mRoad.getRouteLow(), mFeatureTag, 100, 2.0);
-				}
-				*/
 				OverpassAPIProvider overpassProvider = new OverpassAPIProvider();
 				String osmTag = getOSMTag(mFeatureTag);
 				if (osmTag == null){

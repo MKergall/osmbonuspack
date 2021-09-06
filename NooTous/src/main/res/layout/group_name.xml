@@ -7,10 +7,10 @@
     tools:context=".GroupName">
 
     <TextView
-        android:id="@+id/textview_first"
+        android:id="@+id/group_name_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_first_fragment"
+        android:text="@string/group_name_title"
         android:textSize="24dp"
         app:layout_constraintBottom_toTopOf="@id/group_name"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,14 +22,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="24dp"
-        android:hint="@string/group_name"
+        android:hint="@string/group_name_hint"
         android:imeOptions="actionDone"
         android:singleLine="true"
         android:completionThreshold="1"
         app:layout_constraintBottom_toTopOf="@id/button_next"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_first" />
+        app:layout_constraintTop_toBottomOf="@id/group_name_title" />
 
     <ImageButton
         android:id="@+id/trends"
@@ -54,5 +54,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/group_name" />
+
+    <ImageButton
+        android:id="@+id/button_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/ic_dialog_email"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

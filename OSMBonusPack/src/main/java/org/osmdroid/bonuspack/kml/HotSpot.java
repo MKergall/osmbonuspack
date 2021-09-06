@@ -38,7 +38,7 @@ public class HotSpot implements Parcelable {
 
     public HotSpot(){
         mx = 0.5f;
-        my = 0.5f;
+        my = 0.0f; //we decide that default=bottom (not specified in KML doc...)
         mXUnits = Units.fraction;
         mYUnits = Units.fraction;
     }

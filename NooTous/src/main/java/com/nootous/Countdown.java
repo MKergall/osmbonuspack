@@ -142,7 +142,7 @@ public class Countdown extends Fragment implements LocationListener {
                     mActivity.mPartner = null;
                 startSharingTimer();
             } else {
-                Toast.makeText(mActivity.getApplicationContext(), error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -235,7 +235,7 @@ public class Countdown extends Fragment implements LocationListener {
                 else
                     mBinding.pancarte.setVisibility(View.VISIBLE);
             } else
-                Toast.makeText(mActivity.getApplicationContext(), error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
         }
     }
 
