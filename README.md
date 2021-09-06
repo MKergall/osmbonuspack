@@ -15,8 +15,6 @@ Have a look to the examples below, and to the [features](https://github.com/MKer
 
 The [OSMNavigator](https://github.com/MKergall/osmbonuspack/wiki/OSMNavigator) application demonstrates the use of these classes. This is a generic-purpose Map/Navigation tool, including a KML viewer and editor.
 
-[![Get it on Google Play](http://steverichey.github.io/google-play-badge-svg/img/en_get.svg)](https://play.google.com/store/apps/details?id=com.osmnavigator)
-
 
 # Examples
 Geocoding, route display, bubble on the destination with the address and an image
