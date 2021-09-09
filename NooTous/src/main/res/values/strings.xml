@@ -8,4 +8,6 @@
     <string name="next">Next</string>
     <string name="group_name_title">Event Name:</string>
     <string name="group_name_hint">Event Name</string>
+    <string name="nickname_txt">Nickname (visible to all participants):</string>
+    <string name="message_txt">Message (visible to all participants):</string>
 </resources>

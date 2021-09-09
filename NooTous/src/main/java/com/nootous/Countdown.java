@@ -1,6 +1,7 @@
 package com.nootous;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -49,13 +50,13 @@ public class Countdown extends Fragment implements LocationListener {
 
     @Override
     public View onCreateView(
-            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState
+            @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState
     ) {
         mActivity = (MainActivity)getActivity();
         checkPermissions();
 
         //Get initial location:
-        mLocationManager = (LocationManager)mActivity.getSystemService(mActivity.LOCATION_SERVICE);
+        mLocationManager = (LocationManager)mActivity.getSystemService(Activity.LOCATION_SERVICE);
         Location location = null;
         if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -75,9 +76,9 @@ public class Countdown extends Fragment implements LocationListener {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        String nickname = "NooTous";
-        String groupName = mActivity.getSharedPreferences("NOOTOUS", mActivity.MODE_PRIVATE).getString("GROUP_NAME", "");
-        String message = "";
+        String nickname = mActivity.getSharedPreferences("NOOTOUS", Activity.MODE_PRIVATE).getString("NICKNAME", "");
+        String groupName = mActivity.getSharedPreferences("NOOTOUS", Activity.MODE_PRIVATE).getString("GROUP_NAME", "");
+        String message = mActivity.getSharedPreferences("NOOTOUS", Activity.MODE_PRIVATE).getString("MESSAGE", "");
         new StartSharingTask().execute(nickname, groupName, message);
 
         mBinding.groupname.setText(groupName);

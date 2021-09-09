@@ -12,9 +12,9 @@
         android:layout_height="wrap_content"
         android:text="@string/group_name_title"
         android:textSize="24dp"
-        app:layout_constraintBottom_toTopOf="@id/group_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/group_name"
         app:layout_constraintTop_toTopOf="parent" />
 
     <AutoCompleteTextView
@@ -26,7 +26,7 @@
         android:imeOptions="actionDone"
         android:singleLine="true"
         android:completionThreshold="1"
-        app:layout_constraintBottom_toTopOf="@id/button_next"
+        app:layout_constraintBottom_toTopOf="@id/msg_block"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/group_name_title" />
@@ -42,8 +42,63 @@
         android:src="@drawable/trends_button"
         android:background="@android:color/transparent"
         android:contentDescription="trends"
-        app:layout_constraintBottom_toBottomOf="@+id/group_name"
-        app:layout_constraintStart_toEndOf="@+id/group_name" />
+        app:layout_constraintBottom_toBottomOf="@id/group_name"
+        app:layout_constraintStart_toEndOf="@id/group_name" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/msg_block"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/group_name"
+        app:layout_constraintBottom_toTopOf="@id/button_next"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/tv_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
+            android:text="@string/nickname_txt"
+            app:layout_constraintBottom_toTopOf="@id/nickname"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_nickname" />
+
+        <TextView
+            android:id="@+id/tv_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="302dp"
+            android:text="@string/message_txt"
+            app:layout_constraintBottom_toTopOf="@id/message"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/nickname" />
+
+        <EditText
+            android:id="@+id/message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:minLines="2"
+            android:maxLines="5"
+            android:maxLength="280"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_message" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
         android:id="@+id/button_next"
@@ -59,7 +114,8 @@
         android:id="@+id/button_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/ic_dialog_email"
+        android:src="@android:drawable/ic_dialog_email"
+        app:tint="@color/teal_700"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

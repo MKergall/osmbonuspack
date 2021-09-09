@@ -7,4 +7,6 @@
     <string name="next">Suivant</string>
     <string name="group_name_title">Nom de l\'événement :</string>
     <string name="group_name_hint">Nom de l\'événement</string>
+    <string name="nickname_txt">Pseudo (visible de tous les participants) :</string>
+    <string name="message_txt">Message (visible de tous les participants) :</string>
 </resources>

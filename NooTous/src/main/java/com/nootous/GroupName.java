@@ -1,5 +1,6 @@
 package com.nootous;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -27,13 +28,16 @@ public class GroupName extends Fragment {
     GetTrendTask mGetTrendTask;
 
     @Override public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
+            @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         mActivity = (MainActivity)getActivity();
         mBinding = GroupNameBinding.inflate(inflater, container, false);
 
-        String groupName = mActivity.getSharedPreferences("NOOTOUS", mActivity.MODE_PRIVATE).getString("GROUP_NAME", "#");
+        String groupName = mActivity.getSharedPreferences("NOOTOUS", Context.MODE_PRIVATE).getString("GROUP_NAME", "#");
         mBinding.groupName.setText(groupName);
+
+        String nickname = mActivity.getSharedPreferences("NOOTOUS", Context.MODE_PRIVATE).getString("NICKNAME", "NooTous");
+        mBinding.nickname.setText(nickname);
 
         TrendAdapter adapter = new TrendAdapter(
                 getContext(), R.layout.group_name, R.id.lbl_name, mActivity.mTrends);
@@ -49,9 +53,13 @@ public class GroupName extends Fragment {
         mBinding.buttonNext.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View view) {
                 String groupName = mBinding.groupName.getText().toString();
-                SharedPreferences prefs = getActivity().getSharedPreferences("NOOTOUS", getActivity().MODE_PRIVATE);
+                String nickname = mBinding.nickname.getText().toString();
+                String message = mBinding.message.getText().toString();
+                SharedPreferences prefs = getActivity().getSharedPreferences("NOOTOUS", Activity.MODE_PRIVATE);
                 SharedPreferences.Editor ed = prefs.edit();
                 ed.putString("GROUP_NAME", groupName);
+                ed.putString("NICKNAME", nickname);
+                ed.putString("MESSAGE", message);
                 ed.apply();
                 NavHostFragment.findNavController(GroupName.this)
                         .navigate(R.id.action_GroupFragment_to_CountFragment);
@@ -60,8 +68,10 @@ public class GroupName extends Fragment {
 
         mBinding.buttonMessage.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View view) {
-                NavHostFragment.findNavController(GroupName.this)
-                        .navigate(R.id.action_GroupFragment_to_MessageFragment);
+                if (mBinding.msgBlock.getVisibility() == View.GONE)
+                    mBinding.msgBlock.setVisibility(View.VISIBLE);
+                else
+                    mBinding.msgBlock.setVisibility(View.GONE);
             }
         });
 
@@ -127,17 +137,17 @@ public class GroupName extends Fragment {
 
         Filter nameFilter = new Filter() {
             @Override public CharSequence convertResultToString(Object resultValue) {
-                String str = ((Trend) resultValue).name;
-                return str;
+                return ((Trend) resultValue).name;
             }
 
             @Override protected FilterResults performFiltering(CharSequence constraint) {
                 if (constraint != null) {
                     suggestions.clear();
                     for (Trend trend : tempItems) {
-                        if (trend.name.contains(constraint.toString())) {
+                        //if (trend.name.contains(constraint.toString())) {
+                        //don't filter at all
                             suggestions.add(trend);
-                        }
+                        //}
                     }
                     FilterResults filterResults = new FilterResults();
                     filterResults.values = suggestions;

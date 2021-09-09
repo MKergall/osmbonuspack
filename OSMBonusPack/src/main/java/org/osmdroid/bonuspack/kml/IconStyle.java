@@ -83,11 +83,11 @@ public class IconStyle extends ColorStyle implements Parcelable {
 			return null;
 		}
 		Bitmap scaledBitmap = Bitmap.createScaledBitmap(mIcon, sizeX, sizeY, true);
-		BitmapDrawable marker = new BitmapDrawable(context.getResources(), scaledBitmap);
+		BitmapDrawable finalIcon = new BitmapDrawable(context.getResources(), scaledBitmap);
 		int color = getFinalColor();
 		if (color != 0) //there is a real color to blend with:
-			marker.setColorFilter(color, Mode.MULTIPLY);
-		return marker;
+			finalIcon.setColorFilter(color, Mode.MULTIPLY);
+		return finalIcon;
 	}
 
 	/** apply all IconStyle attributes to the Marker */

@@ -1,7 +1,5 @@
 package com.nootous;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +13,7 @@ import com.nootous.databinding.MapBinding;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
 import org.osmdroid.bonuspack.kml.KmlDocument;
+import org.osmdroid.bonuspack.overlays.MarkerBis;
 import org.osmdroid.bonuspack.sharing.Friend;
 import org.osmdroid.bonuspack.sharing.Friends;
 import org.osmdroid.bonuspack.sharing.Partner;
@@ -39,7 +38,7 @@ public class Map extends Fragment {
     protected DirectedLocationOverlay myLocationOverlay;
 
     @Override public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
+            @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         mActivity = (MainActivity)getActivity();
         mBinding = MapBinding.inflate(inflater, container, false);
@@ -134,7 +133,7 @@ public class Map extends Fragment {
                     (friend.mPosition.getLatitude() == 0.0 && friend.mPosition.getLongitude() == 0.0))
                 //some filtering
                 continue;
-            Marker marker = new Marker(mMap);
+            Marker marker = new MarkerBis(mMap);
             try {
                 marker.setPosition(friend.mPosition);
             } catch (Exception IllegalArgumentException) {

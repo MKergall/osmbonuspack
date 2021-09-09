@@ -13,9 +13,6 @@
         <action
             android:id="@+id/action_GroupFragment_to_CountFragment"
             app:destination="@id/CountFragment" />
-        <action
-            android:id="@+id/action_GroupFragment_to_MessageFragment"
-            app:destination="@id/MessageFragment" />
     </fragment>
     <fragment
         android:id="@+id/CountFragment"
@@ -34,14 +31,5 @@
         <action
             android:id="@+id/action_MapFragment_to_CountFragment"
             app:destination="@id/CountFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/MessageFragment"
-        android:name="com.nootous.MessageFragment"
-        android:label="@string/message_fragment_label"
-        tools:layout="@layout/message">
-        <action
-            android:id="@+id/action_MessageFragment_to_GroupFragment"
-            app:destination="@id/GroupFragment" />
     </fragment>
 </navigation>
