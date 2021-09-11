@@ -1801,8 +1801,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			color = Color.GREEN-0x20000000;
 		}
 		s.mLineStyle = new LineStyle(color, 8.0f);
-		String styleId = mKmlDocument.addStyle(s);
-		p.mStyle = styleId;
+		p.mStyle = mKmlDocument.addStyle(s);
 		return t;
 	}
 

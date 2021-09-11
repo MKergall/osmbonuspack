@@ -31,6 +31,9 @@ public class Friend {
             mPosition = new GeoPoint(0.0, 0.0);
         mBearing = joUser.get("bearing").getAsFloat();
         mOnline = (joUser.get("online").getAsInt() == 1);
-        mMessage = joUser.get("message").getAsString();
+        if (joUser.has("message"))
+            mMessage = joUser.get("message").getAsString();
+        else
+            mMessage = "";
     }
 }
