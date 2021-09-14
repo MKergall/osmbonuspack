@@ -191,8 +191,11 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		/*
 		Configuration.getInstance().setOsmdroidBasePath(new File(Environment.getExternalStorageDirectory(), "osmdroid"));
 		Configuration.getInstance().setOsmdroidTileCache(new File(Environment.getExternalStorageDirectory(), "osmdroid/tiles"));
+		Android 11 constraints => we let osmdroid choose the cache path.
+		*/
 		Configuration.getInstance().setUserAgentValue(userAgent);
 
 		//Configuration.getInstance().setMapViewHardwareAccelerated(true);
@@ -430,7 +433,8 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 
 	void checkPermissions() {
 		//the mess to cover MANAGE_EXTERNAL_STORAGE on Android 11+:
-		if (Build.VERSION.SDK_INT>=30) {
+		/*
+		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT) {
 			if (!Environment.isExternalStorageManager()) {
 				try {
 					Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
@@ -442,7 +446,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 				}
 			}
 		}
-
+		*/
 		List<String> permissions = new ArrayList<>();
 		String message = "Application permissions:";
 		if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -1192,7 +1196,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		mDialogForOpen = open;
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(getString(R.string.file_kml_open));
-		builder.setMessage("" + mKmlDocument.getDefaultPathForAndroid(""));
+		builder.setMessage("" + mKmlDocument.getDefaultPathForAndroid(this, ""));
 		final EditText input = new EditText(this);
 		input.setInputType(InputType.TYPE_CLASS_TEXT);
 		String localFileName = getSharedPreferences("OSMNAVIGATOR", MODE_PRIVATE).getString("KML_LOCAL_FILE", "current.kml");
@@ -1205,7 +1209,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 				prefs.edit().putString("KML_LOCAL_FILE", localFileName).apply();
 				dialog.cancel();
 				if (mDialogForOpen){
-					File file = mKmlDocument.getDefaultPathForAndroid(localFileName);
+					File file = mKmlDocument.getDefaultPathForAndroid(getApplicationContext(), localFileName);
 					openFile("file:/"+file.toString(), false, false);
 				} else
 					saveFile(localFileName);
@@ -1230,11 +1234,11 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		builder.setView(input);
 		builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
 			@Override public void onClick(DialogInterface dialog, int which) {
-				String uri = input.getText().toString();
-				SharedPreferences prefs = getSharedPreferences("OSMNAVIGATOR", MODE_PRIVATE);
-				prefs.edit().putString("KML_URI", uri).apply();
-				dialog.cancel();
-				openFile(uri, false, false);
+			String uri = input.getText().toString();
+			SharedPreferences prefs = getSharedPreferences("OSMNAVIGATOR", MODE_PRIVATE);
+			prefs.edit().putString("KML_URI", uri).apply();
+			dialog.cancel();
+			openFile(uri, false, false);
 			}
 		});
 		builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -1256,11 +1260,11 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				String query = input.getText().toString();
-				SharedPreferences prefs = getSharedPreferences("OSMNAVIGATOR", MODE_PRIVATE);
-				prefs.edit().putString("OVERPASS_QUERY", query).apply();
-				dialog.cancel();
-				openFile(query, false, true);
+			String query = input.getText().toString();
+			SharedPreferences prefs = getSharedPreferences("OSMNAVIGATOR", MODE_PRIVATE);
+			prefs.edit().putString("OVERPASS_QUERY", query).apply();
+			dialog.cancel();
+			openFile(query, false, true);
 			}
 		});
 		builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -1349,7 +1353,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	/** save fileName locally, as KML or GeoJSON depending on the extension */
 	void saveFile(String fileName){
 		boolean result;
-		File file = mKmlDocument.getDefaultPathForAndroid(fileName);
+		File file = mKmlDocument.getDefaultPathForAndroid(this, fileName);
 		if (fileName.endsWith(".json"))
 			result = mKmlDocument.saveAsGeoJSON(file);
 		else

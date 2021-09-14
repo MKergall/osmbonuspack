@@ -233,9 +233,9 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 			KmlFolder root = mKmlDocument.mKmlRoot;
 			root.addOverlay(roadOverlay, mKmlDocument);
 			root.addOverlay(roadMarkers, mKmlDocument);
-			mKmlDocument.saveAsKML(mKmlDocument.getDefaultPathForAndroid("my_route.kml"));
+			mKmlDocument.saveAsKML(mKmlDocument.getDefaultPathForAndroid(this, "my_route.kml"));
 			//15. Loading and saving of GeoJSON content
-			mKmlDocument.saveAsGeoJSON(mKmlDocument.getDefaultPathForAndroid("my_route.json"));
+			mKmlDocument.saveAsGeoJSON(mKmlDocument.getDefaultPathForAndroid(this,"my_route.json"));
 		}
 
 		//16. Handling Map events

@@ -1,5 +1,7 @@
 package org.osmdroid.bonuspack.kml;
 
+import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -217,19 +219,24 @@ public class KmlDocument implements Parcelable {
 	}
 
 	/**
-	 * Get the default path for KML file on Android: on the external storage, in a "kml" directory. 
-	 * Creates the directory if necessary. 
+	 * Get the default path for KML file on Android:
+	 * SDK < KITKAT : on the external storage, in a "kml" directory (creating the directory if necessary)
+	 * SDK >= KITKAT : in the private storage area of the application.
 	 * @param fileName
 	 * @return full path, as a File, or null if error. 
 	 */
-	public File getDefaultPathForAndroid(String fileName){
-		try {
-			File path = new File(Environment.getExternalStorageDirectory(), "kml");
-			path.mkdir();
-			return new File(path.getAbsolutePath(), fileName);
-		} catch (NullPointerException e){
-			e.printStackTrace();
-			return null;
+	public File getDefaultPathForAndroid(Context context, String fileName){
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			return new File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), fileName);
+		} else {
+			try {
+				File path = new File(Environment.getExternalStorageDirectory(), "kml");
+				path.mkdir();
+				return new File(path.getAbsolutePath(), fileName);
+			} catch (NullPointerException e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
 	}
 	
