@@ -26,15 +26,13 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 
-import android.provider.Settings;
+import android.os.ParcelFileDescriptor;
 import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -62,13 +60,11 @@ import org.osmdroid.bonuspack.kml.KmlPoint;
 import org.osmdroid.bonuspack.kml.KmlTrack;
 import org.osmdroid.bonuspack.kml.LineStyle;
 import org.osmdroid.bonuspack.kml.Style;
-import org.osmdroid.bonuspack.location.FlickrPOIProvider;
 import org.osmdroid.bonuspack.location.GeoNamesPOIProvider;
 //import org.osmdroid.bonuspack.location.GeocoderGraphHopper;
 import org.osmdroid.bonuspack.location.GeocoderNominatim;
 import org.osmdroid.bonuspack.location.OverpassAPIProvider;
 import org.osmdroid.bonuspack.location.POI;
-import org.osmdroid.bonuspack.location.PicasaPOIProvider;
 import org.osmdroid.bonuspack.routing.GoogleRoadManager;
 import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
@@ -111,9 +107,16 @@ import org.osmdroid.views.overlay.infowindow.BasicInfoWindow;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 import org.osmdroid.views.overlay.mylocation.DirectedLocationOverlay;
+
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -578,6 +581,18 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 				break;
 			case KmlStylesActivity.KML_STYLES_REQUEST:
 				updateUIWithKml();
+				break;
+			case PICK_KML_FILE:
+				if (intent != null) {
+					Uri uri = intent.getData();
+					openFile(uri.toString(), false, false);
+				}
+				break;
+			case SAVE_KML_FILE:
+				if (intent != null) {
+					Uri uri = intent.getData();
+					saveFile(uri);
+				}
 				break;
 			default:
 				break;
@@ -1190,37 +1205,20 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 
 	//------------ KML handling
 
-	boolean mDialogForOpen;
+	static final int PICK_KML_FILE = 18;
+	void openLoadFileDialog(){
+		Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+		intent.addCategory(Intent.CATEGORY_OPENABLE);
+		intent.setType("*/*");
+		startActivityForResult(intent, PICK_KML_FILE);
+	}
 
-	void openLocalFileDialog(boolean open){
-		mDialogForOpen = open;
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(getString(R.string.file_kml_open));
-		builder.setMessage("" + mKmlDocument.getDefaultPathForAndroid(this, ""));
-		final EditText input = new EditText(this);
-		input.setInputType(InputType.TYPE_CLASS_TEXT);
-		String localFileName = getSharedPreferences("OSMNAVIGATOR", MODE_PRIVATE).getString("KML_LOCAL_FILE", "current.kml");
-		input.setText(localFileName);
-		builder.setView(input);
-		builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-			@Override public void onClick(DialogInterface dialog, int which) {
-				String localFileName = input.getText().toString();
-				SharedPreferences prefs = getSharedPreferences("OSMNAVIGATOR", MODE_PRIVATE);
-				prefs.edit().putString("KML_LOCAL_FILE", localFileName).apply();
-				dialog.cancel();
-				if (mDialogForOpen){
-					File file = mKmlDocument.getDefaultPathForAndroid(getApplicationContext(), localFileName);
-					openFile("file:/"+file.toString(), false, false);
-				} else
-					saveFile(localFileName);
-			}
-		});
-		builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-			@Override public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
-			}
-		});
-		builder.show();
+	static final int SAVE_KML_FILE = 19;
+	void openSaveFileDialog(){
+		Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+		intent.addCategory(Intent.CATEGORY_OPENABLE);
+		intent.setType("*/*");
+		startActivityForResult(intent, SAVE_KML_FILE);
 	}
 
 	void openUrlDialog(){
@@ -1258,8 +1256,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		input.setText(query);
 		builder.setView(input);
 		builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
+			@Override public void onClick(DialogInterface dialog, int which) {
 			String query = input.getText().toString();
 			SharedPreferences prefs = getSharedPreferences("OSMNAVIGATOR", MODE_PRIVATE);
 			prefs.edit().putString("OVERPASS_QUERY", query).apply();
@@ -1268,8 +1265,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			}
 		});
 		builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
+			@Override public void onClick(DialogInterface dialog, int which) {
 				dialog.cancel();
 			}
 		});
@@ -1313,17 +1309,18 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			if (isOverpassRequest){
 				//mUri contains the query
 				ok = getKMLFromOverpass(mUri);
-			} else if (mUri.startsWith("file:/")){
-				mUri = mUri.substring("file:/".length());
-				File file = new File(mUri);
-				if (mUri.endsWith(".json"))
-					ok = mKmlDocument.parseGeoJSON(file);
-				else if (mUri.endsWith(".kmz"))
-					ok = mKmlDocument.parseKMZFile(file);
-				else //assume KML
-					ok = mKmlDocument.parseKMLFile(file);
 			} else if (mUri.startsWith("http")) {
 				ok = mKmlDocument.parseKMLUrl(mUri);
+			} else if (mUri.startsWith("content://")){
+				try {
+					Uri uri = Uri.parse(mUri);
+					InputStream inputStream = getContentResolver().openInputStream(uri);
+					if (mUri.endsWith(".json"))
+						ok = mKmlDocument.parseGeoJSONStream(inputStream);
+					else //assume KML
+						ok = mKmlDocument.parseKMLStream(inputStream,null);
+					inputStream.close();
+				} catch (Exception e) { }
 			}
 			return ok;
 		}
@@ -1346,22 +1343,28 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	}
 
 	void openFile(String uri, boolean onCreate, boolean isOverpassRequest){
-		//Toast.makeText(this, "Loading "+uri, Toast.LENGTH_SHORT).show();
 		new KmlLoadingTask(getString(R.string.loading)+" "+uri).execute(uri, onCreate, isOverpassRequest);
 	}
 
 	/** save fileName locally, as KML or GeoJSON depending on the extension */
-	void saveFile(String fileName){
-		boolean result;
-		File file = mKmlDocument.getDefaultPathForAndroid(this, fileName);
-		if (fileName.endsWith(".json"))
-			result = mKmlDocument.saveAsGeoJSON(file);
-		else
-			result = mKmlDocument.saveAsKML(file);
-		if (result)
-			Toast.makeText(this, fileName + " saved", Toast.LENGTH_SHORT).show();
-		else
-			Toast.makeText(this, "Unable to save "+fileName, Toast.LENGTH_SHORT).show();
+	void saveFile(Uri uri){
+		try {
+			ParcelFileDescriptor pfd = getContentResolver().openFileDescriptor(uri, "w");
+			FileOutputStream fileOutputStream = new FileOutputStream(pfd.getFileDescriptor());
+			OutputStreamWriter out = new OutputStreamWriter(fileOutputStream, "UTF-8");
+			BufferedWriter writer = new BufferedWriter(out, 8192);
+			if (uri.toString().endsWith(".json"))
+				mKmlDocument.saveAsGeoJSON(writer);
+			else
+				mKmlDocument.saveAsKML(writer);
+			writer.close();
+			out.close();
+			fileOutputStream.close();
+			pfd.close();
+			Toast.makeText(this, uri.toString() + " saved", Toast.LENGTH_SHORT).show();
+		} catch (Exception e) {
+			Toast.makeText(this, "Unable to save "+uri.toString(), Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	Style buildDefaultStyle(){
@@ -1407,7 +1410,6 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 		protected void onPostExecute(String result) {
 			kmlPoint.mName = result;
 			updateUIWithKml();
-			// marker.showInfoWindow();
 		}
 	}
 
@@ -1619,19 +1621,19 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			openUrlDialog();
 			return true;
 		case R.id.menu_open_file:
-			openLocalFileDialog(true);
+			openLoadFileDialog();
 			return true;
 		case R.id.menu_overpass_api:
 			openOverpassAPIWizard();
 			return true;
-			case R.id.menu_kml_record_track:
-				mIsRecordingTrack = !mIsRecordingTrack;
-				mFriendsManager.setTracksRecording(mIsRecordingTrack);
-				if (mIsRecordingTrack)
-					item.setTitle(R.string.menu_kml_stop_record_tracks);
-				else
-					item.setTitle(R.string.menu_kml_record_tracks);
-				return true;
+		case R.id.menu_kml_record_track:
+			mIsRecordingTrack = !mIsRecordingTrack;
+			mFriendsManager.setTracksRecording(mIsRecordingTrack);
+			if (mIsRecordingTrack)
+				item.setTitle(R.string.menu_kml_stop_record_tracks);
+			else
+				item.setTitle(R.string.menu_kml_record_tracks);
+			return true;
 		case R.id.menu_kml_get_overlays:
 			insertOverlaysInKml();
 			updateUIWithKml();
@@ -1647,7 +1649,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			startActivityForResult(myIntent, KmlStylesActivity.KML_STYLES_REQUEST);
 			return true;
 		case R.id.menu_save_file:
-			openLocalFileDialog(false);
+			openSaveFileDialog();
 			return true;
 		case R.id.menu_kml_clear:
 			mKmlDocument = new KmlDocument();
