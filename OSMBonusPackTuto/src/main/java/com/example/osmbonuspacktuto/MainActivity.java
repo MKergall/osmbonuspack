@@ -88,7 +88,6 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 
 		setContentView(R.layout.main);
 		map = (MapView) findViewById(R.id.map);
-		map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT);
 		map.setMultiTouchControls(true);
 		GeoPoint startPoint = new GeoPoint(48.13, -1.63);
 		IMapController mapController = map.getController();

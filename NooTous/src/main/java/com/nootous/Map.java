@@ -46,7 +46,6 @@ public class Map extends Fragment {
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID+"/"+BuildConfig.VERSION_NAME);
         mMap = (MapView) mBinding.map;
         mMap.setTilesScaledToDpi(true);
-        mMap.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT);
         mMap.setMultiTouchControls(true);
         mMap.setMinZoomLevel(4.0);
         mMap.setMaxZoomLevel(21.0);

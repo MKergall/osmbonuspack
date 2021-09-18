@@ -238,7 +238,6 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			map.getOverlayManager().getTilesOverlay().setColorFilter(TilesOverlay.INVERT_COLORS);
 
 		map.setTilesScaledToDpi(true);
-		map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT);
 		map.setMultiTouchControls(true);
 		map.setMinZoomLevel(1.0);
 		map.setMaxZoomLevel(21.0);

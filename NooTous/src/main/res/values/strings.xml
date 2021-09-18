@@ -4,7 +4,6 @@
     <string name="group_fragment_label">Event Name</string>
     <string name="count_fragment_label">Countdown</string>
     <string name="map_fragment_label">Map</string>
-    <string name="message_fragment_label">My Message</string>
     <string name="next">Next</string>
     <string name="group_name_title">Event Name:</string>
     <string name="group_name_hint">Event Name</string>
