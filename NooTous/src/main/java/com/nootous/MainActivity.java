@@ -1,5 +1,8 @@
 package com.nootous;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -51,8 +54,7 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        mBlurredDistance = 100.0 + Math.random()*100.0; //offset by 100 to 200 meters
-	    mBlurredBearing = Math.random()*360.0; //in any direction
+        initBlurring(100.0);
     }
 
     @Override public boolean onSupportNavigateUp() {
@@ -61,28 +63,40 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    /*
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_group, menu);
         return true;
     }
 
+    private static String eventManagementUrl = "https://comob.org/NooTous/partner.html";
+
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_my_message:
+            case R.id.action_event_management:
+                String groupName = getSharedPreferences("NOOTOUS", Context.MODE_PRIVATE).getString("GROUP_NAME", "#");
+                String url = eventManagementUrl + "?group_id=" + groupName;
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(browserIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-    */
 
     //----------------------
 
     @Override protected void onDestroy() {
         super.onDestroy();
         mTrends = null;
+    }
+
+    /**
+     * @param distanceRange offset by distanceRange to 2*distanceRange (in meters)
+     */
+    public void initBlurring(double distanceRange){
+        mBlurredDistance = distanceRange + Math.random()*distanceRange;
+        mBlurredBearing = Math.random()*360.0; //in any direction
     }
 
     public GeoPoint getBlurredLocation(){

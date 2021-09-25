@@ -33,6 +33,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.os.ParcelFileDescriptor;
+import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -194,14 +195,8 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		/*
-		Configuration.getInstance().setOsmdroidBasePath(new File(Environment.getExternalStorageDirectory(), "osmdroid"));
-		Configuration.getInstance().setOsmdroidTileCache(new File(Environment.getExternalStorageDirectory(), "osmdroid/tiles"));
-		Android 11 constraints => we let osmdroid choose the cache path.
-		*/
-		Configuration.getInstance().setUserAgentValue(userAgent);
+		Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
 
-		//Configuration.getInstance().setMapViewHardwareAccelerated(true);
 		MapsForgeTileSource.createInstance(getApplication());
 
 		LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -434,30 +429,11 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 	final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
 
 	void checkPermissions() {
-		//the mess to cover MANAGE_EXTERNAL_STORAGE on Android 11+:
-		/*
-		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT) {
-			if (!Environment.isExternalStorageManager()) {
-				try {
-					Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
-					Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri);
-					startActivity(intent);
-				} catch (Exception ex) {
-					Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-					startActivity(intent);
-				}
-			}
-		}
-		*/
 		List<String> permissions = new ArrayList<>();
 		String message = "Application permissions:";
 		if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 			permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
 			message += "\nLocation to show user location.";
-		}
-		if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-			permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-			message += "\nStorage access to store map tiles.";
 		}
 		if (!permissions.isEmpty()) {
 			Toast.makeText(this, message, Toast.LENGTH_LONG).show();
@@ -476,12 +452,6 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 				// Fill with results
 				for (int i = 0; i < permissions.length; i++)
 					perms.put(permissions[i], grantResults[i]);
-				// Check for WRITE_EXTERNAL_STORAGE
-				Boolean storage = perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-				if (!storage) {
-					// Permission Denied
-					Toast.makeText(this, "Storage permission is required to store map tiles to reduce data usage and for offline usage.", Toast.LENGTH_LONG).show();
-				} // else: permission was granted, yay!
 			}
 		}
 	}

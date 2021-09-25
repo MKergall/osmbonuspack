@@ -17,6 +17,8 @@ import android.os.StrictMode;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -84,7 +86,7 @@ public class MainActivity extends Activity implements MapEventsReceiver, MapView
 
 		//Introduction
 		super.onCreate(savedInstanceState);
-		Configuration.getInstance().setUserAgentValue("OBP_Tuto/1.0");
+		Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
 
 		setContentView(R.layout.main);
 		map = (MapView) findViewById(R.id.map);
