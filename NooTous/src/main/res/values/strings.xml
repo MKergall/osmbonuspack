@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">NooTous</string>
     <string name="action_event_management">Event management</string>
+    <string name="action_settings">Settings</string>
     <string name="group_fragment_label">Event Name</string>
     <string name="count_fragment_label">Countdown</string>
     <string name="map_fragment_label">Map</string>
@@ -9,4 +10,6 @@
     <string name="group_name_hint">Event Name</string>
     <string name="nickname_txt">Nickname (visible to all participants):</string>
     <string name="message_txt">Message (visible to all participants):</string>
+    <string name="settings_title">Settings</string>
+    <string name="slider_position_label">Blur my position by:</string>
 </resources>

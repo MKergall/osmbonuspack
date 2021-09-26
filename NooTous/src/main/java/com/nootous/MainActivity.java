@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        initBlurring(100.0);
+        initPositionBlurring();
     }
 
     @Override public boolean onSupportNavigateUp() {
@@ -69,10 +69,13 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private static String eventManagementUrl = "https://comob.org/NooTous/partner.html";
+    protected static String eventManagementUrl = "https://comob.org/NooTous/partner.html";
 
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_settings:
+                startActivityForResult(new Intent(this, SettingsActivity.class), 100);
+                return true;
             case R.id.action_event_management:
                 String groupName = getSharedPreferences("NOOTOUS", Context.MODE_PRIVATE).getString("GROUP_NAME", "#");
                 String url = eventManagementUrl + "?group_id=" + groupName;
@@ -84,6 +87,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (resultCode == 100){
+            initPositionBlurring();
+        }
+    }
+
     //----------------------
 
     @Override protected void onDestroy() {
@@ -92,10 +102,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * @param distanceRange offset by distanceRange to 2*distanceRange (in meters)
+     * Initialize position blurring from preferences.
+     * User choice = 100m => random blurring will be in range [100m, 150m]
      */
-    public void initBlurring(double distanceRange){
-        mBlurredDistance = distanceRange + Math.random()*distanceRange;
+    public void initPositionBlurring(){
+        float distanceRange = getSharedPreferences("NOOTOUS", Context.MODE_PRIVATE).getFloat("BLURRING", 100.0f);
+        mBlurredDistance = distanceRange + Math.random()*distanceRange*0.5;
         mBlurredBearing = Math.random()*360.0; //in any direction
     }
 

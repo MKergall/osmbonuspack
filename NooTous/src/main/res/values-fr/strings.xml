@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">NooTous</string>
     <string name="action_event_management">Gestion d\'événement</string>
+    <string name="action_settings">Paramètres</string>
     <string name="group_fragment_label">Nom de l\'événement</string>
     <string name="count_fragment_label">Décompte</string>
     <string name="map_fragment_label">Carte</string>
@@ -9,4 +10,6 @@
     <string name="group_name_hint">Nom de l\'événement</string>
     <string name="nickname_txt">Pseudo (visible de tous les participants) :</string>
     <string name="message_txt">Message (visible de tous les participants) :</string>
+    <string name="settings_title">Paramètres</string>
+    <string name="slider_position_label">Flouter ma position de :</string>
 </resources>

@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/slider_position_label"
+        android:textSize="20dp"
+        android:textAlignment="center"
+        android:layout_gravity="center"/>
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/slider_position"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:valueFrom="0"
+        android:valueTo="2000"
+        android:stepSize="100" />
+
+    <Button
+        android:id="@+id/button_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="OK" />
+
+</LinearLayout>

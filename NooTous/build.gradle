@@ -38,4 +38,5 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.3.5'
     implementation 'androidx.navigation:navigation-ui:2.3.5'
     implementation project(path: ':OSMBonusPack')
+    implementation 'androidx.preference:preference:1.1.1'
 }

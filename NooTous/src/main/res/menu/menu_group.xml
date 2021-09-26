@@ -3,8 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.nootous.MainActivity">
     <item
-        android:id="@+id/action_event_management"
+        android:id="@+id/action_settings"
         android:orderInCategory="1"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_event_management"
+        android:orderInCategory="2"
         android:title="@string/action_event_management"
         app:showAsAction="never" />
 </menu>

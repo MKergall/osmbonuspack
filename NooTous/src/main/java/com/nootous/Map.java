@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import com.nootous.databinding.MapBinding;
 import org.osmdroid.api.IMapController;
@@ -126,7 +127,8 @@ public class Map extends Fragment {
             mMap.invalidate();
             return;
         }
-        Drawable icon = getResources().getDrawable(R.drawable.marker_friend_off);
+        Drawable iconFriend = getResources().getDrawable(R.drawable.marker_friend);
+        Drawable iconMyself = getResources().getDrawable(R.drawable.marker_myself);
         for (Friend friend : mFriends.friendsList) {
             if (!friend.mHasLocation ||
                     (friend.mPosition.getLatitude() == 0.0 && friend.mPosition.getLongitude() == 0.0))
@@ -141,7 +143,10 @@ public class Map extends Fragment {
             marker.setTitle(friend.mNickName);
             marker.setSnippet(friend.mMessage);
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            marker.setIcon(icon);
+            if (friend.mMyself)
+                marker.setIcon(iconMyself);
+            else
+                marker.setIcon(iconFriend);
             //marker.setRelatedObject(friend);
             mFriendsMarkers.add(marker);
         }

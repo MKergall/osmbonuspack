@@ -9,6 +9,7 @@ import org.osmdroid.util.GeoPoint;
  */
 public class Friend {
     public String mId;
+    public boolean mMyself;
     public String mNickName;
     public boolean mHasLocation;
     public GeoPoint mPosition;
@@ -21,6 +22,7 @@ public class Friend {
 
     public Friend(JsonObject joUser) {
         mId = joUser.get("id").getAsString();
+        mMyself = joUser.get("myself").getAsBoolean();
         mNickName = joUser.get("nickname").getAsString();
         mHasLocation = (joUser.get("has_location").getAsInt() == 1);
         if (mHasLocation) {
