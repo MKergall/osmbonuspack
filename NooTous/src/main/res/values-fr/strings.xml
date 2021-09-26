@@ -8,8 +8,9 @@
     <string name="next">Suivant</string>
     <string name="group_name_title">Nom de l\'événement :</string>
     <string name="group_name_hint">Nom de l\'événement</string>
-    <string name="nickname_txt">Pseudo (visible de tous les participants) :</string>
-    <string name="message_txt">Message (visible de tous les participants) :</string>
+    <string name="nickname_txt">Pseudo :</string>
+    <string name="message_txt">Message :</string>
+    <string name="warning_txt">(visible de tous les participants)</string>
     <string name="settings_title">Paramètres</string>
     <string name="slider_position_label">Flouter ma position de :</string>
 </resources>

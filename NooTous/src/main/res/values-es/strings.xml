@@ -1,11 +1,16 @@
 <resources>
     <string name="app_name">NooTous</string>
+    <string name="action_event_management">Gestión del evento</string>
+    <string name="action_settings">Configurationes</string>
     <string name="group_fragment_label">Nombre del evento</string>
     <string name="count_fragment_label">Cuenta</string>
     <string name="map_fragment_label">Mapa</string>
     <string name="next">Próximo</string>
     <string name="group_name_title">Nombre del evento :</string>
     <string name="group_name_hint">Nombre del evento</string>
-    <string name="nickname_txt">Seudó (visible para todos los participantes):</string>
-    <string name="message_txt">Mensaje (visible para todos los participantes):</string>
+    <string name="nickname_txt">Seudó:</string>
+    <string name="message_txt">Mensaje:</string>
+    <string name="warning_txt">(visible para todos los participantes)</string>
+    <string name="settings_title">Configurationes</string>
+    <string name="slider_position_label">Difuminar mi posición:</string>
 </resources>
