@@ -17,16 +17,13 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 import com.nootous.databinding.ActivityGroupBinding;
 import org.osmdroid.bonuspack.sharing.Friends;
 import org.osmdroid.bonuspack.sharing.Partner;
-import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.util.GeoPoint;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +75,13 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.action_event_management:
                 String groupName = getSharedPreferences("NOOTOUS", Context.MODE_PRIVATE).getString("GROUP_NAME", "#");
-                String url = eventManagementUrl + "?group_id=" + groupName;
+                String groupNameEncoded = null;
+                try {
+                    groupNameEncoded = URLEncoder.encode(groupName, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                String url = eventManagementUrl + "?group_id=" + groupNameEncoded;
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(browserIntent);
                 return true;
