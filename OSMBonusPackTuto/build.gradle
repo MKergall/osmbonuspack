@@ -1,12 +1,17 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     defaultConfig {
         applicationId "com.example.osmbonuspacktuto"
         minSdkVersion 16
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
     }
@@ -35,7 +40,7 @@ dependencies {
     // including as local lib
     /*
     compile(name: 'osmbonuspack_v6.8.0', ext: 'aar')
-    implementation 'org.osmdroid:osmdroid-android:6.1.11'
+    implementation 'org.osmdroid:osmdroid-android:6.1.13'
     implementation 'org.apache.commons:commons-lang3:3.8.1'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.okhttp3:okhttp:4.7.2'
