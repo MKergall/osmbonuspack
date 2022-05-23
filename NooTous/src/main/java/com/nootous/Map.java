@@ -8,20 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import com.nootous.databinding.MapBinding;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
 import org.osmdroid.bonuspack.kml.KmlDocument;
-import org.osmdroid.bonuspack.overlays.MarkerBis;
 import org.osmdroid.bonuspack.sharing.Friend;
 import org.osmdroid.bonuspack.sharing.Friends;
 import org.osmdroid.bonuspack.sharing.Partner;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.Marker;
@@ -134,7 +131,7 @@ public class Map extends Fragment {
                     (friend.mPosition.getLatitude() == 0.0 && friend.mPosition.getLongitude() == 0.0))
                 //some filtering
                 continue;
-            Marker marker = new MarkerBis(mMap);
+            Marker marker = new Marker(mMap);
             try {
                 marker.setPosition(friend.mPosition);
             } catch (Exception IllegalArgumentException) {

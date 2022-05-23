@@ -6,16 +6,13 @@ import android.os.Parcelable;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import org.osmdroid.bonuspack.kml.KmlFeature.Styler;
-import org.osmdroid.bonuspack.overlays.MarkerBis;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Marker.OnMarkerDragListener;
 import org.osmdroid.views.overlay.Overlay;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -87,7 +84,7 @@ public class KmlPoint extends KmlGeometry implements Parcelable, Cloneable {
 	/** Build the corresponding Marker overlay */	
 	@Override public Overlay buildOverlay(MapView map, Style defaultStyle, Styler styler, KmlPlacemark kmlPlacemark, 
 			KmlDocument kmlDocument){
-		Marker marker = new MarkerBis(map);
+		Marker marker = new Marker(map);
 		marker.setTitle(kmlPlacemark.mName);
 		marker.setSnippet(kmlPlacemark.mDescription);
 		marker.setSubDescription(kmlPlacemark.getExtendedDataAsText());
