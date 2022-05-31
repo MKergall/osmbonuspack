@@ -30,7 +30,7 @@ dependencies {
     implementation project(":OSMBonusPack")
 
     //including using JitPack:
-    //implementation 'com.github.MKergall:osmbonuspack:6.8.0'
+    //implementation 'com.github.MKergall:osmbonuspack:6.9.0'
 
     implementation 'org.osmdroid:osmdroid-mapsforge:6.1.6@aar'
     implementation 'org.mapsforge:mapsforge-map-android:0.13.0'
