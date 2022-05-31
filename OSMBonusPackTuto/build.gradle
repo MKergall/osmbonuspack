@@ -35,11 +35,11 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     //including using JitPack:
-    //implementation 'com.github.MKergall:osmbonuspack:6.8.0'
+    //implementation 'com.github.MKergall:osmbonuspack:6.9.0'
 
     // including as local lib
     /*
-    compile(name: 'osmbonuspack_v6.8.0', ext: 'aar')
+    compile(name: 'osmbonuspack_6.9.0', ext: 'aar')
     implementation 'org.osmdroid:osmdroid-android:6.1.13'
     implementation 'org.apache.commons:commons-lang3:3.8.1'
     implementation 'com.google.code.gson:gson:2.8.6'
