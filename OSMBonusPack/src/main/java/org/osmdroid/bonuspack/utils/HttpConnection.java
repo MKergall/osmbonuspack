@@ -70,7 +70,7 @@ public class HttpConnection {
             if (status != 200) {
                 Log.e(BonusPackHelper.LOG_TAG, "Invalid response from server: " + status.toString());
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
   }
