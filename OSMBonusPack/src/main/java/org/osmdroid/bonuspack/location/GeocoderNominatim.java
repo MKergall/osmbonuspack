@@ -233,7 +233,7 @@ public class GeocoderNominatim {
 				+ "&addressdetails=1"
 				+ "&limit=" + maxResults
 				+ "&q=" + URLEncoder.encode(locationName);
-		if (lowerLeftLatitude != 0.0 && upperRightLatitude != 0.0){
+		if (lowerLeftLatitude != 0.0 || upperRightLatitude != 0.0){
 			//viewbox = left, top, right, bottom:
 			url += "&viewbox=" + lowerLeftLongitude
 				+ "," + upperRightLatitude
@@ -253,8 +253,7 @@ public class GeocoderNominatim {
 		if (result == null)
 			throw new IOException();
 		try {
-			JsonParser parser = new JsonParser();
-			JsonElement json = parser.parse(result);
+			JsonElement json = JsonParser.parseString(result);
 			JsonArray jResults = json.getAsJsonArray();
 			List<Address> list = new ArrayList<Address>(jResults.size());
 			for (int i=0; i<jResults.size(); i++){

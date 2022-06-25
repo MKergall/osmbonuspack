@@ -430,18 +430,16 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 
 	void checkPermissions() {
 		List<String> permissions = new ArrayList<>();
-		String message = "Application permissions:";
 		if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 			permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-			message += "\nLocation to show user location.";
 		}
 		if (!permissions.isEmpty()) {
-			Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 			String[] params = permissions.toArray(new String[permissions.size()]);
 			ActivityCompat.requestPermissions(this, params, REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
 		} // else: We already have permissions, so handle as normal
 	}
 
+	/*
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
 		switch (requestCode) {
@@ -455,6 +453,7 @@ public class MapActivity extends Activity implements MapEventsReceiver, Location
 			}
 		}
 	}
+	*/
 
 	void setViewOn(BoundingBox bb){
 		if (bb != null){
