@@ -197,7 +197,7 @@ public abstract class KmlFeature implements Parcelable, Cloneable {
 				return false;
 			writer.write('<'+objectType);
 			if (mId != null)
-				writer.write(" id=\"mId\"");
+				writer.write(" id=\"+mId+\"");
 			writer.write(">\n");
 			if (mStyle != null){
 				writer.write("<styleUrl>#"+mStyle+"</styleUrl>\n");
