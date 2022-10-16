@@ -171,6 +171,14 @@ public abstract class MarkerClusterer extends Overlay {
 		return false;
 	}
 
+	@Override public boolean onDoubleTap(final MotionEvent event, final MapView mapView) {
+		for (final StaticCluster cluster : reversedClusters()) {
+			if (cluster.getMarker().onDoubleTap(event, mapView))
+				return true;
+		}
+		return false;
+	}
+
 	@Override public BoundingBox getBounds(){
 		if (mItems.size() == 0)
 				return null;
