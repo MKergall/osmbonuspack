@@ -145,6 +145,9 @@ public class OverpassAPIProvider {
 							+ tagValueFromJsonNotNull("shop", jTags) 
 							+ tagValueFromJsonNotNull("sport", jTags) 
 							+ tagValueFromJsonNotNull("tourism", jTags);
+							+ tagValueFromJsonNotNull("lanes", jTags);
+							+ tagValueFromJsonNotNull("surface", jTags);
+							+ tagValueFromJsonNotNull("footway", jTags);
 					//remove first "," (quite ugly, I know)
 					if (poi.mDescription.length()>0)
 						poi.mDescription = poi.mDescription.substring(1);
